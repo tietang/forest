@@ -40,4 +40,8 @@ public interface Slice<Key> {
 	Long getSliceId();
 
 	void setSliceId(Long sliceId);
+
+	String getAlias();
+
+	void setAlias(String alias);
 }

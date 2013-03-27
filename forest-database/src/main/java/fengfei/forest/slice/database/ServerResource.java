@@ -11,71 +11,41 @@ public class ServerResource extends SliceResource {
 	static final String KEY_DRIVER_CLASS = "driverClass";
 	static final String KEY_SCHEMA = "schema";
 	static final String KEY_DATABASE = "database";
-	int port;
-	String host;
+
 
 	public ServerResource(SliceResource resource) {
-		super(resource.getName(), resource.getSchema());
-		this.status = resource.getStatus();
-		this.extraInfo = resource.getExtraInfo();
-		this.id = resource.getId();
-		this.weight = resource.getWeight();
-		splitName();
-	}
-
-	@Override
-	public void setName(String name) {
-		super.setName(name);
-		splitName();
-	}
-
-	@Override
-	public void setSchema(String schema) {
-		super.setSchema(schema);
-		splitName();
-	}
-
-	private void splitName() {
-		String[] sr = name.split(":");
-		if (sr.length >= 2) {
-			this.host = sr[0];
-			this.port = Integer.parseInt(sr[1]);
-
-		} else {
-			throw new IllegalArgumentException("resource's name is error.");
-		}
+		super(resource.getSliceId(), resource.getFunction(), resource.getResource());
 	}
 
 	public String getUsername() {
-		return extraInfo.get(KEY_USER);
+		return resource.getExtraInfo().get(KEY_USER);
 	}
 
 	public String getPassword() {
-		return extraInfo.get(KEY_PASSWORD);
+		return resource.getExtraInfo().get(KEY_PASSWORD);
 	}
 
 	public String getHost() {
-
-		return host;// extraInfo.get(KEY_HOST);
+		return resource.getExtraInfo().get(KEY_HOST);
 	}
 
 	public int getPort() {
-		return port;// Integer.parseInt(extraInfo.get(KEY_PORT));
+		return Integer.parseInt(resource.getExtraInfo().get(KEY_PORT));
 	}
 
 	public String getDriverClass() {
-		return extraInfo.get(KEY_DRIVER_CLASS);
+		return resource.getExtraInfo().get(KEY_DRIVER_CLASS);
 	}
 
 	public String getSchema() {
-		return schema;// extraInfo.get(KEY_SCHEMA);
+		return resource.getExtraInfo().get(KEY_SCHEMA);
 	}
 
 	public String getDatabase() {
-		return extraInfo.get(KEY_DATABASE);
+		return resource.getExtraInfo().get(KEY_DATABASE);
 	}
 
 	public String getDatabaseName() {
-		return extraInfo.get(KEY_DATABASE);
+		return resource.getExtraInfo().get(KEY_DATABASE);
 	}
 }

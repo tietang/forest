@@ -17,6 +17,7 @@ import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
 
 public class AccuracyRouterEqualityTest {
+
 	AccuracyRouter<Long> router = new AccuracyRouter<>();
 	int size = 60;
 
@@ -25,20 +26,16 @@ public class AccuracyRouterEqualityTest {
 		router.setOverflowType(OverflowType.Exception);
 		int ip = 2;
 		for (int i = 0; i < size; i++) {
-
 			for (int j = 0; j < 3; j++) {
 				String name = "192.168.1." + (ip++) + ":8002";
 				Resource resource = new Resource(name);
 				resource.addExtraInfo(extraInfo());
 				Long sliceId = Long.valueOf(i);
-				SliceResource sliceResource = new SliceResource(sliceId,
-						resource);
+				SliceResource sliceResource = new SliceResource(sliceId, resource);
 				sliceResource.addParams(extraInfo());
-				router.register(Long.valueOf(i), sliceResource);
+				router.register(Long.valueOf(i), String.valueOf(i), sliceResource);
 			}
-
 		}
-
 	}
 
 	private Map<String, String> extraInfo() {
@@ -56,8 +53,7 @@ public class AccuracyRouterEqualityTest {
 	public void testLocateKeyFunction() {
 		for (int i = 0; i < size; i++) {
 			int id = Math.abs(random.nextInt() % size);
-			SliceResource resource = router.locate(Long.valueOf(id),
-					Function.Read);
+			SliceResource resource = router.locate(Long.valueOf(id), Function.Read);
 			assertNotNull(resource);
 			assertEquals(Function.ReadWrite, resource.getFunction());
 			assertEquals(4, resource.getExtraInfo().size());
@@ -74,9 +70,7 @@ public class AccuracyRouterEqualityTest {
 			assertTrue(resource.getFunction() == Function.ReadWrite);
 			assertEquals(4, resource.getExtraInfo().size());
 			System.out.println(resource);
-
 		}
-
 	}
 
 	@Test
@@ -84,26 +78,22 @@ public class AccuracyRouterEqualityTest {
 		String msg = " test locate for exception";
 		for (int i = 0; i < size; i++) {
 			int id = Math.abs(random.nextInt() % size) + size;
-
 			try {
-				SliceResource resource = router.locate(Long.valueOf(id),
-						Function.Read);
+				SliceResource resource = router.locate(Long.valueOf(id), Function.Read);
 				assertTrue(msg, false);
 			} catch (Exception e) {
 				assertTrue(msg + ":" + e.getMessage(), true);
 				e.printStackTrace();
 			}
 			try {
-				SliceResource resource = router.locate(Long.valueOf(id),
-						Function.Write);
+				SliceResource resource = router.locate(Long.valueOf(id), Function.Write);
 				assertTrue(msg, false);
 			} catch (Exception e) {
 				assertTrue(msg + ":" + e.getMessage(), true);
 				e.printStackTrace();
 			}
 			try {
-				SliceResource resource = router.locate(Long.valueOf(id),
-						Function.ReadWrite);
+				SliceResource resource = router.locate(Long.valueOf(id), Function.ReadWrite);
 				assertTrue(msg, false);
 			} catch (Exception e) {
 				assertTrue(msg + ":" + e.getMessage(), true);
@@ -116,9 +106,7 @@ public class AccuracyRouterEqualityTest {
 				assertTrue(msg + ":" + e.getMessage(), true);
 				e.printStackTrace();
 			}
-
 		}
-
 	}
 
 	@Test
@@ -130,8 +118,6 @@ public class AccuracyRouterEqualityTest {
 			assertTrue(resource.getFunction() == Function.ReadWrite);
 			assertEquals(4, resource.getExtraInfo().size());
 			System.out.println(resource);
-
 		}
 	}
-
 }

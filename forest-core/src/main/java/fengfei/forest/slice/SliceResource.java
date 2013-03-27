@@ -4,8 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SliceResource {
+
 	public static enum Function {
-		Read, Write, ReadWrite;
+		Read,
+		Write,
+		ReadWrite;
 
 		public static Function find(String name) {
 			if (name == null || "".equals(name)) {
@@ -34,9 +37,20 @@ public class SliceResource {
 		this.alias = String.valueOf(sliceId);
 	}
 
+	public SliceResource(Function function, Resource resource) {
+		this(resource);
+		this.function = function;
+	}
+
 	public SliceResource(Long sliceId, Resource resource) {
 		super();
 		this.sliceId = sliceId;
+		this.resource = resource;
+		this.alias = String.valueOf(sliceId);
+	}
+
+	public SliceResource(Resource resource) {
+		super();
 		this.resource = resource;
 		this.alias = String.valueOf(sliceId);
 	}
@@ -106,9 +120,6 @@ public class SliceResource {
 
 	@Override
 	public String toString() {
-		return "SliceResource [sliceId=" + sliceId + ", alias=" + alias
-				+ ", function=" + function + ", resource=" + resource
-				+ ", params=" + params + "]";
+		return "SliceResource [sliceId=" + sliceId + ", alias=" + alias + ", function=" + function + ", resource=" + resource + ", params=" + params + "]";
 	}
-
 }

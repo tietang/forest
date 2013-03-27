@@ -46,14 +46,16 @@ public class NavigableRouter<Key> extends AbstractRouter<Key> {
 		super(equalizer);
 	}
 
-	private SliceResource getResource(Map.Entry<Long, Slice<Key>> entry, Key key,
-			Function function, long id, boolean isDealOver) {
+	private SliceResource getResource(
+			Map.Entry<Long, Slice<Key>> entry,
+			Key key,
+			Function function,
+			long id,
+			boolean isDealOver) {
 		if (slices.size() == 0) {
-			throw new NonExistedResourceException("id=" + id
-					+ " non-existed Slice.");
+			throw new NonExistedResourceException("id=" + id + " non-existed Slice.");
 		}
-		if (entry == null || entry.getValue() == null
-				|| entry.getValue() instanceof NullSlice) {
+		if (entry == null || entry.getValue() == null || entry.getValue() instanceof NullSlice) {
 			return dealOverflow(key, function, id, isDealOver);
 		}
 		Slice<Key> slice = entry.getValue();
@@ -67,14 +69,15 @@ public class NavigableRouter<Key> extends AbstractRouter<Key> {
 		return resource;
 	}
 
-	private SliceResource getResource(Map.Entry<Long, Slice<Key>> entry, Key key,
-			long id, boolean isDealOver) {
+	private SliceResource getResource(
+			Map.Entry<Long, Slice<Key>> entry,
+			Key key,
+			long id,
+			boolean isDealOver) {
 		if (slices.size() == 0) {
-			throw new NonExistedResourceException(" non-existed slice for id="
-					+ id);
+			throw new NonExistedResourceException(" non-existed slice for id=" + id);
 		}
-		if (entry == null || entry.getValue() == null
-				|| entry.getValue() instanceof NullSlice) {
+		if (entry == null || entry.getValue() == null || entry.getValue() instanceof NullSlice) {
 			return dealOverflow(key, null, id, isDealOver);
 		}
 		Slice<Key> slice = entry.getValue();
@@ -88,15 +91,16 @@ public class NavigableRouter<Key> extends AbstractRouter<Key> {
 
 	private Random random = new Random(19800202);
 
-	private SliceResource getResource(Map.Entry<Long, Slice<Key>> entry,
-			Function function, boolean isFirst) {
-		if (entry == null || entry.getValue() == null
-				|| entry.getValue() instanceof NullSlice) {
+	private SliceResource getResource(
+			Map.Entry<Long, Slice<Key>> entry,
+			Function function,
+			boolean isFirst) {
+		if (entry == null || entry.getValue() == null || entry.getValue() instanceof NullSlice) {
 			throw new NonExistedResourceException(" non-existed any slice.");
 		}
 		Slice<Key> slice = entry.getValue();
-		SliceResource resource = function == null ? slice.getAny(random.nextLong())
-				: slice.get(random.nextLong(), function);
+		SliceResource resource = function == null ? slice.getAny(random.nextLong()) : slice
+				.get(random.nextLong(), function);
 		if (resource == null) {
 			Router<Key> router = slice.getChildRouter();
 			return isFirst ? router.first() : router.last();
@@ -148,10 +152,10 @@ public class NavigableRouter<Key> extends AbstractRouter<Key> {
 	@Override
 	public void addslice(Slice<Key> slice) {
 		getSlices().put(slice.getSliceId(), slice);
-
 	}
 
-	public void register(SliceResource resource, Range... ranges) {
+	@Override
+	public void register(SliceResource resource, String alias, Range... ranges) {
 		for (Range range : ranges) {
 			long previous = range.start - 1;
 			if (previous > 0) {
@@ -162,7 +166,7 @@ public class NavigableRouter<Key> extends AbstractRouter<Key> {
 				}
 			}
 			//
-			register(range.end, resource);
+			register(range.end, alias, resource);
 		}
 	}
 
@@ -183,22 +187,15 @@ public class NavigableRouter<Key> extends AbstractRouter<Key> {
 			}
 			slices.put(range.end, slice);
 		}
-
 	}
 
 	@Override
 	public String toString() {
-		return "NavigableRouter [\n slices=" + slices + ", equalizer="
-				+ equalizer + ", overflowType=" + overflowType
-				+ ", selectType=" + selectType + ", defaultExtraInfo="
-				+ defaultExtraInfo + "]";
+		return "NavigableRouter [\n slices=" + slices + ", equalizer=" + equalizer + ", overflowType=" + overflowType + ", selectType=" + selectType + ", defaultExtraInfo=" + defaultExtraInfo + "]";
 	}
 
 	@Override
 	public boolean isSupported(OverflowType overflowType) {
-		return overflowType == OverflowType.Exception
-				|| overflowType == OverflowType.First
-				|| overflowType == OverflowType.Last;
+		return overflowType == OverflowType.Exception || overflowType == OverflowType.First || overflowType == OverflowType.Last;
 	}
-
 }

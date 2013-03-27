@@ -85,4 +85,16 @@ public class NullSlice<Key> implements Slice<Key> {
 
 	}
 
+	@Override
+	public String getAlias() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setAlias(String alias) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

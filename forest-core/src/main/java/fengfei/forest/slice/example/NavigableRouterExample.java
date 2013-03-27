@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fengfei.forest.slice.OverflowType;
+import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.SelectType;
@@ -17,10 +18,9 @@ public class NavigableRouterExample {
 	 */
 	public static void main(String[] args) {
 		NavigableRouter<Long> router = new NavigableRouter<>();
-
 		router.setSelectType(SelectType.Hash);
 		router.setOverflowType(OverflowType.Last);
-		router.setEqualizer(new LongEqualizer());	
+		router.setEqualizer(new LongEqualizer());
 		setupGroup(router);
 		System.out.println(router);
 		System.out.println(router.locate(101l));
@@ -41,18 +41,17 @@ public class NavigableRouterExample {
 		int ip = 2;
 		int sliceSize = 10;
 		for (int i = 0; i < sliceSize; i++) {
-
 			Long sliceId = Long.valueOf((i + 1) * 1980);
 			for (int j = 0; j < 6; j++) {
 				String name = "192.168.1." + (ip++) + ":8002";
-				SliceResource resource = new SliceResource(name);
-				resource.setFunction(j < 2 ? Function.Write : Function.Read);
+				Resource resource = new Resource(name);
 				resource.addExtraInfo(extraInfo());
-				router.register(sliceId, resource);
+				SliceResource sliceResource = new SliceResource(resource);
+				sliceResource.setFunction(j == 0 ? Function.Write : Function.Read);
+				sliceResource.addParams(extraInfo());
+				router.register(sliceId, String.valueOf(i), sliceResource);
 			}
-
 		}
-
 	}
 
 	private static Map<String, String> extraInfo() {
@@ -63,5 +62,4 @@ public class NavigableRouterExample {
 		extraInfo.put("password", "pwd");
 		return extraInfo;
 	}
-
 }

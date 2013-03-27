@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fengfei.forest.slice.OverflowType;
+import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.SelectType;
@@ -39,15 +40,15 @@ public class AccuracyRouterExample {
 	private static void setupGroup(AccuracyRouter<Long> router) {
 		int ip = 2;
 		for (int i = 0; i < 10; i++) {
-
 			for (int j = 0; j < 3; j++) {
 				String name = "192.168.1." + (ip++) + ":8002";
-				SliceResource resource = new SliceResource(name);
-				resource.setFunction(j == 0 ? Function.Write : Function.Read);
+				Resource resource = new Resource(name);
 				resource.addExtraInfo(extraInfo());
-				router.register(Long.valueOf(i), resource);
+				SliceResource sliceResource = new SliceResource(resource);
+				sliceResource.setFunction(j == 0 ? Function.Write : Function.Read);
+				sliceResource.addParams(extraInfo());
+				router.register(Long.valueOf(i), String.valueOf(i), sliceResource);
 			}
-
 		}
 	}
 
@@ -59,5 +60,4 @@ public class AccuracyRouterExample {
 		extraInfo.put("password", "pwd");
 		return extraInfo;
 	}
-
 }

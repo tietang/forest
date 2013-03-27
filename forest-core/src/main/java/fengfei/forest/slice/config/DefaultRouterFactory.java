@@ -10,6 +10,7 @@ import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Plotter;
 import fengfei.forest.slice.Range;
+import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.Router;
@@ -39,15 +40,12 @@ public class DefaultRouterFactory implements RouterFactory {
 				RouterConfig routerConfig = inherit(rc);
 				routerConfigCache.put(rc.id, routerConfig);
 			} catch (CloneNotSupportedException e) {
-
 				e.printStackTrace();
 			}
 		}
-
 	}
 
-	private RouterConfig inherit(RouterConfig routerConfig)
-			throws CloneNotSupportedException {
+	private RouterConfig inherit(RouterConfig routerConfig) throws CloneNotSupportedException {
 		String parentId = routerConfig.parentId;
 		if (parentId == null) {
 			return routerConfig;
@@ -60,27 +58,16 @@ public class DefaultRouterFactory implements RouterFactory {
 				// FIXME copy
 				config = config.copy();
 				config.id = routerConfig.id;
-				config.selectType = routerConfig.selectType == null ? config.selectType
-						: routerConfig.selectType;
-				config.routerClass = routerConfig.routerClass == null ? config.routerClass
-						: routerConfig.routerClass;
-				config.plotterClass = routerConfig.plotterClass == null ? config.plotterClass
-						: routerConfig.plotterClass;
-				config.overflow = routerConfig.overflow == null ? config.overflow
-						: routerConfig.overflow;
-				config.equalizerClass = routerConfig.equalizerClass == null ? config.equalizerClass
-						: routerConfig.equalizerClass;
-
-				config.addDefaultExtraInfo(new HashMap<>(
-						routerConfig.defaultExtraInfo));
+				config.selectType = routerConfig.selectType == null ? config.selectType : routerConfig.selectType;
+				config.routerClass = routerConfig.routerClass == null ? config.routerClass : routerConfig.routerClass;
+				config.plotterClass = routerConfig.plotterClass == null ? config.plotterClass : routerConfig.plotterClass;
+				config.overflow = routerConfig.overflow == null ? config.overflow : routerConfig.overflow;
+				config.equalizerClass = routerConfig.equalizerClass == null ? config.equalizerClass : routerConfig.equalizerClass;
+				config.addDefaultExtraInfo(new HashMap<>(routerConfig.defaultExtraInfo));
 				config.slices = routerConfig.slices;
-
 				return config;
-
 			}
-
 		}
-
 	}
 
 	<Key> Router<Key> create(RouterConfig routerConfig) {
@@ -92,19 +79,14 @@ public class DefaultRouterFactory implements RouterFactory {
 		if (equalizerClass != null && !"".equals(equalizerClass)) {
 			equalizer = newInstance(equalizerClass);
 		}
-
 		router.setOverflowType(OverflowType.find(routerConfig.overflow));
 		router.setEqualizer(equalizer);
-
 		build(routerConfig, router);
 		return router;
-
 	}
 
 	private <Key> void build(RouterConfig routerConfig, Router<Key> router) {
-
 		List<SliceConfig> sliceConfigs = routerConfig.getSliceList();
-
 		int size = sliceConfigs.size();
 		for (int i = 0; i < size; i++) {
 			SliceConfig sliceConfig = sliceConfigs.get(i);
@@ -115,14 +97,11 @@ public class DefaultRouterFactory implements RouterFactory {
 			Slice<Key> slice = create(sliceId, sliceConfig, routerConfig);
 			Range[] ranges = splitSourceKey(sliceConfig.sourceKey);
 			router.register(slice, ranges);
-
 		}
-
 	}
 
 	private Range[] splitSourceKey(String sourceKey) {
 		List<Range> longs = new ArrayList<>();
-
 		String[] sources = sourceKey.split(",| ");
 		for (String sk : sources) {
 			if (sk != null && !"".equals(sk.trim())) {
@@ -140,22 +119,19 @@ public class DefaultRouterFactory implements RouterFactory {
 				}
 			}
 		}
-
 		return longs.toArray(new Range[longs.size()]);
-
 	}
 
-	public <Key> Slice<Key> create(Long sliceId, SliceConfig sliceConfig,
+	public <Key> Slice<Key> create(
+			Long sliceId,
+			SliceConfig sliceConfig,
 			RouterConfig routerConfig) {
 		Map<String, String> defaultExtraInfo = routerConfig.defaultExtraInfo;
-		Slice<Key> slice = new ReadWriteSlice<>();
+		Slice<Key> slice = new ReadWriteSlice<>(sliceId);
 		Plotter plotter = newInstance(routerConfig.plotterClass);
 		slice.setPlotter(plotter);
-
 		slice.addParams(defaultExtraInfo);
 		slice.addParams(sliceConfig.extraInfo);
-		slice.setSliceId(sliceId);
-
 		buildReource(sliceConfig.resConfigs, slice);
 		//
 		List<SliceConfig> subSliceConfigs = sliceConfig.subSlices;
@@ -166,7 +142,6 @@ public class DefaultRouterFactory implements RouterFactory {
 			Router<Key> childRouter = create(subRouterConfig);
 			slice.setChildRouter(childRouter);
 		}
-
 		return slice;
 	}
 
@@ -178,31 +153,27 @@ public class DefaultRouterFactory implements RouterFactory {
 			resource.setSliceId(slice.getSliceId());
 			slice.add(resource);
 		}
-
 	}
 
 	public SliceResource create(ResConfig resConfig) {
-
 		//
-		SliceResource resource = new SliceResource(resConfig.name, resConfig.schema);
+		Resource resource = new Resource(resConfig.name);
+		resource.addExtraInfo(resConfig.extraInfo);
 		resource.addExtraInfo(resConfig.extraInfo);
 		resource.addExtraInfo(resource.getExtraInfo());
 		resource.setWeight(resConfig.weight);
-		resource.setFunction(Function.find(resConfig.function));
-
-		return resource;
+		SliceResource sliceResource = new SliceResource(resource);
+		sliceResource.setFunction(Function.find(resConfig.function));
+		return sliceResource;
 	}
 
 	@SuppressWarnings("unchecked")
 	private <T> T newInstance(String className) {
 		try {
 			return (T) Class.forName(className.trim()).newInstance();
-		} catch (InstantiationException | IllegalAccessException
-				| ClassNotFoundException e) {
-
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			throw new IllegalArgumentException("non-exist class: " + className);
 		}
-
 	}
 
 	public <Key> Router<Key> getRouter(String routerName) {
@@ -218,18 +189,13 @@ public class DefaultRouterFactory implements RouterFactory {
 			throw new NonExistedSliceException("unitName=" + routerName);
 		}
 		return router;
-
 	}
 
-	public <Source> Router<Source> getRouter(Equalizer<Source> equalizer,
-			String routerName) {
+	public <Source> Router<Source> getRouter(Equalizer<Source> equalizer, String routerName) {
 		Router<Source> router = getRouter(routerName);
 		if (equalizer != null) {
 			router.setEqualizer(equalizer);
 		}
-
 		return router;
-
 	}
-
 }

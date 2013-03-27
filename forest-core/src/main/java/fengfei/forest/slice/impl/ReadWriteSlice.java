@@ -24,15 +24,12 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 	private ResourceTribe all = new ResourceTribe();
 	protected Plotter plotter = new HashPlotter();
 
-	public ReadWriteSlice() {
-		super();
-		read = new ResourceTribe();
-		write = new ResourceTribe();
-		all = new ResourceTribe();
+	public ReadWriteSlice(Long sliceId) {
+		super(sliceId);
 	}
 
-	public ReadWriteSlice(Plotter plotter) {
-		this();
+	public ReadWriteSlice(Long sliceId, Plotter plotter) {
+		this(sliceId);
 		setPlotter(plotter);
 	}
 
@@ -47,6 +44,7 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 	public void add(SliceResource resource, Function function) {
 		mergeInheritInfoTo(resource);
 		resource.setSliceId(sliceId);
+		resource.setAlias(alias);
 		switch (function) {
 		case Read:
 			read.addResource(resource);
@@ -62,8 +60,7 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 			all.addResource(resource);
 			break;
 		default:
-			throw new UnSupportedException("unsupported the function: "
-					+ function.name());
+			throw new UnSupportedException("unsupported the function: " + function.name());
 		}
 	}
 
@@ -103,8 +100,7 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 	public boolean fail(SliceResource resource) {
 		lock.lock();
 		try {
-			return (fail(read, resource) || fail(write, resource))
-					&& fail(all, resource);
+			return (fail(read, resource) || fail(write, resource)) && fail(all, resource);
 		} catch (Exception e) {
 			throw new SliceRuntimeException("fail resource error.", e);
 			// return false;
@@ -124,8 +120,9 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 	public boolean recover(SliceResource resource) {
 		lock.lock();
 		try {
-			return (recover(read, resource) || recover(write, resource))
-					&& recover(all, resource);
+			return (recover(read, resource) || recover(write, resource)) && recover(
+					all,
+					resource);
 		} catch (Exception e) {
 			throw new SliceRuntimeException("recover resource error.", e);
 			// return false;
@@ -144,10 +141,6 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 
 	@Override
 	public String toString() {
-		return "ReadWriteSlice [read=" + read + ", write=" + write + ", all="
-				+ all + ", plotter=" + plotter + ", sliceId=" + sliceId
-				+ ", extraInfo=" + extraInfo + ", childRouter=" + childRouter
-				+ "]";
+		return "ReadWriteSlice [read=" + read + ", write=" + write + ", all=" + all + ", plotter=" + plotter + ", sliceId=" + sliceId + ", extraInfo=" + params + ", childRouter=" + childRouter + "]";
 	}
-
 }

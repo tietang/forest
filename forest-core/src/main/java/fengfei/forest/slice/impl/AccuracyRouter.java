@@ -53,7 +53,9 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 		super(equalizer, selectType);
 	}
 
-	public AccuracyRouter(Equalizer<Key> equalizer, SelectType selectType,
+	public AccuracyRouter(
+			Equalizer<Key> equalizer,
+			SelectType selectType,
 			Map<String, String> defaultExtraInfo) {
 		this(equalizer, selectType);
 		this.defaultExtraInfo = defaultExtraInfo;
@@ -75,12 +77,13 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 
 	private Random random = new Random(19800202);
 
-	private SliceResource getResource(Map.Entry<Long, Slice<Key>> entry,
-			Function function, boolean isFirst) {
-		if (entry == null || entry.getValue() == null
-				|| entry.getValue() instanceof NullSlice) {
-			throw new NonExistedSliceException(" non-existed any slice for "
-					+ (isFirst ? "first slice" : "last slice"));
+	private SliceResource getResource(
+			Map.Entry<Long, Slice<Key>> entry,
+			Function function,
+			boolean isFirst) {
+		if (entry == null || entry.getValue() == null || entry.getValue() instanceof NullSlice) {
+			throw new NonExistedSliceException(
+					" non-existed any slice for " + (isFirst ? "first slice" : "last slice"));
 		}
 		Slice<Key> slice = entry.getValue();
 		SliceResource resource = slice.get(random.nextLong(), function);
@@ -123,10 +126,13 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 		sortedSlices.put(slice.getSliceId(), slice);
 	}
 
-	public void register(SliceResource resource, Range... ranges) {
+ 
+
+	@Override
+	public void register(SliceResource resource, String alias, Range... ranges) {
 		for (Range range : ranges) {
 			for (long i = range.start; i <= range.end; i++) {
-				register(i, resource);
+				register(i, alias, resource);
 			}
 		}
 	}
@@ -142,17 +148,11 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 
 	@Override
 	public String toString() {
-		return "AccuracyNavigator [resources=" + slices + ", sortedResources="
-				+ sortedSlices + ", equalizer=" + equalizer + ", overflowType="
-				+ overflowType + ", selectType=" + selectType
-				+ ", defaultExtraInfo=" + defaultExtraInfo + "]";
+		return "AccuracyNavigator [resources=" + slices + ", sortedResources=" + sortedSlices + ", equalizer=" + equalizer + ", overflowType=" + overflowType + ", selectType=" + selectType + ", defaultExtraInfo=" + defaultExtraInfo + "]";
 	}
 
 	@Override
 	public boolean isSupported(OverflowType overflowType) {
-		return overflowType == OverflowType.Exception
-				|| overflowType == OverflowType.First
-				|| overflowType == OverflowType.Last;
+		return overflowType == OverflowType.Exception || overflowType == OverflowType.First || overflowType == OverflowType.Last;
 	}
-
 }
