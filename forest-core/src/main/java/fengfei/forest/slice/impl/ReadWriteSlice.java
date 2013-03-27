@@ -5,8 +5,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import fengfei.forest.slice.Plotter;
-import fengfei.forest.slice.Resource;
-import fengfei.forest.slice.Resource.Function;
+import fengfei.forest.slice.SliceResource;
+import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.exception.SliceRuntimeException;
 import fengfei.forest.slice.exception.UnSupportedException;
 
@@ -44,7 +44,7 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 		all.setPlotter(plotter);
 	}
 
-	public void add(Resource resource, Function function) {
+	public void add(SliceResource resource, Function function) {
 		mergeInheritInfoTo(resource);
 		resource.setSliceId(sliceId);
 		switch (function) {
@@ -68,7 +68,7 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 	}
 
 	@Override
-	public void remove(Resource resource) {
+	public void remove(SliceResource resource) {
 		lock.lock();
 		try {
 			read.removeResource(resource);
@@ -81,7 +81,7 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 		}
 	}
 
-	public Resource get(long seed, Function function) {
+	public SliceResource get(long seed, Function function) {
 		switch (function) {
 		case Read:
 			return read.next(seed);
@@ -96,11 +96,11 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 	}
 
 	@Override
-	public Resource getAny(long seed) {
+	public SliceResource getAny(long seed) {
 		return all.next(seed);
 	}
 
-	public boolean fail(Resource resource) {
+	public boolean fail(SliceResource resource) {
 		lock.lock();
 		try {
 			return (fail(read, resource) || fail(write, resource))
@@ -113,15 +113,15 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 		}
 	}
 
-	public boolean fail(ResourceTribe tribe, Resource resource) {
-		List<Resource> availableResources = tribe.getAvailableResources();
-		List<Resource> failResources = tribe.getFailResources();
+	public boolean fail(ResourceTribe tribe, SliceResource resource) {
+		List<SliceResource> availableResources = tribe.getAvailableResources();
+		List<SliceResource> failResources = tribe.getFailResources();
 		availableResources.remove(resource);
 		failResources.add(resource);
 		return true;
 	}
 
-	public boolean recover(Resource resource) {
+	public boolean recover(SliceResource resource) {
 		lock.lock();
 		try {
 			return (recover(read, resource) || recover(write, resource))
@@ -134,9 +134,9 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 		}
 	}
 
-	public boolean recover(ResourceTribe tribe, Resource resource) {
-		List<Resource> availableResources = tribe.getAvailableResources();
-		List<Resource> failResources = tribe.getFailResources();
+	public boolean recover(ResourceTribe tribe, SliceResource resource) {
+		List<SliceResource> availableResources = tribe.getAvailableResources();
+		List<SliceResource> failResources = tribe.getFailResources();
 		failResources.remove(resource);
 		availableResources.add(resource);
 		return true;

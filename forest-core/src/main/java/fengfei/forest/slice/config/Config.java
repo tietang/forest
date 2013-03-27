@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import fengfei.forest.slice.OverflowType;
-import fengfei.forest.slice.Resource.Function;
+import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.SelectType;
 
 public class Config {

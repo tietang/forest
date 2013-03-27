@@ -12,8 +12,8 @@ import java.util.Random;
 import org.junit.Before;
 import org.junit.Test;
 
-import fengfei.forest.slice.Resource;
-import fengfei.forest.slice.Resource.Function;
+import fengfei.forest.slice.SliceResource;
+import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.Slice;
 
 public class ReadWriteSliceHashTest {
@@ -26,10 +26,10 @@ public class ReadWriteSliceHashTest {
 
 		Map<String, String> extraInfo = extraInfo();
 		for (int i = 0; i < 10; i++) {
-			slice.addExtraInfo(extraInfo);
+			slice.addParams(extraInfo);
 			String host = "192.168.1." + (i + 2) + ":8080";
 
-			Resource resource = new Resource(host);
+			SliceResource resource = new SliceResource(host);
 			if (i <= 1) {
 				resource.setFunction(Function.Write);
 			} else {
@@ -54,13 +54,13 @@ public class ReadWriteSliceHashTest {
 		Random rd = new Random();
 		for (int i = 0; i < 20; i++) {
 
-			Resource resource = slice.get(rd.nextInt(), Function.Read);
+			SliceResource resource = slice.get(rd.nextInt(), Function.Read);
 
 			assertNotNull(resource);
 			assertEquals(Function.Read, resource.getFunction());
 			assertEquals(4, resource.getExtraInfo().size());
 			System.out.println(resource);
-			Resource read = resource;
+			SliceResource read = resource;
 			//
 			resource = slice.get(rd.nextInt(), Function.Write);
 			assertNotNull(resource);
@@ -86,7 +86,7 @@ public class ReadWriteSliceHashTest {
 		System.out.println("test any");
 
 		for (int i = 0; i < 20; i++) {
-			Resource resource = slice.getAny(random.nextLong());
+			SliceResource resource = slice.getAny(random.nextLong());
 			assertNotNull(resource);
 			assertTrue(resource.getFunction() == Function.Read
 					|| resource.getFunction() == Function.Write);

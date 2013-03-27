@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fengfei.forest.slice.OverflowType;
-import fengfei.forest.slice.Resource;
-import fengfei.forest.slice.Resource.Function;
+import fengfei.forest.slice.SliceResource;
+import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.impl.LongEqualizer;
 import fengfei.forest.slice.impl.NavigableRouter;
@@ -45,7 +45,7 @@ public class NavigableRouterExample {
 			Long sliceId = Long.valueOf((i + 1) * 1980);
 			for (int j = 0; j < 6; j++) {
 				String name = "192.168.1." + (ip++) + ":8002";
-				Resource resource = new Resource(name);
+				SliceResource resource = new SliceResource(name);
 				resource.setFunction(j < 2 ? Function.Write : Function.Read);
 				resource.addExtraInfo(extraInfo());
 				router.register(sliceId, resource);

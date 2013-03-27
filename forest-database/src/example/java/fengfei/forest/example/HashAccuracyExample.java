@@ -5,8 +5,8 @@ import java.util.Map;
 
 import fengfei.forest.database.pool.TomcatPoolableDataSourceFactory;
 import fengfei.forest.slice.OverflowType;
-import fengfei.forest.slice.Resource;
-import fengfei.forest.slice.Resource.Function;
+import fengfei.forest.slice.SliceResource;
+import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.database.MysqlConnectonUrlMaker;
@@ -49,9 +49,9 @@ public class HashAccuracyExample {
 
 			for (int j = 0; j < 3; j++) {
 				String name = "192.168.1." + (ip++) + ":8002";
-				Resource resource = new Resource(name);
+				SliceResource resource = new SliceResource(name);
 				resource.setFunction(j == 0 ? Function.Write : Function.Read);
-				resource.addExtraInfo(extraInfo());
+				resource.addParams(extraInfo());
 				router.register(Long.valueOf(i), resource);
 			}
 

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import fengfei.forest.slice.Plotter;
-import fengfei.forest.slice.Resource;
+import fengfei.forest.slice.SliceResource;
 
 public class LoopPlotter implements Plotter {
 
@@ -12,7 +12,7 @@ public class LoopPlotter implements Plotter {
 	private int currentIndex;
 
 	@Override
-	public int to(long seed, List<Resource> availableResources, List<Resource> failResources) {
+	public int to(long seed, List<SliceResource> availableResources, List<SliceResource> failResources) {
 		currentIndex = count.getAndIncrement();
 		int index = Math.abs(currentIndex % availableResources.size());
 		return index;

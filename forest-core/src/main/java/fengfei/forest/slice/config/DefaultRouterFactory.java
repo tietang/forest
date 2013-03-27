@@ -10,8 +10,8 @@ import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Plotter;
 import fengfei.forest.slice.Range;
-import fengfei.forest.slice.Resource;
-import fengfei.forest.slice.Resource.Function;
+import fengfei.forest.slice.SliceResource;
+import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.Slice;
 import fengfei.forest.slice.config.Config.ResConfig;
@@ -152,8 +152,8 @@ public class DefaultRouterFactory implements RouterFactory {
 		Plotter plotter = newInstance(routerConfig.plotterClass);
 		slice.setPlotter(plotter);
 
-		slice.addExtraInfo(defaultExtraInfo);
-		slice.addExtraInfo(sliceConfig.extraInfo);
+		slice.addParams(defaultExtraInfo);
+		slice.addParams(sliceConfig.extraInfo);
 		slice.setSliceId(sliceId);
 
 		buildReource(sliceConfig.resConfigs, slice);
@@ -174,17 +174,17 @@ public class DefaultRouterFactory implements RouterFactory {
 		int size = resConfigs.size();
 		for (int i = 0; i < size; i++) {
 			ResConfig resConfig = resConfigs.get(i);
-			Resource resource = create(resConfig);
+			SliceResource resource = create(resConfig);
 			resource.setSliceId(slice.getSliceId());
 			slice.add(resource);
 		}
 
 	}
 
-	public Resource create(ResConfig resConfig) {
+	public SliceResource create(ResConfig resConfig) {
 
 		//
-		Resource resource = new Resource(resConfig.name, resConfig.schema);
+		SliceResource resource = new SliceResource(resConfig.name, resConfig.schema);
 		resource.addExtraInfo(resConfig.extraInfo);
 		resource.addExtraInfo(resource.getExtraInfo());
 		resource.setWeight(resConfig.weight);

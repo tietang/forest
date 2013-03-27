@@ -9,8 +9,8 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Range;
-import fengfei.forest.slice.Resource;
-import fengfei.forest.slice.Resource.Function;
+import fengfei.forest.slice.SliceResource;
+import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.Slice;
@@ -60,14 +60,14 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 	}
 
 	@Override
-	public Resource locate(Key key, Function function) {
+	public SliceResource locate(Key key, Function function) {
 		long id = equalizer.get(key, slices.size());
 		Slice<Key> slice = slices.get(id);
 		return getResource(slice, key, function, id, true);
 	}
 
 	@Override
-	public Resource locate(Key key) {
+	public SliceResource locate(Key key) {
 		long id = equalizer.get(key, slices.size());
 		Slice<Key> slice = slices.get(id);
 		return getResource(slice, key, id, true);
@@ -75,7 +75,7 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 
 	private Random random = new Random(19800202);
 
-	private Resource getResource(Map.Entry<Long, Slice<Key>> entry,
+	private SliceResource getResource(Map.Entry<Long, Slice<Key>> entry,
 			Function function, boolean isFirst) {
 		if (entry == null || entry.getValue() == null
 				|| entry.getValue() instanceof NullSlice) {
@@ -83,7 +83,7 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 					+ (isFirst ? "first slice" : "last slice"));
 		}
 		Slice<Key> slice = entry.getValue();
-		Resource resource = slice.get(random.nextLong(), function);
+		SliceResource resource = slice.get(random.nextLong(), function);
 		if (resource == null) {
 			Router<Key> router = slice.getChildRouter();
 			return isFirst ? router.first() : router.last();
@@ -91,24 +91,24 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 		return resource;
 	}
 
-	public Resource first(Function function) {
+	public SliceResource first(Function function) {
 		Map.Entry<Long, Slice<Key>> entry = sortedSlices.firstEntry();
 		return getResource(entry, function, true);
 	}
 
 	@Override
-	public Resource first() {
+	public SliceResource first() {
 		Map.Entry<Long, Slice<Key>> entry = sortedSlices.firstEntry();
 		return getResource(entry, null, true);
 	}
 
 	@Override
-	public Resource last() {
+	public SliceResource last() {
 		Map.Entry<Long, Slice<Key>> entry = sortedSlices.lastEntry();
 		return getResource(entry, null, false);
 	}
 
-	public Resource last(Function function) {
+	public SliceResource last(Function function) {
 		Map.Entry<Long, Slice<Key>> entry = sortedSlices.lastEntry();
 		return getResource(entry, function, false);
 	}
@@ -123,7 +123,7 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 		sortedSlices.put(slice.getSliceId(), slice);
 	}
 
-	public void register(Resource resource, Range... ranges) {
+	public void register(SliceResource resource, Range... ranges) {
 		for (Range range : ranges) {
 			for (long i = range.start; i <= range.end; i++) {
 				register(i, resource);

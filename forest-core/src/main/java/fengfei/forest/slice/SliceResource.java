@@ -3,8 +3,7 @@ package fengfei.forest.slice;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Resource {
-
+public class SliceResource {
 	public static enum Function {
 		Read, Write, ReadWrite;
 
@@ -24,62 +23,45 @@ public class Resource {
 	}
 
 	protected Long sliceId;
-	protected String id;
-	protected String name;
-	protected String schema = "0";
-	protected int weight = 0;
-	protected Status status = Status.Normal;
+	protected String alias;
 	protected Function function = Function.ReadWrite;
-	protected Map<String, String> extraInfo = new HashMap<>();
+	protected Resource resource;
+	protected Map<String, String> params = new HashMap<>();
 
-	public Resource(String name) {
+	public SliceResource(Long sliceId, Function function, Resource resource) {
+		this(sliceId, resource);
+		this.function = function;
+		this.alias = String.valueOf(sliceId);
+	}
+
+	public SliceResource(Long sliceId, Resource resource) {
 		super();
-		this.name = name;
-		createId();
+		this.sliceId = sliceId;
+		this.resource = resource;
+		this.alias = String.valueOf(sliceId);
 	}
 
-	public Resource(String name, String schema) {
-		this(name);
-		this.schema = schema;
-		createId();
-	}
-	
-
-	public Resource(String name, Function function) {
-		this(name);
-		this.function = function;
+	public void addParam(String key, String value) {
+		params.put(key, value);
 	}
 
-	public Resource(String name, String schema, Function function) {
-		this(name);
-		this.schema = schema;
-		this.function = function;
+	public Map<String, String> getParams() {
+		return params;
 	}
 
-	private void createId() {
-		this.id = name + ":" + schema;
+	public void addParams(Map<String, String> params) {
+		if (params == null) {
+			return;
+		}
+		this.params.putAll(new HashMap<>(params));
 	}
 
-	public String getName() {
-		return name;
+	public String getAlias() {
+		return alias;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-		createId();
-	}
-
-	public String getSchema() {
-		return schema;
-	}
-
-	public void setSchema(String schema) {
-		this.schema = schema;
-		createId();
-	}
-
-	public String getId() {
-		return id;
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 
 	public Long getSliceId() {
@@ -90,35 +72,28 @@ public class Resource {
 		this.sliceId = sliceId;
 	}
 
-	public void addExtraInfo(String key, String value) {
-		extraInfo.put(key, value);
+	public Resource getResource() {
+		return resource;
+	}
+
+	public void setResource(Resource resource) {
+		this.resource = resource;
+	}
+
+	public String getName() {
+		return resource.getName();
 	}
 
 	public Map<String, String> getExtraInfo() {
-		return extraInfo;
-	}
-
-	public void addExtraInfo(Map<String, String> extraInfo) {
-		if (extraInfo == null) {
-			return;
-		}
-		this.extraInfo.putAll(new HashMap<>(extraInfo));
+		return resource.extraInfo;
 	}
 
 	public int getWeight() {
-		return weight;
-	}
-
-	public void setWeight(int weight) {
-		this.weight = weight;
+		return resource.weight;
 	}
 
 	public Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(Status status) {
-		this.status = status;
+		return resource.status;
 	}
 
 	public Function getFunction() {
@@ -130,40 +105,10 @@ public class Resource {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((schema == null) ? 0 : schema.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Resource other = (Resource) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (schema == null) {
-			if (other.schema != null)
-				return false;
-		} else if (!schema.equals(other.schema))
-			return false;
-		return true;
-	}
-
-	@Override
 	public String toString() {
-		return "Resource [groupId=" + sliceId + ", id=" + id + ", weight="
-				+ weight + ", status=" + status + ", function=" + function
-				+ ", extraInfo=" + extraInfo + "]";
+		return "SliceResource [sliceId=" + sliceId + ", alias=" + alias
+				+ ", function=" + function + ", resource=" + resource
+				+ ", params=" + params + "]";
 	}
+
 }

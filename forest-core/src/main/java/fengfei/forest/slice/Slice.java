@@ -2,7 +2,7 @@ package fengfei.forest.slice;
 
 import java.util.Map;
 
-import fengfei.forest.slice.Resource.Function;
+import fengfei.forest.slice.SliceResource.Function;
 
 /**
  * 一个slice是由一系列相同resource组成
@@ -19,23 +19,23 @@ public interface Slice<Key> {
 
 	void setPlotter(Plotter plotter);
 
-	void setExtraInfo(Map<String, String> extraInfo);
+	void setParams(Map<String, String> params);
 
-	void addExtraInfo(String key, String value);
+	void addParams(String key, String value);
 
-	Map<String, String> getExtraInfo();
+	Map<String, String> getParams();
 
-	void addExtraInfo(Map<String, String> extraInfo);
+	void addParams(Map<String, String> params);
 
-	void add(Resource resource);
+	void add(SliceResource resource);
 
-	void add(Resource resource, Function function);
+	void add(SliceResource resource, Function function);
 
-	void remove(Resource resource);
+	void remove(SliceResource resource);
 
-	Resource get(long seed, Function function);
+	SliceResource get(long seed, Function function);
 
-	Resource getAny(long seed);
+	SliceResource getAny(long seed);
 
 	Long getSliceId();
 

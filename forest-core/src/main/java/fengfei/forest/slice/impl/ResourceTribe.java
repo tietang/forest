@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fengfei.forest.slice.Plotter;
-import fengfei.forest.slice.Resource;
+import fengfei.forest.slice.SliceResource;
 
 public class ResourceTribe {
 
-	protected List<Resource> availableResources = new ArrayList<>();
-	protected List<Resource> failResources = new ArrayList<>();
+	protected List<SliceResource> availableResources = new ArrayList<>();
+	protected List<SliceResource> failResources = new ArrayList<>();
 	protected Plotter plotter = new HashPlotter();
 
 	public ResourceTribe() {
@@ -24,36 +24,36 @@ public class ResourceTribe {
 		this.plotter = plotter;
 	}
 
-	public List<Resource> getAvailableResources() {
+	public List<SliceResource> getAvailableResources() {
 		return availableResources;
 	}
 
-	public void setAvailableResources(List<Resource> availableResources) {
+	public void setAvailableResources(List<SliceResource> availableResources) {
 		this.availableResources = availableResources;
 	}
 
-	public void setFailResources(List<Resource> failResources) {
+	public void setFailResources(List<SliceResource> failResources) {
 		this.failResources = failResources;
 	}
 
-	public void addResource(Resource resource) {
+	public void addResource(SliceResource resource) {
 		availableResources.add(resource);
 		// System.out.println("model: " + Resource);
 		// System.out.println("model Resources: " + Resources);
 	}
 
-	public void removeResource(Resource resource) {
+	public void removeResource(SliceResource resource) {
 		availableResources.remove(resource);
 		failResources.remove(resource);
 		// System.out.println("model: " + Resource);
 		// System.out.println("model Resources: " + Resources);
 	}
 
-	public List<Resource> getFailResources() {
+	public List<SliceResource> getFailResources() {
 		return failResources;
 	}
 
-	public Resource next(long seed) {
+	public SliceResource next(long seed) {
 		int index = plotter.to(seed, availableResources, failResources);
 		return availableResources.get(Math.abs(index));
 	}

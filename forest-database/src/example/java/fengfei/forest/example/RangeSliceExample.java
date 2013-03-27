@@ -6,8 +6,8 @@ import java.util.Map;
 import fengfei.forest.database.pool.TomcatPoolableDataSourceFactory;
 import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.OverflowType;
-import fengfei.forest.slice.Resource;
-import fengfei.forest.slice.Resource.Function;
+import fengfei.forest.slice.SliceResource;
+import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.database.MysqlConnectonUrlMaker;
@@ -65,9 +65,9 @@ public class RangeSliceExample {
 			for (int j = 0; j < 6; j++) {
 				// String name = "192.168.1." + (ip++) + ":3306";
 				String name = "127.0.0.1:3306";
-				Resource resource = new Resource(name, "");
+				SliceResource resource = new SliceResource(name, "");
 				resource.setFunction(j < 2 ? Function.Write : Function.Read);
-				resource.addExtraInfo(extraInfo());
+				resource.addParams(extraInfo());
 				router.register(sliceId, resource);
 				System.out.println(resource);
 			}

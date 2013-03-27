@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 import fengfei.forest.slice.Failover;
-import fengfei.forest.slice.Resource;
+import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.Slice;
 
@@ -50,7 +50,7 @@ public abstract class AbstractSlice<Key> implements Failover, Slice<Key> {
 	 * @see fengfei.forest.slice.ResourceSet#setExtraInfo(java.util.Map)
 	 */
 	@Override
-	public void setExtraInfo(Map<String, String> extraInfo) {
+	public void setParams(Map<String, String> extraInfo) {
 		this.extraInfo = extraInfo;
 	}
 
@@ -61,7 +61,7 @@ public abstract class AbstractSlice<Key> implements Failover, Slice<Key> {
 	 * java.lang.String)
 	 */
 	@Override
-	public void addExtraInfo(String key, String value) {
+	public void addParams(String key, String value) {
 		extraInfo.put(key, value);
 	}
 
@@ -71,12 +71,12 @@ public abstract class AbstractSlice<Key> implements Failover, Slice<Key> {
 	 * @see fengfei.forest.slice.ResourceSet#getExtraInfo()
 	 */
 	@Override
-	public Map<String, String> getExtraInfo() {
+	public Map<String, String> getParams() {
 		return extraInfo;
 	}
 
 	@Override
-	public void addExtraInfo(Map<String, String> extraInfo) {
+	public void addParams(Map<String, String> extraInfo) {
 		if (extraInfo == null) {
 			return;
 		}
@@ -84,14 +84,14 @@ public abstract class AbstractSlice<Key> implements Failover, Slice<Key> {
 	}
 
 	@Override
-	public void add(Resource resource) {
+	public void add(SliceResource resource) {
 		add(resource, resource.getFunction());
 	}
 
-	protected void mergeInheritInfoTo(Resource resource) {
+	protected void mergeInheritInfoTo(SliceResource resource) {
 		Map<String, String> extraInfo = new HashMap<String, String>(
 				resource.getExtraInfo());
-		resource.addExtraInfo(getExtraInfo());
-		resource.addExtraInfo(extraInfo);
+		resource.addParams(getParams());
+		resource.addParams(extraInfo);
 	}
 }

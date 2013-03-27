@@ -1,6 +1,6 @@
 package fengfei.forest.slice;
 
-import fengfei.forest.slice.Resource.Function;
+import fengfei.forest.slice.SliceResource.Function;
 
 public interface Navigator<Key> {
 
@@ -12,7 +12,7 @@ public interface Navigator<Key> {
 	 * @param function
 	 * @return
 	 */
-	Resource locate(Key key, Function function);
+	SliceResource locate(Key key, Function function);
 
 	/**
 	 * 定位到一个给定的key所对应的默认Resource
@@ -20,7 +20,7 @@ public interface Navigator<Key> {
 	 * @param key
 	 * @return
 	 */
-	Resource locate(Key key);
+	SliceResource locate(Key key);
 
 	/**
 	 * get first slice of all slices
@@ -28,7 +28,7 @@ public interface Navigator<Key> {
 	 * @param key
 	 * @return
 	 */
-	Resource first();
+	SliceResource first();
 
 	/**
 	 * get first slice of all slices by function
@@ -36,7 +36,7 @@ public interface Navigator<Key> {
 	 * @param key
 	 * @return
 	 */
-	Resource first(Function function);
+	SliceResource first(Function function);
 
 	/**
 	 * get first slice of last slices
@@ -44,7 +44,7 @@ public interface Navigator<Key> {
 	 * @param key
 	 * @return
 	 */
-	Resource last();
+	SliceResource last();
 
 	/**
 	 * get first slice of all slices by function
@@ -52,5 +52,5 @@ public interface Navigator<Key> {
 	 * @param key
 	 * @return
 	 */
-	Resource last(Function function);
+	SliceResource last(Function function);
 }

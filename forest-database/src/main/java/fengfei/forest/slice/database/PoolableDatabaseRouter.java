@@ -10,8 +10,8 @@ import fengfei.forest.database.pool.PoolableException;
 import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Range;
-import fengfei.forest.slice.Resource;
-import fengfei.forest.slice.Resource.Function;
+import fengfei.forest.slice.SliceResource;
+import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.Slice;
@@ -141,17 +141,17 @@ public class PoolableDatabaseRouter<Key> implements Router<Key> {
 	}
 
 	@Override
-	public void register(Long sliceId, Resource resource) {
+	public void register(Long sliceId, SliceResource resource) {
 		router.register(sliceId, resource);
 	}
 
 	@Override
-	public void update(Long sliceId, Resource resource) {
+	public void update(Long sliceId, SliceResource resource) {
 		router.update(sliceId, resource);
 	}
 
 	@Override
-	public void remove(Resource resource) {
+	public void remove(SliceResource resource) {
 		router.remove(resource);
 	}
 
@@ -161,7 +161,7 @@ public class PoolableDatabaseRouter<Key> implements Router<Key> {
 	}
 
 	@Override
-	public void register(Resource resource, Range... ranges) {
+	public void register(SliceResource resource, Range... ranges) {
 		router.register(resource, ranges);
 	}
 

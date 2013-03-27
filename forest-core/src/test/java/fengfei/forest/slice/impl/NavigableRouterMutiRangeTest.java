@@ -14,8 +14,8 @@ import org.junit.Test;
 
 import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Range;
-import fengfei.forest.slice.Resource;
-import fengfei.forest.slice.Resource.Function;
+import fengfei.forest.slice.SliceResource;
+import fengfei.forest.slice.SliceResource.Function;
 
 public class NavigableRouterMutiRangeTest {
 
@@ -42,7 +42,7 @@ public class NavigableRouterMutiRangeTest {
 	private void register(Range... ranges) {
 		for (int j = 0; j < 3; j++) {
 			String name = "192.168.1." + (x++) + ":8002";
-			Resource resource = new Resource(name);
+			SliceResource resource = new SliceResource(name);
 			if (j == 0) {
 				resource.setFunction(Function.Write);
 			} else {
@@ -67,13 +67,13 @@ public class NavigableRouterMutiRangeTest {
 	@Test
 	public void testLocateKeyFunction() {
 		for (int id : includes) {
-			Resource resource = navigator.locate(Long.valueOf(id),
+			SliceResource resource = navigator.locate(Long.valueOf(id),
 					Function.Read);
 			assertNotNull(resource);
 			assertEquals(Function.Read, resource.getFunction());
 			assertEquals(4, resource.getExtraInfo().size());
 			System.out.println(resource);
-			Resource read = resource;
+			SliceResource read = resource;
 			//
 			resource = navigator.locate(Long.valueOf(id), Function.Write);
 			assertNotNull(resource);
@@ -92,8 +92,8 @@ public class NavigableRouterMutiRangeTest {
 	}
 
 	private void testFirst(String msg, Long id, Function function) {
-		Resource resource = navigator.locate(Long.valueOf(id), function);
-		Resource first = function == null ? navigator.first() : navigator
+		SliceResource resource = navigator.locate(Long.valueOf(id), function);
+		SliceResource first = function == null ? navigator.first() : navigator
 				.first(function);
 		assertNotNull(msg, resource);
 		assertNotNull(msg, first);
@@ -101,8 +101,8 @@ public class NavigableRouterMutiRangeTest {
 	}
 
 	private void testLast(String msg, Long id, Function function) {
-		Resource resource = navigator.locate(Long.valueOf(id), function);
-		Resource last = function == null ? navigator.last() : navigator
+		SliceResource resource = navigator.locate(Long.valueOf(id), function);
+		SliceResource last = function == null ? navigator.last() : navigator
 				.last(function);
 		assertNotNull(msg, resource);
 		assertNotNull(msg, last);
@@ -112,10 +112,10 @@ public class NavigableRouterMutiRangeTest {
 	}
 
 	private void testNew(String msg, Long id, Function function) {
-		Resource resource = navigator.locate(Long.valueOf(id), function);
-		Resource last = function == null ? navigator.last() : navigator
+		SliceResource resource = navigator.locate(Long.valueOf(id), function);
+		SliceResource last = function == null ? navigator.last() : navigator
 				.last(function);
-		Resource first = function == null ? navigator.first() : navigator
+		SliceResource first = function == null ? navigator.first() : navigator
 				.first(function);
 		assertNotNull(msg, resource);
 		assertNotNull(msg, last);
@@ -128,7 +128,7 @@ public class NavigableRouterMutiRangeTest {
 
 	private void testException(String msg, Long id, Function function) {
 		try {
-			Resource resource = navigator.locate(Long.valueOf(id), function);
+			SliceResource resource = navigator.locate(Long.valueOf(id), function);
 			assertTrue(msg, false);
 		} catch (Exception e) {
 			assertTrue(msg + ":" + e.getMessage(), true);
@@ -172,7 +172,7 @@ public class NavigableRouterMutiRangeTest {
 	@Test
 	public void testLocateKey() {
 		for (int id : excludes) {
-			Resource resource = navigator.locate(Long.valueOf(id));
+			SliceResource resource = navigator.locate(Long.valueOf(id));
 			assertNotNull(resource);
 			assertTrue(resource.getFunction() == Function.Read
 					|| resource.getFunction() == Function.Write);

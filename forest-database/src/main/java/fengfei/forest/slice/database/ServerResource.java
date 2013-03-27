@@ -1,8 +1,8 @@
 package fengfei.forest.slice.database;
 
-import fengfei.forest.slice.Resource;
+import fengfei.forest.slice.SliceResource;
 
-public class ServerResource extends Resource {
+public class ServerResource extends SliceResource {
 
 	static final String KEY_HOST = "host";
 	static final String KEY_PORT = "port";
@@ -14,7 +14,7 @@ public class ServerResource extends Resource {
 	int port;
 	String host;
 
-	public ServerResource(Resource resource) {
+	public ServerResource(SliceResource resource) {
 		super(resource.getName(), resource.getSchema());
 		this.status = resource.getStatus();
 		this.extraInfo = resource.getExtraInfo();
