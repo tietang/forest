@@ -81,6 +81,8 @@ public class RangeSliceExample {
 		extraInfo.put("driverClass", "com.mysql.jdbc.Driver");
 		extraInfo.put("user", "root");
 		extraInfo.put("password", "");
+		extraInfo.put("host", "127.0.0.1");
+		extraInfo.put("port", "3306");
 		// pool config
 		extraInfo.put("maxActive", "10");
 		extraInfo.put("maxIdle", "10");
