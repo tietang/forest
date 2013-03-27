@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface Plotter {
 
-	int to(long seed, List<Resource> availableResources, List<Resource> failResources);
+	int to(long seed, List<SliceResource> availableResources, List<SliceResource> failResources);
 }

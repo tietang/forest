@@ -5,17 +5,17 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import fengfei.forest.slice.Resource;
+import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.exception.SliceException;
 
 public class PoolableServerResource extends ServerResource {
 	DataSource dataSource;
 
-	public PoolableServerResource(Resource resource) {
+	public PoolableServerResource(SliceResource resource) {
 		super(resource);
 	}
 
-	public PoolableServerResource(Resource resource, DataSource dataSource) {
+	public PoolableServerResource(SliceResource resource, DataSource dataSource) {
 		super(resource);
 
 		this.dataSource = dataSource;

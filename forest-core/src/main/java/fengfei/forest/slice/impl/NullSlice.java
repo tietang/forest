@@ -3,8 +3,8 @@ package fengfei.forest.slice.impl;
 import java.util.Map;
 
 import fengfei.forest.slice.Plotter;
-import fengfei.forest.slice.Resource;
-import fengfei.forest.slice.Resource.Function;
+import fengfei.forest.slice.SliceResource;
+import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.Slice;
 
@@ -27,49 +27,49 @@ public class NullSlice<Key> implements Slice<Key> {
 	}
 
 	@Override
-	public void setExtraInfo(Map<String, String> extraInfo) {
+	public void setParams(Map<String, String> extraInfo) {
 
 	}
 
 	@Override
-	public void addExtraInfo(String key, String value) {
+	public void addParams(String key, String value) {
 
 	}
 
 	@Override
-	public Map<String, String> getExtraInfo() {
+	public Map<String, String> getParams() {
 
 		return null;
 	}
 
 	@Override
-	public void addExtraInfo(Map<String, String> extraInfo) {
+	public void addParams(Map<String, String> extraInfo) {
 
 	}
 
 	@Override
-	public void add(Resource resource) {
+	public void add(SliceResource resource) {
 
 	}
 
 	@Override
-	public void add(Resource resource, Function function) {
+	public void add(SliceResource resource, Function function) {
 
 	}
 
 	@Override
-	public void remove(Resource resource) {
+	public void remove(SliceResource resource) {
 
 	}
 
 	@Override
-	public Resource get(long seed, Function function) {
+	public SliceResource get(long seed, Function function) {
 
 		return null;
 	}
 
 	@Override
-	public Resource getAny(long seed) {
+	public SliceResource getAny(long seed) {
 
 		return null;
 	}
@@ -83,6 +83,18 @@ public class NullSlice<Key> implements Slice<Key> {
 	@Override
 	public void setSliceId(Long sliceId) {
 
+	}
+
+	@Override
+	public String getAlias() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setAlias(String alias) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

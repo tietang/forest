@@ -8,10 +8,11 @@ import java.util.Map;
 import java.util.Set;
 
 import fengfei.forest.slice.OverflowType;
-import fengfei.forest.slice.Resource.Function;
+import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.SelectType;
 
 public class Config {
+
 	private List<RouterConfig> routers = new ArrayList<>();
 	private Map<String, RouterConfig> routerMap = new HashMap<>();
 	public Map<String, String> defaultExtraInfo = new HashMap<>();
@@ -44,6 +45,7 @@ public class Config {
 	}
 
 	public static class RouterConfig {
+
 		public String id;
 		public String parentId;
 		public String equalizerClass;
@@ -75,10 +77,10 @@ public class Config {
 		public List<SliceConfig> getSliceList() {
 			return new ArrayList<>(slices);
 		}
-
 	}
 
 	public static class SliceConfig {
+
 		public Long id;
 		public String sourceKey;
 		public int weight = 1;
@@ -89,8 +91,8 @@ public class Config {
 	}
 
 	public static class ResConfig {
+
 		public String name;
-		public String schema = "0";
 		public int weight = 0;
 		public String function = Function.ReadWrite.name();
 		public Map<String, String> extraInfo = new HashMap<>();

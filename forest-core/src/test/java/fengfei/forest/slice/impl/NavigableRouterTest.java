@@ -14,9 +14,11 @@ import org.junit.Test;
 
 import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Resource;
-import fengfei.forest.slice.Resource.Function;
+import fengfei.forest.slice.SliceResource;
+import fengfei.forest.slice.SliceResource.Function;
 
 public class NavigableRouterTest {
+
 	NavigableRouter<Long> navigator = new NavigableRouter<>();
 	int size = 60;
 	int max = 0;
@@ -26,24 +28,22 @@ public class NavigableRouterTest {
 		int x = 2;
 		max = size * 1980;
 		for (int i = 0; i < size; i++) {
-
-			Long groupId = Long.valueOf((i + 1) * 1980);
+			Long sliceId = Long.valueOf((i + 1) * 1980);
 			for (int j = 0; j < 3; j++) {
-				String name = "192.168.1." + (x++)+ ":8002";
+				String name = "192.168.1." + (x++) + ":8002";
 				Resource resource = new Resource(name);
-				if (j == 0) {
-					resource.setFunction(Function.Write);
-				} else {
-					resource.setFunction(Function.Read);
-				}
 				resource.addExtraInfo(extraInfo());
-
-				navigator.register(groupId, resource);
+				SliceResource sliceResource = new SliceResource(resource);
+				if (j == 0) {
+					sliceResource.setFunction(Function.Write);
+				} else {
+					sliceResource.setFunction(Function.Read);
+				}
+				sliceResource.addParams(extraInfo());
+				navigator.register(sliceId, String.valueOf(i), sliceResource);
 			}
-
 		}
 		System.out.println(navigator);
-
 	}
 
 	private Map<String, String> extraInfo() {
@@ -54,19 +54,19 @@ public class NavigableRouterTest {
 		extraInfo.put("password", "pwd");
 		return extraInfo;
 	}
+
 	Random random = new Random();
 
 	@Test
 	public void testLocateKeyFunction() {
 		for (int i = 0; i < size; i++) {
 			int id = Math.abs(random.nextInt() % max);
-			Resource resource = navigator.locate(Long.valueOf(id),
-					Function.Read);
+			SliceResource resource = navigator.locate(Long.valueOf(id), Function.Read);
 			assertNotNull(resource);
 			assertEquals(Function.Read, resource.getFunction());
 			assertEquals(4, resource.getExtraInfo().size());
 			System.out.println(resource);
-			Resource read = resource;
+			SliceResource read = resource;
 			//
 			resource = navigator.locate(Long.valueOf(id), Function.Write);
 			assertNotNull(resource);
@@ -77,18 +77,15 @@ public class NavigableRouterTest {
 			// /
 			resource = navigator.locate(Long.valueOf(id), Function.ReadWrite);
 			assertNotNull(resource);
-			assertTrue(resource.getFunction() == Function.Read
-					|| resource.getFunction() == Function.Write);
+			assertTrue(resource.getFunction() == Function.Read || resource.getFunction() == Function.Write);
 			assertEquals(4, resource.getExtraInfo().size());
 			System.out.println(resource);
-
 		}
-
 	}
 
 	private void testFirst(String msg, Long id, Function function) {
-		Resource resource = navigator.locate(Long.valueOf(id), function);
-		Resource first = function == null ? navigator.first() : navigator
+		SliceResource resource = navigator.locate(Long.valueOf(id), function);
+		SliceResource first = function == null ? navigator.first() : navigator
 				.first(function);
 		assertNotNull(msg, resource);
 		assertNotNull(msg, first);
@@ -96,19 +93,17 @@ public class NavigableRouterTest {
 	}
 
 	private void testLast(String msg, Long id, Function function) {
-		Resource resource = navigator.locate(Long.valueOf(id), function);
-		Resource last = function == null ? navigator.last() : navigator
-				.last(function);
+		SliceResource resource = navigator.locate(Long.valueOf(id), function);
+		SliceResource last = function == null ? navigator.last() : navigator.last(function);
 		assertNotNull(msg, resource);
 		assertNotNull(msg, last);
 		assertEquals(msg, resource.getSliceId(), last.getSliceId());
 	}
 
 	private void testNew(String msg, Long id, Function function) {
-		Resource resource = navigator.locate(Long.valueOf(id), function);
-		Resource last = function == null ? navigator.last() : navigator
-				.last(function);
-		Resource first = function == null ? navigator.first() : navigator
+		SliceResource resource = navigator.locate(Long.valueOf(id), function);
+		SliceResource last = function == null ? navigator.last() : navigator.last(function);
+		SliceResource first = function == null ? navigator.first() : navigator
 				.first(function);
 		assertNotNull(msg, resource);
 		assertNotNull(msg, last);
@@ -121,7 +116,7 @@ public class NavigableRouterTest {
 
 	private void testException(String msg, Long id, Function function) {
 		try {
-			Resource resource = navigator.locate(Long.valueOf(id), function);
+			SliceResource resource = navigator.locate(Long.valueOf(id), function);
 			assertTrue(msg, false);
 		} catch (Exception e) {
 			assertTrue(msg + ":" + e.getMessage(), true);
@@ -129,8 +124,7 @@ public class NavigableRouterTest {
 		}
 	}
 
-	private void testLocateKeyFunctionForOverflow(String msg, Long id,
-			Function function) {
+	private void testLocateKeyFunctionForOverflow(String msg, Long id, Function function) {
 		OverflowType overflowType = navigator.getOverflowType();
 		switch (overflowType) {
 		case First:
@@ -143,7 +137,6 @@ public class NavigableRouterTest {
 			testNew(msg, id, function);
 			break;
 		case Exception:
-
 			testException(msg, id, function);
 			break;
 		default:
@@ -157,27 +150,21 @@ public class NavigableRouterTest {
 		String msg = " test locate for exception";
 		for (int i = 0; i < size; i++) {
 			Long id = Long.valueOf(Math.abs(random.nextInt() % max) + max + 1);
-
 			testLocateKeyFunctionForOverflow(msg, id, Function.Read);
 			testLocateKeyFunctionForOverflow(msg, id, Function.Write);
 			testLocateKeyFunctionForOverflow(msg, id, Function.ReadWrite);
-
 		}
-
 	}
 
 	@Test
 	public void testLocateKey() {
 		for (int i = 0; i < size; i++) {
 			int id = Math.abs(random.nextInt() % max);
-			Resource resource = navigator.locate(Long.valueOf(id));
+			SliceResource resource = navigator.locate(Long.valueOf(id));
 			assertNotNull(resource);
-			assertTrue(resource.getFunction() == Function.Read
-					|| resource.getFunction() == Function.Write);
+			assertTrue(resource.getFunction() == Function.Read || resource.getFunction() == Function.Write);
 			assertEquals(4, resource.getExtraInfo().size());
 			System.out.println(resource);
-
 		}
 	}
-
 }

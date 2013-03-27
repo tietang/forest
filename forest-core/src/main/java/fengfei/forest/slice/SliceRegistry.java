@@ -6,15 +6,15 @@ public interface SliceRegistry<Key> {
 
 	void register(Slice<Key> slice);
 
-	void register(Long sliceId, Resource resource);
+	void register(Long sliceId, String alias, SliceResource resource);
 
-	void register(Resource resource, Range... ranges);
+	void register(SliceResource resource, String alias, Range... ranges);
 
 	void register(Slice<Key> slice, Range... ranges);
 
-	void update(Long sliceId, Resource resource);
+	void update(Long sliceId, SliceResource resource);
 
-	void remove(Resource resource);
+	void remove(SliceResource resource);
 
 	void remove(Long sliceId);
 

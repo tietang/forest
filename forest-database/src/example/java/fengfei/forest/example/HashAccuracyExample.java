@@ -6,7 +6,8 @@ import java.util.Map;
 import fengfei.forest.database.pool.TomcatPoolableDataSourceFactory;
 import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Resource;
-import fengfei.forest.slice.Resource.Function;
+import fengfei.forest.slice.SliceResource;
+import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.database.MysqlConnectonUrlMaker;
@@ -22,7 +23,8 @@ public class HashAccuracyExample {
 	public static void main(String[] args) {
 		AccuracyRouter<Long> faced = new AccuracyRouter<>(new LongEqualizer());
 		PoolableDatabaseRouter<Long> router = new PoolableDatabaseRouter<>(
-				faced, new MysqlConnectonUrlMaker(),
+				faced,
+				new MysqlConnectonUrlMaker(),
 				new TomcatPoolableDataSourceFactory());
 		setupGroup(router);
 		router.setSelectType(SelectType.Hash);
@@ -46,24 +48,25 @@ public class HashAccuracyExample {
 	private static void setupGroup(Router<Long> router) {
 		int ip = 2;
 		for (int i = 0; i < 50; i++) {
-
 			for (int j = 0; j < 3; j++) {
 				String name = "192.168.1." + (ip++) + ":8002";
 				Resource resource = new Resource(name);
-				resource.setFunction(j == 0 ? Function.Write : Function.Read);
 				resource.addExtraInfo(extraInfo());
-				router.register(Long.valueOf(i), resource);
+				SliceResource sliceResource = new SliceResource(resource);
+				sliceResource.setFunction(j == 0 ? Function.Write : Function.Read);
+				sliceResource.addParams(extraInfo());
+				router.register(Long.valueOf(i), String.valueOf(i), sliceResource);
 			}
-
 		}
 	}
 
 	private static Map<String, String> extraInfo() {
 		Map<String, String> extraInfo = new HashMap<String, String>();
-
 		extraInfo.put("driverClass", "com.mysql.jdbc.Driver");
 		extraInfo.put("user", "root");
 		extraInfo.put("password", "");
+		extraInfo.put("host", "127.0.0.1");
+		extraInfo.put("port", "3306");
 		// pool config
 		extraInfo.put("maxActive", "10");
 		extraInfo.put("maxIdle", "10");
@@ -71,8 +74,6 @@ public class HashAccuracyExample {
 		extraInfo.put("initialSize", "2");
 		extraInfo.put("maxWait", "30000");
 		extraInfo.put("testOnBorrow", "true");
-
 		return extraInfo;
 	}
-
 }

@@ -2,15 +2,17 @@ package fengfei.forest.slice.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Resource;
-import fengfei.forest.slice.Resource.Function;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.Slice;
+import fengfei.forest.slice.SliceResource;
+import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.exception.NonExistedSliceException;
 import fengfei.forest.slice.exception.UnSupportedException;
 
@@ -20,6 +22,8 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 	protected OverflowType overflowType = OverflowType.Last;
 	protected SelectType selectType;
 	protected Map<String, String> defaultExtraInfo = new HashMap<>();
+	protected AtomicLong sliceIdCreator = new AtomicLong();
+	protected Map<String, Resource> resources = new ConcurrentHashMap<>();
 
 	@SuppressWarnings("unchecked")
 	public AbstractRouter() {
@@ -36,15 +40,16 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 		this.selectType = selectType;
 	}
 
-	protected Resource dealOverflow(Key key, Function function, long id,
+	protected SliceResource dealOverflow(
+			Key key,
+			Function function,
+			long id,
 			boolean isDealOver) {
 		if (!isSupported(overflowType)) {
-			throw new UnSupportedException("unSupported overflowType :"
-					+ overflowType);
+			throw new UnSupportedException("unSupported overflowType :" + overflowType);
 		}
 		if (!isDealOver) {
-			throw new NonExistedSliceException("id=" + id
-					+ " non-existed slice.");
+			throw new NonExistedSliceException("id=" + id + " non-existed slice.");
 		}
 		switch (overflowType) {
 		case First:
@@ -54,11 +59,9 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 		case New:
 			return null;
 		case Exception:
-			throw new NonExistedSliceException("id=" + id
-					+ " non-existed slice.");
+			throw new NonExistedSliceException("id=" + id + " non-existed slice.");
 		default:
-			throw new NonExistedSliceException("id=" + id
-					+ " non-existed slice.");
+			throw new NonExistedSliceException("id=" + id + " non-existed slice.");
 		}
 	}
 
@@ -72,12 +75,16 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 	 * @param isDealOver
 	 * @return
 	 */
-	protected Resource getResource(Slice<Key> slice, Key key,
-			Function function, long id, boolean isDealOver) {
+	protected SliceResource getResource(
+			Slice<Key> slice,
+			Key key,
+			Function function,
+			long id,
+			boolean isDealOver) {
 		if (slice == null) {
 			return dealOverflow(key, function, id, isDealOver);
 		}
-		Resource resource = slice.get(id, function);
+		SliceResource resource = slice.get(id, function);
 		if (resource == null) {
 			Router<Key> router = slice.getChildRouter();
 			return router.locate(key);
@@ -85,12 +92,13 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 		return resource;
 	}
 
-	protected Resource getResource(Slice<Key> slice, Key key, long id,
-			boolean isDealOver) {
+	protected
+			SliceResource
+			getResource(Slice<Key> slice, Key key, long id, boolean isDealOver) {
 		if (slice == null || slice instanceof NullSlice) {
 			return dealOverflow(key, null, id, isDealOver);
 		}
-		Resource resource = slice.getAny(id);
+		SliceResource resource = slice.getAny(id);
 		if (resource == null) {
 			Router<Key> router = slice.getChildRouter();
 			return router.locate(key);
@@ -110,8 +118,7 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 
 	public void setOverflowType(OverflowType overflowType) {
 		if (!isSupported(overflowType)) {
-			throw new UnSupportedException("unSupported overflowType :"
-					+ overflowType);
+			throw new UnSupportedException("unSupported overflowType :" + overflowType);
 		}
 		this.overflowType = overflowType;
 	}
@@ -137,37 +144,42 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 		addslice(slice);
 	}
 
-	protected Slice<Key> updateNullSlice(Slice<Key> slice) {
+	protected Slice<Key> updateNullSlice(Slice<Key> slice, String alias) {
 		if (slice != null && slice instanceof NullSlice) {
 			Long sliceId = slice.getSliceId();
 			getSlices().remove(sliceId);
 			slice = null;
-			slice = createSlice(sliceId);
+			slice = createSlice(sliceId, alias);
 		}
 		return slice;
 	}
 
 	@Override
-	public void register(Long sliceId, Resource resource) {
+	public void register(Long sliceId, String alias, SliceResource resource) {
 		Slice<Key> slice = getSlices().get(sliceId);
 		if (slice == null) {
-			slice = createSlice(sliceId);
+			slice = createSlice(sliceId, alias);
 		}
-		update(slice, resource);
+		slice.setSliceId(sliceId);
+		update(slice, alias, resource);
 	}
 
-	protected Slice<Key> createSlice(Long sliceId) {
-		Slice<Key> slice = new ReadWriteSlice<>();
-		slice.setSliceId(sliceId);
+	protected Slice<Key> createSlice(Long sliceId, String alias) {
+		Slice<Key> slice = new ReadWriteSlice<>(sliceId);
+		if (alias == null || "".equals(alias)) {
+			slice.setAlias(String.valueOf(sliceIdCreator.getAndIncrement()));
+		} else {
+			slice.setAlias(alias);
+		}
 		return slice;
 	}
 
-	private void update(Slice<Key> slice, Resource resource) {
-		slice = updateNullSlice(slice);
+	private void update(Slice<Key> slice, String alias, SliceResource resource) {
+		slice = updateNullSlice(slice, alias);
 		Map<String, String> extraInfo = new HashMap<>(getDefaultExtraInfo());
-		extraInfo.putAll(slice.getExtraInfo());
+		extraInfo.putAll(slice.getParams());
 		extraInfo.putAll(resource.getExtraInfo());
-		resource.addExtraInfo(extraInfo);
+		resource.addParams(extraInfo);
 		slice.add(resource);
 		// getSlices().put(slice.getSliceId(), slice);
 		addslice(slice);
@@ -176,17 +188,16 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 	public abstract void addslice(Slice<Key> slice);
 
 	@Override
-	public void update(Long sliceId, Resource resource) {
+	public void update(Long sliceId, SliceResource resource) {
 		Slice<Key> slice = getSlices().get(sliceId);
 		if (slice == null) {
-			throw new NonExistedSliceException(
-					"Non Existed slice for slice id:" + sliceId);
+			throw new NonExistedSliceException("Non Existed slice for slice id:" + sliceId);
 		}
-		update(slice, resource);
+		update(slice, slice.getAlias(), resource);
 	}
 
 	@Override
-	public void remove(Resource resource) {
+	public void remove(SliceResource resource) {
 		if (resource == null || resource.getSliceId() == null) {
 			throw new IllegalArgumentException("arg resource is imperfect.");
 		} else if (getSlices().containsKey(resource.getSliceId())) {
@@ -194,8 +205,7 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 			slice.remove(resource);
 		} else {
 			throw new NonExistedSliceException(
-					"Can't remove,non existed slice for slice id:"
-							+ resource.getSliceId());
+					"Can't remove,non existed slice for slice id:" + resource.getSliceId());
 		}
 	}
 
