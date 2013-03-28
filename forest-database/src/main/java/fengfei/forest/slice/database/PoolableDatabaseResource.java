@@ -8,14 +8,14 @@ import javax.sql.DataSource;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.exception.SliceException;
 
-public class PoolableServerResource extends ServerResource {
+public class PoolableDatabaseResource extends DatabaseResource {
 	DataSource dataSource;
 
-	public PoolableServerResource(SliceResource resource) {
+	public PoolableDatabaseResource(SliceResource resource) {
 		super(resource);
 	}
 
-	public PoolableServerResource(SliceResource resource, DataSource dataSource) {
+	public PoolableDatabaseResource(SliceResource resource, DataSource dataSource) {
 		super(resource);
 
 		this.dataSource = dataSource;

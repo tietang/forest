@@ -1,4 +1,4 @@
-package fengfei.forest.slice.database;
+package fengfei.forest.slice.server;
 
 import java.util.Map;
 
@@ -7,16 +7,16 @@ import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Range;
 import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.Router;
-import fengfei.forest.slice.SliceResource;
-import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.Slice;
+import fengfei.forest.slice.SliceResource;
+import fengfei.forest.slice.SliceResource.Function;
 
-public class DatabaseRouter<Key> implements Router<Key> {
+public class ServerRouter<Key> implements Router<Key> {
 
 	protected Router<Key> router;
 
-	public DatabaseRouter(Router<Key> router) {
+	public ServerRouter(Router<Key> router) {
 		super();
 		this.router = router;
 	}

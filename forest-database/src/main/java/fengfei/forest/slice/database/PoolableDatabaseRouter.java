@@ -11,8 +11,9 @@ import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.exception.NonExistedSliceException;
 import fengfei.forest.slice.exception.SliceRuntimeException;
+import fengfei.forest.slice.server.ServerRouter;
 
-public class PoolableDatabaseRouter<Key> extends DatabaseRouter<Key> {
+public class PoolableDatabaseRouter<Key> extends ServerRouter<Key> {
 
 	private Map<String, DataSource> pooledDataSources = new ConcurrentHashMap<>();
 	private ConnectonUrlMaker urlMaker;
@@ -28,17 +29,17 @@ public class PoolableDatabaseRouter<Key> extends DatabaseRouter<Key> {
 		this.poolableDataSourceFactory = poolableDataSourceFactory;
 	}
 
-	public PoolableServerResource locate(Key key) {
-		PoolableServerResource res = new PoolableServerResource(router.locate(key));
+	public PoolableDatabaseResource locate(Key key) {
+		PoolableDatabaseResource res = new PoolableDatabaseResource(router.locate(key));
 		return locate(res);
 	}
 
-	public PoolableServerResource locate(Key key, Function function) {
-		PoolableServerResource res = new PoolableServerResource(router.locate(key, function));
+	public PoolableDatabaseResource locate(Key key, Function function) {
+		PoolableDatabaseResource res = new PoolableDatabaseResource(router.locate(key, function));
 		return locate(res);
 	}
 
-	private PoolableServerResource locate(PoolableServerResource res) {
+	private PoolableDatabaseResource locate(PoolableDatabaseResource res) {
 		String url = urlMaker.makeUrl(res);
 		DataSource dataSource = pooledDataSources.get(url);
 		if (dataSource == null) {
@@ -110,22 +111,22 @@ public class PoolableDatabaseRouter<Key> extends DatabaseRouter<Key> {
 	}
 
 	@Override
-	public PoolableServerResource first() {
-		return new PoolableServerResource(router.first());
+	public PoolableDatabaseResource first() {
+		return new PoolableDatabaseResource(router.first());
 	}
 
 	@Override
-	public PoolableServerResource first(Function function) {
-		return new PoolableServerResource(router.first(function));
+	public PoolableDatabaseResource first(Function function) {
+		return new PoolableDatabaseResource(router.first(function));
 	}
 
 	@Override
-	public PoolableServerResource last() {
-		return new PoolableServerResource(router.last());
+	public PoolableDatabaseResource last() {
+		return new PoolableDatabaseResource(router.last());
 	}
 
 	@Override
-	public PoolableServerResource last(Function function) {
-		return new PoolableServerResource(router.last(function));
+	public PoolableDatabaseResource last(Function function) {
+		return new PoolableDatabaseResource(router.last(function));
 	}
 }

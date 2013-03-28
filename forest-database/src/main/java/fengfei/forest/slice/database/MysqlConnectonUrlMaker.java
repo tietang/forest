@@ -3,7 +3,7 @@ package fengfei.forest.slice.database;
 public class MysqlConnectonUrlMaker implements ConnectonUrlMaker {
 
 	@Override
-	public String makeUrl(ServerResource resource) {
+	public String makeUrl(DatabaseResource resource) {
 
 		String characterEncoding = resource.getExtraInfo().get(
 				"characterEncoding");

@@ -1,6 +1,5 @@
 package fengfei.forest.slice;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class SliceResource {
@@ -29,8 +28,8 @@ public class SliceResource {
 	protected String alias;
 	protected Function function = Function.ReadWrite;
 	protected Resource resource;
-	protected Map<String, String> params = new HashMap<>();
 
+	// protected Map<String, String> params = new HashMap<>();
 	public SliceResource(Long sliceId, Function function, Resource resource) {
 		this(sliceId, resource);
 		this.function = function;
@@ -55,19 +54,20 @@ public class SliceResource {
 		this.alias = String.valueOf(sliceId);
 	}
 
+	public Resource getResource() {
+		return resource;
+	}
+
 	public void addParam(String key, String value) {
-		params.put(key, value);
+		this.resource.addExtraInfo(key, value);
 	}
 
 	public Map<String, String> getParams() {
-		return params;
+		return this.resource.getExtraInfo();
 	}
 
 	public void addParams(Map<String, String> params) {
-		if (params == null) {
-			return;
-		}
-		this.params.putAll(new HashMap<>(params));
+		resource.addExtraInfo(params);
 	}
 
 	public String getAlias() {
@@ -84,14 +84,6 @@ public class SliceResource {
 
 	public void setSliceId(Long sliceId) {
 		this.sliceId = sliceId;
-	}
-
-	public Resource getResource() {
-		return resource;
-	}
-
-	public void setResource(Resource resource) {
-		this.resource = resource;
 	}
 
 	public String getName() {
@@ -120,6 +112,6 @@ public class SliceResource {
 
 	@Override
 	public String toString() {
-		return "SliceResource [sliceId=" + sliceId + ", alias=" + alias + ", function=" + function + ", resource=" + resource + ", params=" + params + "]";
+		return "SliceResource [sliceId=" + sliceId + ", alias=" + alias + ", function=" + function + ", resource=" + resource + "]";
 	}
 }
