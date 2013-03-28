@@ -5,6 +5,7 @@ import java.util.Map;
 import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Range;
+import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
@@ -60,11 +61,6 @@ public class DatabaseRouter<Key> implements Router<Key> {
 	}
 
 	@Override
-	public void update(Long sliceId, SliceResource resource) {
-		getRouter().update(sliceId, resource);
-	}
-
-	@Override
 	public void remove(SliceResource resource) {
 		getRouter().remove(resource);
 	}
@@ -107,5 +103,45 @@ public class DatabaseRouter<Key> implements Router<Key> {
 	@Override
 	public void register(SliceResource resource, String alias, Range... ranges) {
 		getRouter().register(resource, alias, ranges);
+	}
+
+	@Override
+	public void register(Long sliceId, SliceResource resource) {
+		getRouter().register(sliceId, resource);
+	}
+
+	@Override
+	public void register(SliceResource resource, Range... ranges) {
+		getRouter().register(resource, ranges);
+	}
+
+	@Override
+	public Slice<Key> get(Long sliceId) {
+		return getRouter().get(sliceId);
+	}
+
+	@Override
+	public void register(Resource resource) {
+		getRouter().register(resource);
+	}
+
+	@Override
+	public void map(Long sliceId, String alias, String resourceName, Function function) {
+		getRouter().map(sliceId, alias, resourceName, function);
+	}
+
+	@Override
+	public void map(Long sliceId, String resourceName, Function function) {
+		getRouter().map(sliceId, resourceName, function);
+	}
+
+	@Override
+	public void map(String resourceName, Function function, Range... ranges) {
+		getRouter().map(resourceName, function, ranges);
+	}
+
+	@Override
+	public void map(String resourceName, String alias, Function function, Range... ranges) {
+		getRouter().map(resourceName, alias, function, ranges);
 	}
 }

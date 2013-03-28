@@ -8,10 +8,10 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Range;
- 
+
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
- 
+
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.Slice;
 import fengfei.forest.slice.exception.NonExistedResourceException;
@@ -58,7 +58,6 @@ public class NavigableRouter<Key> extends AbstractRouter<Key> {
 			throw new NonExistedResourceException("id=" + id + " non-existed Slice.");
 		}
 		if (entry == null || entry.getValue() == null || entry.getValue() instanceof NullSlice) {
-
 			return dealOverflow(key, function, id, isDealOver);
 		}
 		Slice<Key> slice = entry.getValue();
@@ -124,32 +123,24 @@ public class NavigableRouter<Key> extends AbstractRouter<Key> {
 
 	@Override
 	public SliceResource last() {
-
 		Map.Entry<Long, Slice<Key>> entry = slices.lastEntry();
 		return getResource(entry, null, false);
 	}
 
-
 	public SliceResource last(Function function) {
-
 		Map.Entry<Long, Slice<Key>> entry = slices.lastEntry();
 		return getResource(entry, function, false);
 	}
 
 	@Override
-
-
 	public SliceResource locate(Key key, Function function) {
-
 		long id = equalizer.get(key, slices.size());
 		Map.Entry<Long, Slice<Key>> entry = slices.ceilingEntry(id);
 		return getResource(entry, key, function, id, true);
 	}
 
 	@Override
-
 	public SliceResource locate(Key key) {
-
 		long id = equalizer.get(key, slices.size());
 		Map.Entry<Long, Slice<Key>> entry = slices.ceilingEntry(id);
 		return getResource(entry, key, id, true);
@@ -163,12 +154,10 @@ public class NavigableRouter<Key> extends AbstractRouter<Key> {
 	@Override
 	public void addslice(Slice<Key> slice) {
 		getSlices().put(slice.getSliceId(), slice);
-
 	}
 
 	@Override
 	public void register(SliceResource resource, String alias, Range... ranges) {
-
 		for (Range range : ranges) {
 			long previous = range.start - 1;
 			if (previous > 0) {
@@ -179,9 +168,7 @@ public class NavigableRouter<Key> extends AbstractRouter<Key> {
 				}
 			}
 			//
-
 			register(range.end, alias, resource);
-
 		}
 	}
 
@@ -202,21 +189,31 @@ public class NavigableRouter<Key> extends AbstractRouter<Key> {
 			}
 			slices.put(range.end, slice);
 		}
+	}
 
-
+	@Override
+	public void map(String resourceName, String alias, Function function, Range... ranges) {
+		for (Range range : ranges) {
+			long previous = range.start - 1;
+			if (previous > 0) {
+				Slice<Key> startslice = slices.get(previous);
+				if (startslice == null) {
+					Slice<Key> nullslice = new NullSlice<>();
+					slices.put(previous, nullslice);
+				}
+			}
+			//
+			map(range.end, alias, resourceName, function);
+		}
 	}
 
 	@Override
 	public String toString() {
-
 		return "NavigableRouter [\n slices=" + slices + ", equalizer=" + equalizer + ", overflowType=" + overflowType + ", selectType=" + selectType + ", defaultExtraInfo=" + defaultExtraInfo + "]";
-
 	}
 
 	@Override
 	public boolean isSupported(OverflowType overflowType) {
-
 		return overflowType == OverflowType.Exception || overflowType == OverflowType.First || overflowType == OverflowType.Last;
 	}
-
 }

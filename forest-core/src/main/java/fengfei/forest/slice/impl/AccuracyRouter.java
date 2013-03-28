@@ -53,17 +53,15 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 		super(equalizer, selectType);
 	}
 
- 
 	public AccuracyRouter(
 			Equalizer<Key> equalizer,
 			SelectType selectType,
- 			Map<String, String> defaultExtraInfo) {
+			Map<String, String> defaultExtraInfo) {
 		this(equalizer, selectType);
 		this.defaultExtraInfo = defaultExtraInfo;
 	}
 
 	@Override
-
 	public SliceResource locate(Key key, Function function) {
 		long id = equalizer.get(key, slices.size());
 		Slice<Key> slice = slices.get(id);
@@ -78,7 +76,6 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 	}
 
 	private Random random = new Random(19800202);
-
 
 	private SliceResource getResource(
 			Map.Entry<Long, Slice<Key>> entry,
@@ -97,7 +94,6 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 		return resource;
 	}
 
-
 	public SliceResource first(Function function) {
 		Map.Entry<Long, Slice<Key>> entry = sortedSlices.firstEntry();
 		return getResource(entry, function, true);
@@ -111,14 +107,11 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 
 	@Override
 	public SliceResource last() {
-
 		Map.Entry<Long, Slice<Key>> entry = sortedSlices.lastEntry();
 		return getResource(entry, null, false);
 	}
 
-
 	public SliceResource last(Function function) {
-
 		Map.Entry<Long, Slice<Key>> entry = sortedSlices.lastEntry();
 		return getResource(entry, function, false);
 	}
@@ -132,8 +125,6 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 		getSlices().put(slice.getSliceId(), slice);
 		sortedSlices.put(slice.getSliceId(), slice);
 	}
-
-
 
 	@Override
 	public void register(SliceResource resource, String alias, Range... ranges) {
@@ -153,17 +144,24 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 		}
 	}
 
+
+
+	@Override
+	public void map(String resourceName, String alias, Function function, Range... ranges) {
+		for (Range range : ranges) {
+			for (long i = range.start; i <= range.end; i++) {
+				map(i, alias, resourceName, function);
+			}
+		}
+	}
+
 	@Override
 	public String toString() {
-
 		return "AccuracyNavigator [resources=" + slices + ", sortedResources=" + sortedSlices + ", equalizer=" + equalizer + ", overflowType=" + overflowType + ", selectType=" + selectType + ", defaultExtraInfo=" + defaultExtraInfo + "]";
-
 	}
 
 	@Override
 	public boolean isSupported(OverflowType overflowType) {
-
 		return overflowType == OverflowType.Exception || overflowType == OverflowType.First || overflowType == OverflowType.Last;
 	}
-
 }

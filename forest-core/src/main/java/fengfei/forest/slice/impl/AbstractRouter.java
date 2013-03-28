@@ -7,12 +7,14 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.OverflowType;
+import fengfei.forest.slice.Range;
 import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.Slice;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
+import fengfei.forest.slice.exception.NonExistedResourceException;
 import fengfei.forest.slice.exception.NonExistedSliceException;
 import fengfei.forest.slice.exception.UnSupportedException;
 
@@ -106,10 +108,6 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 		return resource;
 	}
 
-	public void addResourceSet(Long sliceId, Slice<Key> slice) {
-		getSlices().put(sliceId, slice);
-	}
-
 	protected AtomicLong ids = new AtomicLong();
 
 	public void setEqualizer(Equalizer<Key> equalizer) {
@@ -164,6 +162,16 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 		update(slice, alias, resource);
 	}
 
+	@Override
+	public void register(Long sliceId, SliceResource resource) {
+		register(sliceId, null, resource);
+	}
+
+	@Override
+	public void register(SliceResource resource, Range... ranges) {
+		register(resource, null, ranges);
+	}
+
 	protected Slice<Key> createSlice(Long sliceId, String alias) {
 		Slice<Key> slice = new ReadWriteSlice<>(sliceId);
 		if (alias == null || "".equals(alias)) {
@@ -187,7 +195,6 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 
 	public abstract void addslice(Slice<Key> slice);
 
-	@Override
 	public void update(Long sliceId, SliceResource resource) {
 		Slice<Key> slice = getSlices().get(sliceId);
 		if (slice == null) {
@@ -222,4 +229,38 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 	}
 
 	public abstract boolean isSupported(OverflowType overflowType);
+
+	@Override
+	public void register(Resource resource) {
+		resources.put(resource.getName(), resource);
+	}
+
+	@Override
+	public void map(Long sliceId, String alias, String resourceName, Function function) {
+		Slice<Key> slice = getSlices().get(sliceId);
+		if (slice == null) {
+			slice = createSlice(sliceId, alias);
+		}
+		if (alias == null) {
+			alias = slice.getAlias();
+		}
+		Resource resource = resources.get(resourceName);
+		if (resource == null) {
+			throw new NonExistedResourceException("can't register resource: " + resourceName);
+		}
+		update(slice, slice.getAlias(), new SliceResource(sliceId, function, resource));
+	}
+
+	public void map(Long sliceId, String resourceName, Function function) {
+		map(sliceId, String.valueOf(sliceId), resourceName, function);
+	}
+
+	public void map(String resourceName, Function function, Range... ranges) {
+		map(resourceName, null, function, ranges);
+	}
+
+	@Override
+	public Slice<Key> get(Long sliceId) {
+		return getSlices().get(sliceId);
+	}
 }
