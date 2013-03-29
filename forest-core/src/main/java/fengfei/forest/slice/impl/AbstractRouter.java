@@ -189,7 +189,6 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 		extraInfo.putAll(resource.getExtraInfo());
 		resource.addParams(extraInfo);
 		slice.add(resource);
-		// getSlices().put(slice.getSliceId(), slice);
 		addslice(slice);
 	}
 

@@ -86,7 +86,9 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 					" non-existed any slice for " + (isFirst ? "first slice" : "last slice"));
 		}
 		Slice<Key> slice = entry.getValue();
-		SliceResource resource = slice.get(random.nextLong(), function);
+ 
+		SliceResource resource = function == null ? slice.getAny(random.nextLong()) : slice
+				.get(random.nextLong(), function);
 		if (resource == null) {
 			Router<Key> router = slice.getChildRouter();
 			return isFirst ? router.first() : router.last();
@@ -144,8 +146,6 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 		}
 	}
 
-
-
 	@Override
 	public void map(String resourceName, String alias, Function function, Range... ranges) {
 		for (Range range : ranges) {
@@ -157,7 +157,7 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 
 	@Override
 	public String toString() {
-		return "AccuracyNavigator [resources=" + slices + ", sortedResources=" + sortedSlices + ", equalizer=" + equalizer + ", overflowType=" + overflowType + ", selectType=" + selectType + ", defaultExtraInfo=" + defaultExtraInfo + "]";
+		return "AccuracyRouter [slices=" + slices + ", sortedSlices=" + sortedSlices + "]";
 	}
 
 	@Override

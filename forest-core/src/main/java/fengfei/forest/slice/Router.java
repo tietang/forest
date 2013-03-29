@@ -8,6 +8,8 @@ public interface Router<Key>
 
 	void setOverflowType(OverflowType overflowType);
 
+	OverflowType getOverflowType();
+
 	void setSelectType(SelectType selectType);
 
 	void setEqualizer(Equalizer<Key> equalizer);

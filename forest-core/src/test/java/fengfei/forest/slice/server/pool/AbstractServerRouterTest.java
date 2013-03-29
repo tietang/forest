@@ -1,5 +1,8 @@
 package fengfei.forest.slice.server.pool;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -65,10 +68,12 @@ public class AbstractServerRouterTest {
 					public void passivateObject(Clientx obj) throws Exception {
 					}
 				});
+		
 		AccuracyRouter<Long> facade = new AccuracyRouter<>();
 		router = new PoolableServerRouter<Long, ServerHelper.Clientx>(
 				facade,
 				commonsPoolableSourceFactory);
+		
 		int resSize = 10;
 		for (long i = 0; i < resSize; i++) {
 			String name = "127.0.0.1:1980";
@@ -114,5 +119,20 @@ public class AbstractServerRouterTest {
 		extraInfo.put("user", "user");
 		extraInfo.put("password", "pwd");
 		return extraInfo;
+	}
+
+	protected void test(PoolableServerResource<Clientx> resource) throws PoolableException {
+		PooledSource<Clientx> source = null;
+		Clientx clientx = null;
+		try {
+			source = resource.getSource();
+			clientx = source.getDource();
+			String pong = clientx.ping();
+			assertEquals("pong", pong);
+		} catch (Exception e) {
+			assertTrue(false);
+		} finally {
+			source.close(clientx);
+		}
 	}
 }

@@ -144,4 +144,9 @@ public class ServerRouter<Key> implements Router<Key> {
 	public void map(String resourceName, String alias, Function function, Range... ranges) {
 		getRouter().map(resourceName, alias, function, ranges);
 	}
+
+	@Override
+	public OverflowType getOverflowType() {
+		return getRouter().getOverflowType();
+	}
 }
