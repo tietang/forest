@@ -12,6 +12,8 @@ public class ServerResource extends SliceResource {
 
 	public ServerResource(SliceResource resource) {
 		super(resource.getSliceId(), resource.getFunction(), resource.getResource());
+		this.alias=resource.getAlias();
+ 
 	}
 
 	public String getUsername() {

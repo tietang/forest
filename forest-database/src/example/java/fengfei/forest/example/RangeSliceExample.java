@@ -59,7 +59,7 @@ public class RangeSliceExample {
 	private static void setupGroup(Router<Long> router) {
 		int ip = 2;
 		int maxMod = 1024;
-		int sliceSize = 20;
+		int sliceSize = 2;
 		for (int i = 0; i < sliceSize; i++) {
 			Long sliceId = Long.valueOf((i + 1) * 1980);
 			for (int j = 0; j < 6; j++) {

@@ -141,6 +141,6 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 
 	@Override
 	public String toString() {
-		return "ReadWriteSlice [read=" + read + ", write=" + write + ", all=" + all + ", plotter=" + plotter + ", sliceId=" + sliceId + ", extraInfo=" + params + ", childRouter=" + childRouter + "]";
+		return "ReadWriteSlice [read=" + read + ", write=" + write + ", all=" + all + ", sliceId=" + sliceId + ", alias=" + alias + ", params=" + params + ", childRouter=" + childRouter + "]";
 	}
 }
