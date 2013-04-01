@@ -1,6 +1,7 @@
 package fengfei.forest.example;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ import fengfei.forest.slice.database.MysqlConnectonUrlMaker;
 import fengfei.forest.slice.database.PoolableDatabaseRouter;
 import fengfei.forest.slice.impl.NavigableRouter;
 
-public class RangeSliceExample {
+public class RangeSliceExample2 {
 
 	/**
 	 * @param args
@@ -39,23 +40,40 @@ public class RangeSliceExample {
 				return key;
 			}
 		});
-		
-		
+
 		setupGroup(router);
 
-		System.out.println(router);
-		System.out.println(router.locate(101l).getDataSource().toString());
-		System.out.println(router.locate(2l));
-		System.out.println(router.locate(2635l));
-		System.out.println(router.locate(20000l));
-		System.out.println(router.locate(12l, Function.Read));
-		System.out.println(router.locate(2896l, Function.Read));
-		System.out.println(router.locate(19l, Function.Read));
-		System.out.println(router.locate(24642l, Function.Read));
-		System.out.println(router.locate(9912l, Function.Write));
-		System.out.println(router.locate(9720l, Function.Write));
-		System.out.println(router.locate(9701l, Function.Write));
-		System.out.println(router.locate(11000l, Function.Write));
+		testWrite(router);
+		testRead(router);
+		testRead2(router);
+
+	}
+
+	private static void testWrite(PoolableDatabaseRouter<Long> router)
+			throws SQLException {
+		DataSource ds = router.locate(101l, Function.Write).getDataSource();
+		try (Connection conn = ds.getConnection();) {
+			ForestGrower grower = new DefaultForestGrower(conn);
+			grower.insert("insert into ...", new Object[] { 1, "name" });
+		}
+	}
+
+	private static void testRead(PoolableDatabaseRouter<Long> router)
+			throws SQLException {
+		DataSource ds = router.locate(20000l, Function.Read).getDataSource();
+		try (Connection conn = ds.getConnection();) {
+			ForestGrower grower = new DefaultForestGrower(conn);
+			grower.select("select * from tb where .... ", 1, "x");
+		}
+	}
+
+	private static void testRead2(PoolableDatabaseRouter<Long> router)
+			throws SQLException {
+		DataSource ds = router.locate(12l).getDataSource();
+		try (Connection conn = ds.getConnection();) {
+			ForestGrower grower = new DefaultForestGrower(conn);
+			grower.select("select * from tb where .... ", 1, "x");
+		}
 	}
 
 	private static void setupGroup(Router<Long> router) {
@@ -73,7 +91,6 @@ public class RangeSliceExample {
 						: Function.Read);
 				sliceResource.addParams(extraInfo());
 				router.register(sliceId, String.valueOf(i), sliceResource);
-				// System.out.println(sliceResource);
 			}
 		}
 	}
