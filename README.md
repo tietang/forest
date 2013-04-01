@@ -31,3 +31,31 @@ Also see [Examples](https://github.com/wtt2012/forest/tree/master/forest-core/sr
  a implement of sharding framework based forest-core for database.
  You can also see [sharding example](https://github.com/wtt2012/forest/tree/master/forest-database "sharding example]").
 
+## maven dependency##
+**add repository**
+
+		<repository>
+			<id>fengfei-repo</id>
+			<name>fengfei Repository </name>
+			<url>http://fengfei.googlecode.com/svn/maven-repo/releases</url>
+		</repository>
+		<repository>
+			<id>fengfei-snapshot</id>
+			<name>fengfei Repository </name>
+			<url>http://fengfei.googlecode.com/svn/maven-repo/snapshots</url>
+		</repository>
+
+**use it as a maven dependency:**
+
+    <dependency>
+    	<groupId>fengfei.forest</groupId>
+    	<artifactId>forest-core</artifactId>
+    	<version>1.0-SNAPSHOT</version>
+    </dependency>
+or
+
+    <dependency>
+    	<groupId>fengfei.forest</groupId>
+    	<artifactId>forest-database</artifactId>
+    	<version>1.0-SNAPSHOT</version>
+    </dependency>

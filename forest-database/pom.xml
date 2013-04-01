@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>forest</artifactId>
 		<groupId>fengfei.forest</groupId>
-		<version>0.1-SNAPSHOT</version>
+		<version>1.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>forest-database</artifactId>
@@ -69,7 +69,7 @@
 		<dependency>
 			<groupId>fengfei.forest</groupId>
 			<artifactId>forest-core</artifactId>
-			<version>0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 
 
