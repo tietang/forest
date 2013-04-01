@@ -116,5 +116,22 @@
 			<name>MessagePack Repository for Maven</name>
 			<url>http://msgpack.org/maven2/</url>
 		</repository>
+
+		<repository>
+			<id>springsource-repo</id>
+			<name>SpringSource Repository</name>
+			<url>http://repo.springsource.org/release</url>
+		</repository>
+
+		<repository>
+			<id>fengfei-repo</id>
+			<name>fengfei Repository </name>
+			<url>http://fengfei.googlecode.com/svn/maven-repo/releases</url>
+		</repository>
+		<repository>
+			<id>fengfei-snapshot</id>
+			<name>fengfei Repository </name>
+			<url>http://fengfei.googlecode.com/svn/maven-repo/snapshots</url>
+		</repository>
 	</repositories>
 </project>
