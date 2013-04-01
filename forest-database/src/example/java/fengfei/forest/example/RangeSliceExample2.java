@@ -46,6 +46,7 @@ public class RangeSliceExample2 {
 		testWrite(router);
 		testRead(router);
 		testRead2(router);
+		test(router);
 
 	}
 
@@ -71,6 +72,15 @@ public class RangeSliceExample2 {
 			throws SQLException {
 		DataSource ds = router.locate(12l).getDataSource();
 		try (Connection conn = ds.getConnection();) {
+			ForestGrower grower = new DefaultForestGrower(conn);
+			grower.select("select * from tb where .... ", 1, "x");
+		}
+	}
+
+	private static void test(PoolableDatabaseRouter<Long> router)
+			throws SQLException {
+
+		try (Connection conn = router.locate(12l).getConnection();) {
 			ForestGrower grower = new DefaultForestGrower(conn);
 			grower.select("select * from tb where .... ", 1, "x");
 		}

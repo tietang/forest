@@ -1,7 +1,10 @@
 package fengfei.forest.slice.database;
 
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -15,7 +18,8 @@ public class PoolableDatabaseResource extends DatabaseResource {
 		super(resource);
 	}
 
-	public PoolableDatabaseResource(SliceResource resource, DataSource dataSource) {
+	public PoolableDatabaseResource(SliceResource resource,
+			DataSource dataSource) {
 		super(resource);
 
 		this.dataSource = dataSource;
@@ -29,19 +33,13 @@ public class PoolableDatabaseResource extends DatabaseResource {
 		this.dataSource = dataSource;
 	}
 
-	public Connection getConnection() throws SliceException {
+	public Connection getConnection() throws SQLException {
+		return dataSource.getConnection();
+	}
 
-		if (dataSource == null) {
-			throw new SliceException("dataSource is null");
-		} else {
-			try {
-				return dataSource.getConnection();
-			} catch (SQLException e) {
-
-				throw new SliceException("Can't get connection for Resource "
-						+ this, e);
-			}
-		}
+	public Connection getConnection(String username, String password)
+			throws SQLException {
+		return dataSource.getConnection(username, password);
 	}
 
 }
