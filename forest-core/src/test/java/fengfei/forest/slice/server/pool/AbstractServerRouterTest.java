@@ -10,13 +10,14 @@ import java.util.Set;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 
 import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.impl.AccuracyRouter;
 import fengfei.forest.slice.server.pool.ServerHelper.Clientx;
 import fengfei.forest.slice.server.pool.ServerHelper.Serverx;
-
+@Ignore
 public class AbstractServerRouterTest {
 
 	static CommonsPoolableSourceFactory<Clientx> commonsPoolableSourceFactory = null;

@@ -163,13 +163,13 @@
 	</dependencies>
 	<distributionManagement>
 		<repository>
-			<id>maven-fengfei-repo</id>
+			<id>fengfei-repo</id>
 			<name>Maven Repo for fengfei (releases)</name>
 			<url>svn:https://fengfei.googlecode.com/svn/maven-repo/releases</url>
 			<uniqueVersion>false</uniqueVersion>
 		</repository>
 		<snapshotRepository>
-			<id>maven-fengfei-snapshot</id>
+			<id>fengfei-snapshot</id>
 			<name>Maven Repo fengfei (snapshots)</name>
 			<url>svn:https://fengfei.googlecode.com/svn/maven-repo/snapshots</url>
 			<uniqueVersion>false</uniqueVersion>

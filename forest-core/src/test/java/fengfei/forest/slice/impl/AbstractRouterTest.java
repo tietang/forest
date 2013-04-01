@@ -9,11 +9,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import org.junit.Ignore;
+import org.junit.Test;
+
 import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
 
+@Ignore
 public class AbstractRouterTest {
 
 	protected boolean isReadWrite = false;
