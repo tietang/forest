@@ -16,7 +16,7 @@ public class CommonsPooledSource<D> implements PooledSource<D> {
 	}
 
 	@Override
-	public D getDource() throws PoolableException {
+	public D getSource() throws PoolableException {
 		try {
 			return pool.borrowObject();
 		} catch (Exception e) {

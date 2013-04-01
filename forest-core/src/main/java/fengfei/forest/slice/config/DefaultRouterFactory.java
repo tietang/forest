@@ -11,10 +11,10 @@ import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Plotter;
 import fengfei.forest.slice.Range;
 import fengfei.forest.slice.Resource;
-import fengfei.forest.slice.SliceResource;
-import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.Slice;
+import fengfei.forest.slice.SliceResource;
+import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.config.Config.ResConfig;
 import fengfei.forest.slice.config.Config.RouterConfig;
 import fengfei.forest.slice.config.Config.SliceConfig;
@@ -181,7 +181,7 @@ public class DefaultRouterFactory implements RouterFactory {
 		Router<Key> router = (Router<Key>) routers.get(routerName);
 		if (router == null) {
 			RouterConfig routerConfig = routerConfigCache.get(routerName);
-			System.out.println("1:  " + routerConfig);
+//			//System.out.println("1:  " + routerConfig);
 			router = create(routerConfig);
 			routers.put(routerConfig.id, router);
 		}

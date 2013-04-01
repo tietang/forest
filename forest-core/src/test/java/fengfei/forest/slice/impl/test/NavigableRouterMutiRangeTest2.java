@@ -35,7 +35,7 @@ public class NavigableRouterMutiRangeTest2 {
 
 		for (long i = 0; i < resSize; i++) {
 			String name = "192.168.1." + (i + 2) + ":8002";
-			// System.out.println(name);
+			// //System.out.println(name);
 			Resource resource = new Resource(name);
 			resource.addExtraInfo(extraInfo(i));
 			router.register(resource);
@@ -47,7 +47,7 @@ public class NavigableRouterMutiRangeTest2 {
 		register(new Range(2001, 3000), new Range(1004001, 1006000));
 		register(new Range(4001, 5000), new Range(1008001, 1009000));
 		router.setOverflowType(OverflowType.First);
-		System.out.println(router);
+		//System.out.println(router);
 
 	}
 
@@ -91,7 +91,7 @@ public class NavigableRouterMutiRangeTest2 {
 			assertNotNull(resource);
 			assertEquals(Function.Read, resource.getFunction());
 			assertEquals(4, resource.getExtraInfo().size());
-			System.out.println(resource);
+			//System.out.println(resource);
 			SliceResource read = resource;
 			//
 			resource = router.locate(Long.valueOf(id), Function.Write);
@@ -99,14 +99,14 @@ public class NavigableRouterMutiRangeTest2 {
 			assertEquals(Function.Write, resource.getFunction());
 			assertEquals(4, resource.getExtraInfo().size());
 			assertNotSame(resource, read);
-			System.out.println(resource);
+			//System.out.println(resource);
 			// /
 			resource = router.locate(Long.valueOf(id), Function.ReadWrite);
 			assertNotNull(resource);
 			assertTrue(resource.getFunction() == Function.Read
 					|| resource.getFunction() == Function.Write);
 			assertEquals(4, resource.getExtraInfo().size());
-			System.out.println(resource);
+			//System.out.println(resource);
 		}
 	}
 
@@ -125,8 +125,8 @@ public class NavigableRouterMutiRangeTest2 {
 				.last(function);
 		assertNotNull(msg, resource);
 		assertNotNull(msg, last);
-		System.out.println(id + " res: " + resource);
-		System.out.println(id + " last: " + last);
+		//System.out.println(id + " res: " + resource);
+		//System.out.println(id + " last: " + last);
 		assertEquals(msg, resource.getSliceId(), last.getSliceId());
 	}
 
@@ -196,7 +196,7 @@ public class NavigableRouterMutiRangeTest2 {
 			assertTrue(resource.getFunction() == Function.Read
 					|| resource.getFunction() == Function.Write);
 			assertEquals(4, resource.getExtraInfo().size());
-			System.out.println(resource);
+			//System.out.println(resource);
 		}
 	}
 }

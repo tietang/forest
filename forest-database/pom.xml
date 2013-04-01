@@ -18,8 +18,6 @@
 	</properties>
 
 	<build>
-
-
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -100,7 +98,7 @@
 		<dependency>
 			<groupId>fengfei.forest</groupId>
 			<artifactId>forest-dbutils</artifactId>
-			<version>0.1-SNAPSHOT</version>
+			<version>1.0</version>
 		</dependency>
 
 	</dependencies>
@@ -111,5 +109,15 @@
 			<url>http://repo.springsource.org/release</url>
 		</repository>
 
+		<repository>
+			<id>fengfei-repo</id>
+			<name>fengfei Repository </name>
+			<url>http://fengfei.googlecode.com/svn/maven-repo/releases</url>
+		</repository>
+		<repository>
+			<id>fengfei-snapshot</id>
+			<name>fengfei Repository </name>
+			<url>http://fengfei.googlecode.com/svn/maven-repo/snapshots</url>
+		</repository>
 	</repositories>
 </project>

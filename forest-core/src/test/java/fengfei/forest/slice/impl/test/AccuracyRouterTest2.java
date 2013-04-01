@@ -27,7 +27,7 @@ public class AccuracyRouterTest2 {
 		int resSize = 10;
 		for (long i = 0; i < resSize; i++) {
 			String name = "192.168.1." + (i + 2) + ":8002";
-			// System.out.println(name);
+			// //System.out.println(name);
 			Resource resource = new Resource(name);
 			resource.addExtraInfo(extraInfo());
 			router.register(resource);
@@ -43,11 +43,11 @@ public class AccuracyRouterTest2 {
 					router.map(Long.valueOf(i), name, Function.ReadWrite);
 				}
 			}
-			// System.out.println(name);
+			// //System.out.println(name);
 
 		}
 
-		System.out.println(router);
+		//System.out.println(router);
 	}
 
 	private int getIp(int index, int size) {
@@ -76,19 +76,19 @@ public class AccuracyRouterTest2 {
 			assertNotNull(resource);
 			assertEquals(Function.ReadWrite, resource.getFunction());
 			assertEquals(4, resource.getExtraInfo().size());
-			System.out.println(resource);
+			//System.out.println(resource);
 			//
 			resource = router.locate(Long.valueOf(id), Function.Write);
 			assertNotNull(resource);
 			assertEquals(Function.ReadWrite, resource.getFunction());
 			assertEquals(4, resource.getExtraInfo().size());
-			System.out.println(resource);
+			//System.out.println(resource);
 			//
 			resource = router.locate(Long.valueOf(id), Function.ReadWrite);
 			assertNotNull(resource);
 			assertTrue(resource.getFunction() == Function.ReadWrite);
 			assertEquals(4, resource.getExtraInfo().size());
-			System.out.println(resource);
+			//System.out.println(resource);
 
 		}
 
@@ -145,7 +145,7 @@ public class AccuracyRouterTest2 {
 			assertNotNull(resource);
 			assertTrue(resource.getFunction() == Function.ReadWrite);
 			assertEquals(4, resource.getExtraInfo().size());
-			System.out.println(resource);
+			//System.out.println(resource);
 
 		}
 	}

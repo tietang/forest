@@ -3,10 +3,10 @@ package fengfei.forest.slice.impl;
 import java.util.Map;
 
 import fengfei.forest.slice.Plotter;
-import fengfei.forest.slice.SliceResource;
-import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.Slice;
+import fengfei.forest.slice.SliceResource;
+import fengfei.forest.slice.SliceResource.Function;
 
 public class NullSlice<Key> implements Slice<Key> {
 

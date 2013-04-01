@@ -30,7 +30,7 @@ public class AccuracyRouterReadWriteTest extends AccuracyRouterEqualityTest {
 				}
 				router.register(sliceId, String.valueOf(i), sliceResource);
 			}
-			System.out.println(router);
+			//System.out.println(router);
 		}
 //		setRouter(router);
 	}

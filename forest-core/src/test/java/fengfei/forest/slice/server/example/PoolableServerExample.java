@@ -1,12 +1,9 @@
 package fengfei.forest.slice.server.example;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.SliceResource.Function;
@@ -64,11 +61,10 @@ public class PoolableServerExample {
 		setupRouter();
 		//
 		router.setEqualizer(new HashEqualizer<Long>());
-		
+
 		for (int i = 0; i < 10; i++) {
-			PoolableServerResource<Clientx> resource = router.locate(
-					Long.valueOf(i),
-					i % 3 == 0 ? Function.Read : Function.Write);
+			PoolableServerResource<Clientx> resource = router.locate(Long
+					.valueOf(i), i % 3 == 0 ? Function.Read : Function.Write);
 			invoke(resource);
 		}
 		unsetup();
@@ -76,30 +72,29 @@ public class PoolableServerExample {
 
 	private static void invoke(PoolableServerResource<Clientx> resource)
 			throws PoolableException {
-		System.out.print(String.format(
-				"sliceId=%d	alias=%s 	host=%s	rw=%s	",
-				resource.getSliceId(),
-				resource.getAlias(),
-				resource.getHost(),
+		System.out.print(String.format("sliceId=%d	alias=%s 	host=%s	rw=%s	",
+				resource.getSliceId(), resource.getAlias(), resource.getHost(),
 				resource.getFunction().name()));
-		PooledSource<Clientx> source = null;
+
 		Clientx clientx = null;
 		try {
-			source = resource.getSource();
-			clientx = source.getDource();
+	
+			clientx = resource.getSource();
 			String pong = clientx.ping();
 			System.out.print("ping:" + pong + "	");
 			System.out.println(clientx.getIface().hello("tietang"));
 		} catch (Exception e) {
 		} finally {
-			source.close(clientx);
+			resource.close(clientx);
 		}
 	}
 
 	public static void unsetup() throws PoolableException {
 		serverx.close();
-		Map<String, PooledSource<Clientx>> pooledDataSources = router.getPooledDataSources();
-		Set<Entry<String, PooledSource<Clientx>>> entries = pooledDataSources.entrySet();
+		Map<String, PooledSource<Clientx>> pooledDataSources = router
+				.getPooledDataSources();
+		Set<Entry<String, PooledSource<Clientx>>> entries = pooledDataSources
+				.entrySet();
 		for (Entry<String, PooledSource<Clientx>> entry : entries) {
 			commonsPoolableSourceFactory.destory(entry.getValue());
 		}
@@ -107,13 +102,12 @@ public class PoolableServerExample {
 
 	private static void setupRouter() {
 		AccuracyRouter<Long> facade = new AccuracyRouter<>();
-		router = new PoolableServerRouter<Long, ServerHelper.Clientx>(
-				facade,
+		router = new PoolableServerRouter<Long, ServerHelper.Clientx>(facade,
 				commonsPoolableSourceFactory);
 		int resSize = 10;
 		for (long i = 0; i < resSize; i++) {
 			String name = "127.0.0.1:1980";
-			// System.out.println(name);
+			// //System.out.println(name);
 			Resource resource = new Resource(name);
 			resource.addExtraInfo(extraInfo());
 			router.register(resource);
@@ -123,12 +117,12 @@ public class PoolableServerExample {
 			for (int j = 0; j < 3; j++) {
 				String name = "127.0.0.1:1980";
 				if (j == 0) {
-					router.map(Long.valueOf(i), name, Function.ReadWrite);
+					router.map(Long.valueOf(i), name, Function.Write);
 				} else {
-					router.map(Long.valueOf(i), name, Function.ReadWrite);
+					router.map(Long.valueOf(i), name, Function.Read);
 				}
 			}
-			// System.out.println(name);
+			// //System.out.println(name);
 		}
 	}
 

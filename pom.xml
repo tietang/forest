@@ -5,7 +5,7 @@
 
 	<groupId>fengfei.forest</groupId>
 	<artifactId>forest</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>forest</name>
@@ -13,7 +13,6 @@
 	<modules>
 		<module>forest-core</module>
 		<module>forest-database</module>
-		<module>forest-dbutils</module>
 		<module>forest-exmaple</module>
 	</modules>
 	<licenses>
@@ -34,6 +33,15 @@
 	<build>
 
 
+		<extensions>
+			<extension>
+				<groupId>org.jvnet.wagon-svn</groupId>
+				<artifactId>wagon-svn</artifactId>
+				<version>1.8</version>
+			</extension>
+			<!-- <extension> <groupId>com.google.code.maven-svn-wagon</groupId> <artifactId>maven-svn-wagon</artifactId> 
+				<version>1.4</version> </extension> -->
+		</extensions>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -153,5 +161,19 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<distributionManagement>
+		<repository>
+			<id>maven-fengfei-repo</id>
+			<name>Maven Repo for fengfei (releases)</name>
+			<url>svn:https://fengfei.googlecode.com/svn/maven-repo/releases</url>
+			<uniqueVersion>false</uniqueVersion>
+		</repository>
+		<snapshotRepository>
+			<id>maven-fengfei-snapshot</id>
+			<name>Maven Repo fengfei (snapshots)</name>
+			<url>svn:https://fengfei.googlecode.com/svn/maven-repo/snapshots</url>
+			<uniqueVersion>false</uniqueVersion>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>

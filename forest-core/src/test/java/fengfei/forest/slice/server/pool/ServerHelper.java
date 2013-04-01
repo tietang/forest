@@ -26,8 +26,8 @@ public class ServerHelper {
 			public void run() {
 				Clientx clientx = new Clientx("localhost", 1980);
 				RPCInterface x = clientx.getIface();
-				System.out.println(x.ping());
-				System.out.println(x.hello("tietang"));
+				//System.out.println(x.ping());
+				//System.out.println(x.hello("tietang"));
 			};
 		};
 		t2.start();

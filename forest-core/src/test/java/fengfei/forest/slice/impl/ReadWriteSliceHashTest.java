@@ -13,9 +13,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fengfei.forest.slice.Resource;
+import fengfei.forest.slice.Slice;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
-import fengfei.forest.slice.Slice;
 
 public class ReadWriteSliceHashTest {
 
@@ -51,43 +51,43 @@ public class ReadWriteSliceHashTest {
 
 	@Test
 	public void test() {
-		System.out.println("test read");
+		//System.out.println("test read");
 		Random rd = new Random();
 		for (int i = 0; i < 20; i++) {
 			SliceResource resource = slice.get(rd.nextInt(), Function.Read);
 			assertNotNull(resource);
 			assertEquals(Function.Read, resource.getFunction());
 			assertEquals(4, resource.getExtraInfo().size());
-			System.out.println(resource);
+			//System.out.println(resource);
 			SliceResource read = resource;
 			//
 			resource = slice.get(rd.nextInt(), Function.Write);
 			assertNotNull(resource);
 			assertEquals(Function.Write, resource.getFunction());
 			assertEquals(4, resource.getExtraInfo().size());
-			System.out.println(resource);
+			//System.out.println(resource);
 			assertNotSame(resource, read);
 			//
 			resource = slice.get(rd.nextInt(), Function.ReadWrite);
 			assertNotNull(resource);
 			assertTrue(resource.getFunction() == Function.Read || resource.getFunction() == Function.Write);
 			assertEquals(4, resource.getExtraInfo().size());
-			System.out.println(resource);
+			//System.out.println(resource);
 		}
-		System.out.println();
+		//System.out.println();
 	}
 
 	Random random = new Random();
 
 	@Test
 	public void testAny() {
-		System.out.println("test any");
+		//System.out.println("test any");
 		for (int i = 0; i < 20; i++) {
 			SliceResource resource = slice.getAny(random.nextLong());
 			assertNotNull(resource);
 			assertTrue(resource.getFunction() == Function.Read || resource.getFunction() == Function.Write);
 			assertEquals(4, resource.getExtraInfo().size());
-			System.out.println(resource);
+			//System.out.println(resource);
 		}
 	}
 }

@@ -43,7 +43,7 @@ public class NavigableRouterTest {
 				navigator.register(sliceId, String.valueOf(i), sliceResource);
 			}
 		}
-		System.out.println(navigator);
+		//System.out.println(navigator);
 	}
 
 	private Map<String, String> extraInfo() {
@@ -65,7 +65,7 @@ public class NavigableRouterTest {
 			assertNotNull(resource);
 			assertEquals(Function.Read, resource.getFunction());
 			assertEquals(4, resource.getExtraInfo().size());
-			System.out.println(resource);
+			//System.out.println(resource);
 			SliceResource read = resource;
 			//
 			resource = navigator.locate(Long.valueOf(id), Function.Write);
@@ -73,13 +73,13 @@ public class NavigableRouterTest {
 			assertEquals(Function.Write, resource.getFunction());
 			assertEquals(4, resource.getExtraInfo().size());
 			assertNotSame(resource, read);
-			System.out.println(resource);
+			//System.out.println(resource);
 			// /
 			resource = navigator.locate(Long.valueOf(id), Function.ReadWrite);
 			assertNotNull(resource);
 			assertTrue(resource.getFunction() == Function.Read || resource.getFunction() == Function.Write);
 			assertEquals(4, resource.getExtraInfo().size());
-			System.out.println(resource);
+			//System.out.println(resource);
 		}
 	}
 
@@ -164,7 +164,7 @@ public class NavigableRouterTest {
 			assertNotNull(resource);
 			assertTrue(resource.getFunction() == Function.Read || resource.getFunction() == Function.Write);
 			assertEquals(4, resource.getExtraInfo().size());
-			System.out.println(resource);
+			//System.out.println(resource);
 		}
 	}
 }

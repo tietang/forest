@@ -29,21 +29,21 @@ public class PoolableServerRouterTest extends AbstractServerRouterTest {
 			assertEquals(Function.ReadWrite, resource.getFunction());
 			assertEquals(4, resource.getExtraInfo().size());
 			test(resource);
-			System.out.println(resource);
+			//System.out.println(resource);
 			//
 			resource = router.locate(Long.valueOf(id), Function.Write);
 			assertNotNull(resource);
 			assertEquals(Function.ReadWrite, resource.getFunction());
 			assertEquals(4, resource.getExtraInfo().size());
 			test(resource);
-			System.out.println(resource);
+			//System.out.println(resource);
 			//
 			resource = router.locate(Long.valueOf(id), Function.ReadWrite);
 			assertNotNull(resource);
 			assertTrue(resource.getFunction() == Function.ReadWrite);
 			assertEquals(4, resource.getExtraInfo().size());
 			test(resource);
-			System.out.println(resource);
+			//System.out.println(resource);
 		}
 	}
 
@@ -99,7 +99,7 @@ public class PoolableServerRouterTest extends AbstractServerRouterTest {
 			assertTrue(resource.getFunction() == Function.ReadWrite);
 			assertEquals(4, resource.getExtraInfo().size());
 			test(resource);
-			System.out.println(resource);
+			//System.out.println(resource);
 		}
 	}
 }

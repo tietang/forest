@@ -29,7 +29,7 @@ public class AccuracyRouterReadWriteTest2 {
 		int resSize = 10;
 		for (long i = 0; i < resSize; i++) {
 			String name = "192.168.1." + (i + 2) + ":8002";
-			// System.out.println(name);
+			// //System.out.println(name);
 			Resource resource = new Resource(name);
 			resource.addExtraInfo(extraInfo());
 			router.register(resource);
@@ -44,7 +44,7 @@ public class AccuracyRouterReadWriteTest2 {
 					router.map(Long.valueOf(i), name, Function.Read);
 				}
 			}
-			// System.out.println(name);
+			// //System.out.println(name);
 		}
 	}
 
@@ -72,7 +72,7 @@ public class AccuracyRouterReadWriteTest2 {
 			assertNotNull(resource);
 			assertEquals(Function.Read, resource.getFunction());
 			assertEquals(4, resource.getExtraInfo().size());
-			System.out.println(resource);
+			//System.out.println(resource);
 			SliceResource read = resource;
 			//
 			resource = router.locate(Long.valueOf(id), Function.Write);
@@ -80,13 +80,13 @@ public class AccuracyRouterReadWriteTest2 {
 			assertEquals(Function.Write, resource.getFunction());
 			assertEquals(4, resource.getExtraInfo().size());
 			assertNotSame(resource, read);
-			System.out.println(resource);
+			//System.out.println(resource);
 			// /
 			resource = router.locate(Long.valueOf(id), Function.ReadWrite);
 			assertNotNull(resource);
 			assertTrue(resource.getFunction() == Function.Read || resource.getFunction() == Function.Write);
 			assertEquals(4, resource.getExtraInfo().size());
-			System.out.println(resource);
+			//System.out.println(resource);
 		}
 	}
 
@@ -134,7 +134,7 @@ public class AccuracyRouterReadWriteTest2 {
 			assertNotNull(resource);
 			assertTrue(resource.getFunction() == Function.Read || resource.getFunction() == Function.Write);
 			assertEquals(4, resource.getExtraInfo().size());
-			System.out.println(resource);
+			//System.out.println(resource);
 		}
 	}
 }

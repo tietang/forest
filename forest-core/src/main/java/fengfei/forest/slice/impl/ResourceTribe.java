@@ -38,15 +38,15 @@ public class ResourceTribe {
 
 	public void addResource(SliceResource resource) {
 		availableResources.add(resource);
-		// System.out.println("model: " + Resource);
-		// System.out.println("model Resources: " + Resources);
+		// //System.out.println("model: " + Resource);
+		// //System.out.println("model Resources: " + Resources);
 	}
 
 	public void removeResource(SliceResource resource) {
 		availableResources.remove(resource);
 		failResources.remove(resource);
-		// System.out.println("model: " + Resource);
-		// System.out.println("model Resources: " + Resources);
+		// //System.out.println("model: " + Resource);
+		// //System.out.println("model Resources: " + Resources);
 	}
 
 	public List<SliceResource> getFailResources() {

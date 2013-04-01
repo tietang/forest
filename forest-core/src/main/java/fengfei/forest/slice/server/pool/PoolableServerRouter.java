@@ -56,7 +56,7 @@ public class PoolableServerRouter<Key, D> extends ServerRouter<Key> {
 		if (source == null) {
 			throw new NonExistedSliceException("Can't get datasource for the slice" + res);
 		}
-		res.setSource(source);
+		res.setPooledSource(source);
 		return res;
 	}
 }

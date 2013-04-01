@@ -71,7 +71,7 @@ public class RangeSliceExample {
 				sliceResource.setFunction(j < 2 ? Function.Write : Function.Read);
 				sliceResource.addParams(extraInfo());
 				router.register(sliceId, String.valueOf(i), sliceResource);
-				System.out.println(sliceResource);
+				//System.out.println(sliceResource);
 			}
 		}
 	}

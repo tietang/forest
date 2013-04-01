@@ -68,16 +68,15 @@ public class AbstractServerRouterTest {
 					public void passivateObject(Clientx obj) throws Exception {
 					}
 				});
-		
+
 		AccuracyRouter<Long> facade = new AccuracyRouter<>();
-		router = new PoolableServerRouter<Long, ServerHelper.Clientx>(
-				facade,
+		router = new PoolableServerRouter<Long, ServerHelper.Clientx>(facade,
 				commonsPoolableSourceFactory);
-		
+
 		int resSize = 10;
 		for (long i = 0; i < resSize; i++) {
 			String name = "127.0.0.1:1980";
-			// System.out.println(name);
+			// //System.out.println(name);
 			Resource resource = new Resource(name);
 			resource.addExtraInfo(extraInfo());
 			router.register(resource);
@@ -92,16 +91,18 @@ public class AbstractServerRouterTest {
 					router.map(Long.valueOf(i), name, Function.ReadWrite);
 				}
 			}
-			// System.out.println(name);
+			// //System.out.println(name);
 		}
-		System.out.println(router);
+		// System.out.println(router);
 	}
 
 	@AfterClass
 	public static void unsetup() throws PoolableException {
 		serverx.close();
-		Map<String, PooledSource<Clientx>> pooledDataSources = router.getPooledDataSources();
-		Set<Entry<String, PooledSource<Clientx>>> entries = pooledDataSources.entrySet();
+		Map<String, PooledSource<Clientx>> pooledDataSources = router
+				.getPooledDataSources();
+		Set<Entry<String, PooledSource<Clientx>>> entries = pooledDataSources
+				.entrySet();
 		for (Entry<String, PooledSource<Clientx>> entry : entries) {
 			commonsPoolableSourceFactory.destory(entry.getValue());
 		}
@@ -121,12 +122,13 @@ public class AbstractServerRouterTest {
 		return extraInfo;
 	}
 
-	protected void test(PoolableServerResource<Clientx> resource) throws PoolableException {
+	protected void test(PoolableServerResource<Clientx> resource)
+			throws PoolableException {
 		PooledSource<Clientx> source = null;
 		Clientx clientx = null;
 		try {
-			source = resource.getSource();
-			clientx = source.getDource();
+			source = resource.getPooledSource();
+			clientx = source.getSource();
 			String pong = clientx.ping();
 			assertEquals("pong", pong);
 		} catch (Exception e) {

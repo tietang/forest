@@ -29,7 +29,7 @@ public class RoundLongEqualizer implements Equalizer<Long> {
 	public static void main(String[] args) {
 		RoundLongEqualizer e = new RoundLongEqualizer(10);
 		for (int i = 1; i < 123; i++) {
-			System.out.println(i + " : " + e.get(Long.valueOf(i), 3));
+			//System.out.println(i + " : " + e.get(Long.valueOf(i), 3));
 		}
 	}
 }

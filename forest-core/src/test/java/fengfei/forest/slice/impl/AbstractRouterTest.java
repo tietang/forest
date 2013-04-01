@@ -35,7 +35,7 @@ public class AbstractRouterTest {
 		assertNotNull(resource);
 		assertEquals(isReadWrite ? Function.ReadWrite : Function.Read, resource.getFunction());
 		assertEquals(4, resource.getExtraInfo().size());
-		System.out.println(resource);
+		//System.out.println(resource);
 		SliceResource read = resource;
 		//
 		resource = router.locate(Long.valueOf(id), Function.Write);
@@ -47,7 +47,7 @@ public class AbstractRouterTest {
 		if (!isReadWrite) {
 			assertNotSame(resource, read);
 		}
-		System.out.println(resource);
+		//System.out.println(resource);
 		// /
 		resource = router.locate(Long.valueOf(id), Function.ReadWrite);
 		assertNotNull(resource);
@@ -57,7 +57,7 @@ public class AbstractRouterTest {
 			assertTrue(resource.getFunction() == Function.Read || resource.getFunction() == Function.Write);
 		}
 		assertEquals(4, resource.getExtraInfo().size());
-		System.out.println(resource);
+		//System.out.println(resource);
 	}
 
 	protected void testFirst(String msg, Router<Long> router, Long id, Function function) {
@@ -144,6 +144,6 @@ public class AbstractRouterTest {
 					resource.getFunction() == Function.Read || resource.getFunction() == Function.Write);
 		}
 		assertEquals(msg, 4, resource.getExtraInfo().size());
-		System.out.println(resource);
+		//System.out.println(resource);
 	}
 }

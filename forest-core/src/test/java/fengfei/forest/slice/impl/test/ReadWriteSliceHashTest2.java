@@ -43,7 +43,7 @@ public class ReadWriteSliceHashTest2 {
 					resource);
 			slice.add(sliceResource);
 		}
-		System.out.println(slice);
+		//System.out.println(slice);
 	}
 
 	private Map<String, String> extraInfo() {
@@ -65,7 +65,7 @@ public class ReadWriteSliceHashTest2 {
 			assertNotNull(resource);
 			assertEquals(Function.Read, resource.getFunction());
 			assertEquals(4, resource.getParams().size());
-			System.out.println("read: " + resource);
+			//System.out.println("read: " + resource);
 			SliceResource read = resource;
 			//
 
@@ -73,7 +73,7 @@ public class ReadWriteSliceHashTest2 {
 			assertNotNull(resource);
 			assertEquals(Function.Write, resource.getFunction());
 			assertEquals(4, resource.getParams().size());
-			System.out.println("write: " + resource);
+			//System.out.println("write: " + resource);
 			assertNotSame(resource, read);
 			//
 			resource = slice.get(rd.nextInt(), Function.ReadWrite);
@@ -81,16 +81,16 @@ public class ReadWriteSliceHashTest2 {
 			assertTrue(resource.getFunction() == Function.Read
 					|| resource.getFunction() == Function.Write);
 			assertEquals(4, resource.getParams().size());
-			System.out.println("ReadWrite(Any):" + resource);
+			//System.out.println("ReadWrite(Any):" + resource);
 		}
-		System.out.println();
+		//System.out.println();
 	}
 
 	Random random = new Random();
 
 	@Test
 	public void testAny() {
-		System.out.println("test any");
+		//System.out.println("test any");
 
 		for (int i = 0; i < 20; i++) {
 			SliceResource resource = slice.getAny(random.nextLong());
@@ -99,7 +99,7 @@ public class ReadWriteSliceHashTest2 {
 			assertTrue(resource.getFunction() == Function.Read
 					|| resource.getFunction() == Function.Write);
 			assertEquals(4, resource.getParams().size());
-			System.out.println(resource);
+			//System.out.println(resource);
 
 		}
 	}

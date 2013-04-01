@@ -29,7 +29,7 @@ public class HashAccuracyExample {
 		setupGroup(router);
 		router.setSelectType(SelectType.Hash);
 		router.setOverflowType(OverflowType.Last);
-		System.out.println(router);
+		//System.out.println(router);
 		//
 		System.out.println(router.locate(1l));
 		System.out.println(router.locate(2l));
