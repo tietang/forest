@@ -126,4 +126,16 @@ public class NullSlice<Key> implements Slice<Key> {
 		return null;
 	}
 
+	@Override
+	public boolean fail(SliceResource resource) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean recover(SliceResource resource) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

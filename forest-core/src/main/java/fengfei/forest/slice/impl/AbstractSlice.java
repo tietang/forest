@@ -14,7 +14,7 @@ import fengfei.forest.slice.SliceResource;
  * 
  * @param <Key>
  */
-public abstract class AbstractSlice<Key> implements Failover, Slice<Key> {
+public abstract class AbstractSlice<Key> implements Slice<Key> {
 
 	protected Long sliceId;
 	protected String alias;
@@ -95,7 +95,8 @@ public abstract class AbstractSlice<Key> implements Failover, Slice<Key> {
 	}
 
 	protected void mergeInheritInfoTo(SliceResource resource) {
-		Map<String, String> extraInfo = new HashMap<String, String>(resource.getExtraInfo());
+		Map<String, String> extraInfo = new HashMap<String, String>(
+				resource.getExtraInfo());
 		resource.addParams(getParams());
 		resource.addParams(extraInfo);
 	}

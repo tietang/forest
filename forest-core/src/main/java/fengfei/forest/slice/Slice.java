@@ -13,7 +13,7 @@ import fengfei.forest.slice.impl.ResourceTribe;
  * 
  * @param <Key>
  */
-public interface Slice<Key> {
+public interface Slice<Key> extends Failover {
 
 	Router<Key> getChildRouter();
 
