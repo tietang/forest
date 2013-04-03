@@ -1,8 +1,10 @@
 package fengfei.forest.slice;
 
+import java.util.List;
 import java.util.Map;
 
 import fengfei.forest.slice.SliceResource.Function;
+import fengfei.forest.slice.impl.ResourceTribe;
 
 /**
  * 一个slice是由一系列相同resource组成
@@ -33,6 +35,14 @@ public interface Slice<Key> {
 
 	void remove(SliceResource resource);
 
+	List<SliceResource> getResources();
+
+	ResourceTribe getReadTribe();
+
+	ResourceTribe getTribe();
+
+	ResourceTribe getWriteTribe();
+
 	SliceResource get(long seed, Function function);
 
 	SliceResource getAny(long seed);
@@ -44,4 +54,6 @@ public interface Slice<Key> {
 	String getAlias();
 
 	void setAlias(String alias);
+
+	Failover getFailover();
 }

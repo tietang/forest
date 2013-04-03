@@ -1,4 +1,4 @@
-package fengfei.forest.slice.impl;
+package fengfei.forest.slice.equalizer;
 
 import fengfei.forest.slice.Equalizer;
 

@@ -12,8 +12,8 @@ import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.database.MysqlConnectonUrlMaker;
 import fengfei.forest.slice.database.PoolableDatabaseRouter;
+import fengfei.forest.slice.equalizer.LongEqualizer;
 import fengfei.forest.slice.impl.AccuracyRouter;
-import fengfei.forest.slice.impl.LongEqualizer;
 
 public class HashAccuracyExample {
 

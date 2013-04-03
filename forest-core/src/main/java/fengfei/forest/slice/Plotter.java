@@ -1,8 +1,12 @@
 package fengfei.forest.slice;
 
 import java.util.List;
-
+/**
+ * LoadBalance
+ * @author tietang
+ *
+ */
 public interface Plotter {
 
-	int to(long seed, List<SliceResource> availableResources, List<SliceResource> failResources);
+	SliceResource to(long seed, List<SliceResource> availableResources, List<SliceResource> failResources);
 }

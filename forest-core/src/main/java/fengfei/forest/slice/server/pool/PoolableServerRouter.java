@@ -15,8 +15,7 @@ public class PoolableServerRouter<Key, D> extends ServerRouter<Key> {
 	private Map<String, PooledSource<D>> pooledDataSources = new ConcurrentHashMap<>();
 	private PoolableSourceFactory<D> poolableSourceFactory;
 
-	public PoolableServerRouter(
-			Router<Key> router,
+	public PoolableServerRouter(Router<Key> router,
 			PoolableSourceFactory<D> poolableSourceFactory) {
 		super(router);
 		this.poolableSourceFactory = poolableSourceFactory;
@@ -29,14 +28,16 @@ public class PoolableServerRouter<Key, D> extends ServerRouter<Key> {
 	@Override
 	public PoolableServerResource<D> locate(Key key) {
 		ServerResource serverResource = super.locate(key);
-		PoolableServerResource<D> resource = new PoolableServerResource<>(serverResource);
+		PoolableServerResource<D> resource = new PoolableServerResource<>(
+				serverResource);
 		return locate(resource);
 	}
 
 	@Override
 	public PoolableServerResource<D> locate(Key key, Function function) {
 		ServerResource serverResource = super.locate(key, function);
-		PoolableServerResource<D> resource = new PoolableServerResource<>(serverResource);
+		PoolableServerResource<D> resource = new PoolableServerResource<>(
+				serverResource);
 		return locate(resource);
 	}
 
@@ -49,14 +50,15 @@ public class PoolableServerRouter<Key, D> extends ServerRouter<Key> {
 				pooledDataSources.put(name, source);
 			} catch (PoolableException e) {
 				throw new SliceRuntimeException(
-						"Can't create datasource for the slice " + res,
-						e);
+						"Can't create datasource for the slice " + res, e);
 			}
 		}
 		if (source == null) {
-			throw new NonExistedSliceException("Can't get datasource for the slice" + res);
+			throw new NonExistedSliceException(
+					"Can't get datasource for the slice" + res);
 		}
 		res.setPooledSource(source);
 		return res;
 	}
+
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import fengfei.forest.slice.Plotter;
 import fengfei.forest.slice.SliceResource;
+import fengfei.forest.slice.plotter.HashPlotter;
 
 public class ResourceTribe {
 
@@ -54,8 +55,8 @@ public class ResourceTribe {
 	}
 
 	public SliceResource next(long seed) {
-		int index = plotter.to(seed, availableResources, failResources);
-		return availableResources.get(Math.abs(index));
+
+		return plotter.to(seed, availableResources, failResources);
 	}
 
 	@Override

@@ -5,8 +5,8 @@ import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
+import fengfei.forest.slice.equalizer.LongEqualizer;
 import fengfei.forest.slice.impl.AccuracyRouter;
-import fengfei.forest.slice.impl.LongEqualizer;
 
 public class AccuracyRouterExample extends BaseRouterExample {
 

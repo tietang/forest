@@ -1,7 +1,9 @@
 package fengfei.forest.slice.impl;
 
+import java.util.List;
 import java.util.Map;
 
+import fengfei.forest.slice.Failover;
 import fengfei.forest.slice.Plotter;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.Slice;
@@ -87,14 +89,41 @@ public class NullSlice<Key> implements Slice<Key> {
 
 	@Override
 	public String getAlias() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void setAlias(String alias) {
-		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Failover getFailover() {
+		return null;
+	}
+
+	@Override
+	public List<SliceResource> getResources() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResourceTribe getReadTribe() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResourceTribe getTribe() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResourceTribe getWriteTribe() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

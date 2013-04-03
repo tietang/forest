@@ -7,8 +7,8 @@ import java.util.Set;
 
 import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.SliceResource.Function;
+import fengfei.forest.slice.equalizer.HashEqualizer;
 import fengfei.forest.slice.impl.AccuracyRouter;
-import fengfei.forest.slice.impl.HashEqualizer;
 import fengfei.forest.slice.server.pool.CommonsPoolableObjectFactory;
 import fengfei.forest.slice.server.pool.CommonsPoolableSourceFactory;
 import fengfei.forest.slice.server.pool.PoolableException;

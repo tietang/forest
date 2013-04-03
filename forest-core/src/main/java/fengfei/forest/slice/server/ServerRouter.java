@@ -2,6 +2,7 @@ package fengfei.forest.slice.server;
 
 import java.util.Map;
 
+import fengfei.forest.slice.Detector;
 import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Range;
@@ -126,7 +127,8 @@ public class ServerRouter<Key> implements Router<Key> {
 	}
 
 	@Override
-	public void map(Long sliceId, String alias, String resourceName, Function function) {
+	public void map(Long sliceId, String alias, String resourceName,
+			Function function) {
 		getRouter().map(sliceId, alias, resourceName, function);
 	}
 
@@ -141,7 +143,8 @@ public class ServerRouter<Key> implements Router<Key> {
 	}
 
 	@Override
-	public void map(String resourceName, String alias, Function function, Range... ranges) {
+	public void map(String resourceName, String alias, Function function,
+			Range... ranges) {
 		getRouter().map(resourceName, alias, function, ranges);
 	}
 
@@ -149,4 +152,14 @@ public class ServerRouter<Key> implements Router<Key> {
 	public OverflowType getOverflowType() {
 		return getRouter().getOverflowType();
 	}
+
+	@Override
+	public Detector getDetector() {
+		return getRouter().getDetector();
+	}
+
+	public void setDetector(Detector detector) {
+		getRouter().setDetector(detector);
+	}
+
 }

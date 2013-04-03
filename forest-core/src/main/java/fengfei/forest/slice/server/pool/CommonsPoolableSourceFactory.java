@@ -5,17 +5,24 @@ import org.apache.commons.pool.impl.GenericObjectPool;
 
 import fengfei.forest.slice.server.ServerResource;
 
-public class CommonsPoolableSourceFactory<D> implements PoolableSourceFactory<D> {
+public class CommonsPoolableSourceFactory<D> implements
+		PoolableSourceFactory<D> {
 
 	CommonsPoolableObjectFactory<D> poolableObjectFactory;
 
-	public CommonsPoolableSourceFactory(CommonsPoolableObjectFactory<D> poolableObjectFactory) {
+	public CommonsPoolableSourceFactory(
+			CommonsPoolableObjectFactory<D> poolableObjectFactory) {
 		super();
 		this.poolableObjectFactory = poolableObjectFactory;
 	}
 
+	public CommonsPoolableObjectFactory<D> getPoolableObjectFactory() {
+		return poolableObjectFactory;
+	}
+
 	@Override
-	public PooledSource<D> createDataSource(ServerResource resource) throws PoolableException {
+	public PooledSource<D> createDataSource(ServerResource resource)
+			throws PoolableException {
 		try {
 			GenericObjectPool.Config config = new GenericObjectPool.Config();
 			BeanUtils.copyProperties(config, resource.getParams());
@@ -26,8 +33,7 @@ public class CommonsPoolableSourceFactory<D> implements PoolableSourceFactory<D>
 			poolableObjectFactory.setPassword(resource.getPassword());
 			poolableObjectFactory.setParams(resource.getParams());
 			CommonsPooledSource<D> pooledSource = new CommonsPooledSource<>(
-					poolableObjectFactory,
-					config);
+					poolableObjectFactory, config);
 			return pooledSource;
 		} catch (Exception e) {
 			throw new PoolableException("create PooledSource error. ", e);

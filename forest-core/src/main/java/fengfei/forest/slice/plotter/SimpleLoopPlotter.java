@@ -1,4 +1,4 @@
-package fengfei.forest.slice.impl;
+package fengfei.forest.slice.plotter;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -6,16 +6,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 import fengfei.forest.slice.Plotter;
 import fengfei.forest.slice.SliceResource;
 
-public class LoopPlotter implements Plotter {
+public class SimpleLoopPlotter implements Plotter {
 
 	final AtomicInteger count = new AtomicInteger();
 	private int currentIndex;
 
 	@Override
-	public int to(long seed, List<SliceResource> availableResources, List<SliceResource> failResources) {
+	public SliceResource to(long seed, List<SliceResource> availableResources, List<SliceResource> failResources) {
 		currentIndex = count.getAndIncrement();
 		int index = Math.abs(currentIndex % availableResources.size());
-		return index;
+		return availableResources.get(index);
 	}
 
 	public int getCurrentIndex() {

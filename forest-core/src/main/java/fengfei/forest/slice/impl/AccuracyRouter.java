@@ -1,5 +1,6 @@
 package fengfei.forest.slice.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Random;
@@ -53,9 +54,7 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 		super(equalizer, selectType);
 	}
 
-	public AccuracyRouter(
-			Equalizer<Key> equalizer,
-			SelectType selectType,
+	public AccuracyRouter(Equalizer<Key> equalizer, SelectType selectType,
 			Map<String, String> defaultExtraInfo) {
 		this(equalizer, selectType);
 		this.defaultExtraInfo = defaultExtraInfo;
@@ -77,18 +76,17 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 
 	private Random random = new Random(19800202);
 
-	private SliceResource getResource(
-			Map.Entry<Long, Slice<Key>> entry,
-			Function function,
-			boolean isFirst) {
-		if (entry == null || entry.getValue() == null || entry.getValue() instanceof NullSlice) {
-			throw new NonExistedSliceException(
-					" non-existed any slice for " + (isFirst ? "first slice" : "last slice"));
+	private SliceResource getResource(Map.Entry<Long, Slice<Key>> entry,
+			Function function, boolean isFirst) {
+		if (entry == null || entry.getValue() == null
+				|| entry.getValue() instanceof NullSlice) {
+			throw new NonExistedSliceException(" non-existed any slice for "
+					+ (isFirst ? "first slice" : "last slice"));
 		}
 		Slice<Key> slice = entry.getValue();
- 
-		SliceResource resource = function == null ? slice.getAny(random.nextLong()) : slice
-				.get(random.nextLong(), function);
+
+		SliceResource resource = function == null ? slice.getAny(random
+				.nextLong()) : slice.get(random.nextLong(), function);
 		if (resource == null) {
 			Router<Key> router = slice.getChildRouter();
 			return isFirst ? router.first() : router.last();
@@ -126,6 +124,10 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 	public void addslice(Slice<Key> slice) {
 		getSlices().put(slice.getSliceId(), slice);
 		sortedSlices.put(slice.getSliceId(), slice);
+		List<SliceResource> resources = slice.getResources();
+		for (SliceResource resource : resources) {
+			resAndSlices.put(resource.getName(), slice.getSliceId());
+		}
 	}
 
 	@Override
@@ -142,12 +144,17 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 		for (Range range : ranges) {
 			for (long i = range.start; i <= range.end; i++) {
 				slices.put(i, slice);
+				List<SliceResource> resources = slice.getResources();
+				for (SliceResource resource : resources) {
+					resAndSlices.put(resource.getName(), i);
+				}
 			}
 		}
 	}
 
 	@Override
-	public void map(String resourceName, String alias, Function function, Range... ranges) {
+	public void map(String resourceName, String alias, Function function,
+			Range... ranges) {
 		for (Range range : ranges) {
 			for (long i = range.start; i <= range.end; i++) {
 				map(i, alias, resourceName, function);
@@ -157,11 +164,14 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 
 	@Override
 	public String toString() {
-		return "AccuracyRouter [slices=" + slices + ", sortedSlices=" + sortedSlices + "]";
+		return "AccuracyRouter [slices=" + slices + ", sortedSlices="
+				+ sortedSlices + "]";
 	}
 
 	@Override
 	public boolean isSupported(OverflowType overflowType) {
-		return overflowType == OverflowType.Exception || overflowType == OverflowType.First || overflowType == OverflowType.Last;
+		return overflowType == OverflowType.Exception
+				|| overflowType == OverflowType.First
+				|| overflowType == OverflowType.Last;
 	}
 }

@@ -1,4 +1,4 @@
-package fengfei.forest.slice.impl;
+package fengfei.forest.slice.plotter;
 
 import java.util.List;
 
@@ -8,8 +8,8 @@ import fengfei.forest.slice.SliceResource;
 public class RemainderPlotter implements Plotter {
 
 	@Override
-	public int to(long seed, List<SliceResource> availableResources, List<SliceResource> failResources) {
+	public SliceResource to(long seed, List<SliceResource> availableResources, List<SliceResource> failResources) {
 		int index = Math.abs((int) (seed % availableResources.size()));
-		return index;
+		return availableResources.get(index);
 	}
 }

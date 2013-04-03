@@ -1,14 +1,17 @@
 package fengfei.forest.slice.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import fengfei.forest.slice.Failover;
 import fengfei.forest.slice.Plotter;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.exception.SliceRuntimeException;
 import fengfei.forest.slice.exception.UnSupportedException;
+import fengfei.forest.slice.plotter.HashPlotter;
 
 /**
  * 
@@ -17,7 +20,7 @@ import fengfei.forest.slice.exception.UnSupportedException;
  * @param <Key>
  */
 public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
-
+	protected List<SliceResource> resources = new ArrayList<>();
 	protected Lock lock = new ReentrantLock();
 	private ResourceTribe read = new ResourceTribe();
 	private ResourceTribe write = new ResourceTribe();
@@ -48,20 +51,21 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 		switch (function) {
 		case Read:
 			read.addResource(resource);
-			all.addResource(resource);
 			break;
 		case Write:
 			write.addResource(resource);
-			all.addResource(resource);
 			break;
 		case ReadWrite:
 			read.addResource(resource);
 			write.addResource(resource);
-			all.addResource(resource);
+
 			break;
 		default:
-			throw new UnSupportedException("unsupported the function: " + function.name());
+			throw new UnSupportedException("unsupported the function: "
+					+ function.name());
 		}
+		all.addResource(resource);
+		resources.add(resource);
 	}
 
 	@Override
@@ -71,6 +75,7 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 			read.removeResource(resource);
 			write.removeResource(resource);
 			all.removeResource(resource);
+			resources.remove(resource);
 		} catch (Exception e) {
 			throw new SliceRuntimeException("remove resource error.", e);
 		} finally {
@@ -97,10 +102,27 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 		return all.next(seed);
 	}
 
+	public ResourceTribe getReadTribe() {
+		return read;
+	}
+
+	public ResourceTribe getTribe() {
+		return all;
+	}
+
+	public ResourceTribe getWriteTribe() {
+		return write;
+	}
+
+	public List<SliceResource> getResources() {
+		return resources;
+	}
+
 	public boolean fail(SliceResource resource) {
 		lock.lock();
 		try {
-			return (fail(read, resource) || fail(write, resource)) && fail(all, resource);
+			return (fail(read, resource) || fail(write, resource))
+					&& fail(all, resource);
 		} catch (Exception e) {
 			throw new SliceRuntimeException("fail resource error.", e);
 			// return false;
@@ -120,9 +142,8 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 	public boolean recover(SliceResource resource) {
 		lock.lock();
 		try {
-			return (recover(read, resource) || recover(write, resource)) && recover(
-					all,
-					resource);
+			return (recover(read, resource) || recover(write, resource))
+					&& recover(all, resource);
 		} catch (Exception e) {
 			throw new SliceRuntimeException("recover resource error.", e);
 			// return false;
@@ -141,6 +162,13 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 
 	@Override
 	public String toString() {
-		return "ReadWriteSlice [read=" + read + ", write=" + write + ", all=" + all + ", sliceId=" + sliceId + ", alias=" + alias + ", params=" + params + ", childRouter=" + childRouter + "]";
+		return "ReadWriteSlice [read=" + read + ", write=" + write + ", all="
+				+ all + ", sliceId=" + sliceId + ", alias=" + alias
+				+ ", params=" + params + ", childRouter=" + childRouter + "]";
+	}
+
+	@Override
+	public Failover getFailover() {
+		return this;
 	}
 }
