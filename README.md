@@ -4,6 +4,9 @@ a library for creating distributed service and sharding framework.
 
 **forest** was designed to be **EASY** to use, also is a lightweight framework and easily is extended.
 
+## Architecture ##
+![Architecture](doc/architecture.png)
+
 ## forest-core ##
 
 forest-core is a core API. 
