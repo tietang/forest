@@ -15,15 +15,17 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.session.defaults.DefaultSqlSession;
+import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 
-public class SliceSqlSessionFactory implements SqlSessionFactory {
+public class SliceSqlSessionFactory extends DefaultSqlSessionFactory {
 
     private final Configuration configuration;
 
     public SliceSqlSessionFactory(Configuration configuration) {
+    	super(configuration);
         this.configuration = configuration;
     }
 
@@ -47,41 +49,6 @@ public class SliceSqlSessionFactory implements SqlSessionFactory {
         }
     }
 
-    public SqlSession openSession() {
-        return openSessionFromDataSource(configuration.getDefaultExecutorType(), null, false);
-    }
-
-    public SqlSession openSession(boolean autoCommit) {
-        return openSessionFromDataSource(configuration.getDefaultExecutorType(), null, autoCommit);
-    }
-
-    public SqlSession openSession(ExecutorType execType) {
-        return openSessionFromDataSource(execType, null, false);
-    }
-
-    public SqlSession openSession(TransactionIsolationLevel level) {
-        return openSessionFromDataSource(configuration.getDefaultExecutorType(), level, false);
-    }
-
-    public SqlSession openSession(ExecutorType execType, TransactionIsolationLevel level) {
-        return openSessionFromDataSource(execType, level, false);
-    }
-
-    public SqlSession openSession(ExecutorType execType, boolean autoCommit) {
-        return openSessionFromDataSource(execType, null, autoCommit);
-    }
-
-    public SqlSession openSession(Connection connection) {
-        return openSessionFromConnection(configuration.getDefaultExecutorType(), connection);
-    }
-
-    public SqlSession openSession(ExecutorType execType, Connection connection) {
-        return openSessionFromConnection(execType, connection);
-    }
-
-    public Configuration getConfiguration() {
-        return configuration;
-    }
 
     private SqlSession openSessionFromDataSource(
         ExecutorType execType,
