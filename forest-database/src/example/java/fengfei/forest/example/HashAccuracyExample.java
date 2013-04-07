@@ -14,6 +14,7 @@ import fengfei.forest.slice.database.MysqlConnectonUrlMaker;
 import fengfei.forest.slice.database.PoolableDatabaseRouter;
 import fengfei.forest.slice.equalizer.LongEqualizer;
 import fengfei.forest.slice.impl.AccuracyRouter;
+import fengfei.forest.slice.plotter.HashPlotter;
 
 public class HashAccuracyExample {
 
@@ -27,7 +28,7 @@ public class HashAccuracyExample {
 				new MysqlConnectonUrlMaker(),
 				new TomcatPoolableDataSourceFactory());
 		setupGroup(router);
-		router.setSelectType(SelectType.Hash);
+		router.setPlotter(new HashPlotter());
 		router.setOverflowType(OverflowType.Last);
 		//System.out.println(router);
 		//

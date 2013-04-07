@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 
 import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.OverflowType;
+import fengfei.forest.slice.Plotter;
 import fengfei.forest.slice.Range;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SelectType;
@@ -50,14 +51,20 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 		super(equalizer);
 	}
 
-	public AccuracyRouter(Equalizer<Key> equalizer, SelectType selectType) {
-		super(equalizer, selectType);
+	public AccuracyRouter(Equalizer<Key> equalizer,
+			Map<String, String> defaultExtraInfo) {
+		this(equalizer);
+		this.defaultExtraInfo = defaultExtraInfo;
 	}
 
-	public AccuracyRouter(Equalizer<Key> equalizer, SelectType selectType,
+	public AccuracyRouter(Equalizer<Key> equalizer, Plotter plotter) {
+		super(equalizer, plotter);
+
+	}
+
+	public AccuracyRouter(Equalizer<Key> equalizer, Plotter plotter,
 			Map<String, String> defaultExtraInfo) {
-		this(equalizer, selectType);
-		this.defaultExtraInfo = defaultExtraInfo;
+		super(equalizer, plotter, defaultExtraInfo);
 	}
 
 	@Override

@@ -20,6 +20,7 @@ import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.database.MysqlConnectonUrlMaker;
 import fengfei.forest.slice.database.PoolableDatabaseRouter;
 import fengfei.forest.slice.impl.NavigableRouter;
+import fengfei.forest.slice.plotter.HashPlotter;
 
 public class RangeSliceExample2 {
 
@@ -32,7 +33,7 @@ public class RangeSliceExample2 {
 				new NavigableRouter<Long>(), new MysqlConnectonUrlMaker(),
 				new TomcatPoolableDataSourceFactory());
 
-		router.setSelectType(SelectType.Hash);
+		router.setPlotter(new HashPlotter());
 		router.setOverflowType(OverflowType.Last);
 		router.setEqualizer(new Equalizer<Long>() {
 			@Override

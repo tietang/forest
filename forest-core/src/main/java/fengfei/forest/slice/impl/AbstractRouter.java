@@ -3,6 +3,8 @@ package fengfei.forest.slice.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -12,10 +14,10 @@ import com.google.common.collect.ListMultimap;
 import fengfei.forest.slice.Detector;
 import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.OverflowType;
+import fengfei.forest.slice.Plotter;
 import fengfei.forest.slice.Range;
 import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.Router;
-import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.Slice;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
@@ -23,17 +25,19 @@ import fengfei.forest.slice.equalizer.LongEqualizer;
 import fengfei.forest.slice.exception.NonExistedResourceException;
 import fengfei.forest.slice.exception.NonExistedSliceException;
 import fengfei.forest.slice.exception.UnSupportedException;
+import fengfei.forest.slice.plotter.LoopPlotter;
 
 public abstract class AbstractRouter<Key> implements Router<Key> {
 
 	protected Equalizer<Key> equalizer;
 	protected OverflowType overflowType = OverflowType.Last;
-	protected SelectType selectType;
+	// protected SelectType selectType;
 	protected Map<String, String> defaultExtraInfo = new HashMap<>();
 	protected AtomicLong sliceIdCreator = new AtomicLong();
 	protected Map<String, Resource> resources = new ConcurrentHashMap<>();
 	protected ListMultimap<String, Long> resAndSlices = ArrayListMultimap
 			.create();
+	protected Plotter plotter = new LoopPlotter();
 
 	@SuppressWarnings("unchecked")
 	public AbstractRouter() {
@@ -42,13 +46,28 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 
 	public AbstractRouter(Equalizer<Key> equalizer) {
 		this.equalizer = equalizer;
+	}
+
+	public AbstractRouter(Equalizer<Key> equalizer, Plotter plotter) {
+		this(equalizer);
+
+		this.plotter = plotter;
+	}
+
+	public AbstractRouter(Equalizer<Key> equalizer, Plotter plotter,
+			Map<String, String> defaultExtraInfo) {
+		this(equalizer, plotter);
+		this.defaultExtraInfo = defaultExtraInfo;
 
 	}
 
-	public AbstractRouter(Equalizer<Key> equalizer, SelectType selectType) {
-		super();
-		this.equalizer = equalizer;
-		this.selectType = selectType;
+	public void setPlotter(Plotter plotter) {
+		this.plotter = plotter;
+		Map<Long, Slice<Key>> slices = getSlices();
+		Set<Entry<Long, Slice<Key>>> entries = slices.entrySet();
+		for (Entry<Long, Slice<Key>> entry : entries) {
+			entry.getValue().setPlotter(plotter);
+		}
 	}
 
 	protected SliceResource dealOverflow(Key key, Function function, long id,
@@ -129,10 +148,6 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 
 	public OverflowType getOverflowType() {
 		return overflowType;
-	}
-
-	public void setSelectType(SelectType selectType) {
-		this.selectType = selectType;
 	}
 
 	public Map<String, String> getDefaultExtraInfo() {

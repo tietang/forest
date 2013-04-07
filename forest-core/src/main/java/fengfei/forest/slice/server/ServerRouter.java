@@ -5,6 +5,7 @@ import java.util.Map;
 import fengfei.forest.slice.Detector;
 import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.OverflowType;
+import fengfei.forest.slice.Plotter;
 import fengfei.forest.slice.Range;
 import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.Router;
@@ -87,11 +88,6 @@ public class ServerRouter<Key> implements Router<Key> {
 	}
 
 	@Override
-	public void setSelectType(SelectType selectType) {
-		getRouter().setSelectType(selectType);
-	}
-
-	@Override
 	public void setEqualizer(Equalizer<Key> equalizer) {
 		getRouter().setEqualizer(equalizer);
 	}
@@ -160,6 +156,11 @@ public class ServerRouter<Key> implements Router<Key> {
 
 	public void setDetector(Detector detector) {
 		getRouter().setDetector(detector);
+	}
+
+	@Override
+	public void setPlotter(Plotter plotter) {
+		getRouter().setPlotter(plotter);
 	}
 
 }

@@ -4,6 +4,7 @@ import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.impl.AccuracyRouter;
+import fengfei.forest.slice.plotter.HashPlotter;
 import fengfei.forest.slice.server.ServerResource;
 import fengfei.forest.slice.server.ServerRouter;
 import fengfei.forest.slice.server.pool.PoolableException;
@@ -19,7 +20,7 @@ public class ServerRouterExample extends BaseRouterExample {
 		AccuracyRouter<User> faced = new AccuracyRouter<>(equalizer);
 		ServerRouter<User> router = new ServerRouter<>(faced);
 		setupGroup(router);
-		router.setSelectType(SelectType.Hash);
+		router.setPlotter(new HashPlotter());
 		router.setOverflowType(OverflowType.Last);
 		// //System.out.println(router);
 		//

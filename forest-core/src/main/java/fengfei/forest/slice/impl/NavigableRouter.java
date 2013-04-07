@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 
 import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.OverflowType;
+import fengfei.forest.slice.Plotter;
 import fengfei.forest.slice.Range;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.Slice;
@@ -45,6 +46,16 @@ public class NavigableRouter<Key> extends AbstractRouter<Key> {
 
 	public NavigableRouter(Equalizer<Key> equalizer) {
 		super(equalizer);
+	}
+
+	public NavigableRouter(Equalizer<Key> equalizer, Plotter plotter) {
+		super(equalizer, plotter);
+
+	}
+
+	public NavigableRouter(Equalizer<Key> equalizer, Plotter plotter,
+			Map<String, String> defaultExtraInfo) {
+		super(equalizer, plotter, defaultExtraInfo);
 	}
 
 	private SliceResource getResource(Map.Entry<Long, Slice<Key>> entry,
@@ -211,8 +222,7 @@ public class NavigableRouter<Key> extends AbstractRouter<Key> {
 	public String toString() {
 		return "NavigableRouter [\n slices=" + slices + ", equalizer="
 				+ equalizer + ", overflowType=" + overflowType
-				+ ", selectType=" + selectType + ", defaultExtraInfo="
-				+ defaultExtraInfo + "]";
+				+ ", defaultExtraInfo=" + defaultExtraInfo + "]";
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.impl.AccuracyRouter;
+import fengfei.forest.slice.plotter.HashPlotter;
 import fengfei.forest.slice.server.pool.CommonsPoolableObjectFactory;
 import fengfei.forest.slice.server.pool.CommonsPoolableSourceFactory;
 import fengfei.forest.slice.server.pool.PoolableException;
@@ -37,7 +38,7 @@ public class PooledServerRouterExample extends BaseRouterExample {
 		setupGroup(router);
 		faced.setDetector(detector);
 	
-		router.setSelectType(SelectType.Hash);
+		router.setPlotter(new HashPlotter());
 		router.setOverflowType(OverflowType.Last);
 		// //log.info(router);
 		//

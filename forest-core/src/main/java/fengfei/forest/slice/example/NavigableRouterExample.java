@@ -7,6 +7,7 @@ import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.equalizer.LongEqualizer;
 import fengfei.forest.slice.impl.NavigableRouter;
+import fengfei.forest.slice.plotter.HashPlotter;
 
 public class NavigableRouterExample extends BaseRouterExample{
 
@@ -15,7 +16,7 @@ public class NavigableRouterExample extends BaseRouterExample{
 	 */
 	public static void main(String[] args) {
 		NavigableRouter<Long> router = new NavigableRouter<>();
-		router.setSelectType(SelectType.Hash);
+		router.setPlotter(new HashPlotter());
 		router.setOverflowType(OverflowType.Last);
 		router.setEqualizer(new LongEqualizer());
 		setupGroup(router);

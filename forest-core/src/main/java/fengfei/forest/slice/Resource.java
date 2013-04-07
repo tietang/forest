@@ -6,7 +6,7 @@ import java.util.Map;
 public class Resource {
 
 	protected String name;
-	protected int weight = 0;
+	protected int weight = 1;
 	protected Status status = Status.Normal;
 
 	protected Map<String, String> extraInfo = new HashMap<>();

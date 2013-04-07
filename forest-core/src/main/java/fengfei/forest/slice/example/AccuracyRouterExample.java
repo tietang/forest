@@ -7,6 +7,7 @@ import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.equalizer.LongEqualizer;
 import fengfei.forest.slice.impl.AccuracyRouter;
+import fengfei.forest.slice.plotter.HashPlotter;
 
 public class AccuracyRouterExample extends BaseRouterExample {
 
@@ -16,7 +17,7 @@ public class AccuracyRouterExample extends BaseRouterExample {
 	public static void main(String[] args) {
 		AccuracyRouter<Long> router = new AccuracyRouter<>(new LongEqualizer());
 		setupGroup(router);
-		router.setSelectType(SelectType.Hash);
+		router.setPlotter(new HashPlotter());
 		router.setOverflowType(OverflowType.Last);
 		// //System.out.println(router);
 		//
