@@ -16,7 +16,11 @@ public interface SliceRegistry<Key> {
 
 	void register(SliceResource resource, Range... ranges);
 
-	//void update(Long sliceId, SliceResource resource);
+	void registerChild(Router<Key> childRouter, Range... ranges);
+
+	void registerChild(Long sliceId, Router<Key> childRouter);
+
+	// void update(Long sliceId, SliceResource resource);
 
 	void remove(SliceResource resource);
 

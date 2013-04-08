@@ -212,6 +212,8 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 		resource.addParams(extraInfo);
 		resource.setAlias(slice.getAlias());
 		slice.add(resource);
+		if (plotter != null)
+			slice.setPlotter(plotter);
 		addslice(slice);
 	}
 
@@ -291,6 +293,18 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 
 	public void map(String resourceName, Function function, Range... ranges) {
 		map(resourceName, null, function, ranges);
+	}
+
+	@Override
+	public void registerChild(Long sliceId, Router<Key> childRouter) {
+		Slice<Key> slice = get(sliceId);
+		if (slice == null) {
+			throw new NonExistedSliceException(
+					"Can't register child router, slice(" + sliceId
+							+ ") is non-exists.");
+		}
+		slice.setChildRouter(childRouter);
+
 	}
 
 	@Override

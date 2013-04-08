@@ -9,7 +9,6 @@ import fengfei.forest.slice.Plotter;
 import fengfei.forest.slice.Range;
 import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.Router;
-import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.Slice;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
@@ -161,6 +160,17 @@ public class ServerRouter<Key> implements Router<Key> {
 	@Override
 	public void setPlotter(Plotter plotter) {
 		getRouter().setPlotter(plotter);
+	}
+
+	@Override
+	public void registerChild(Router<Key> childRouter, Range... ranges) {
+		getRouter().registerChild(childRouter, ranges);
+
+	}
+
+	@Override
+	public void registerChild(Long sliceId, Router<Key> childRouter) {
+		getRouter().registerChild(sliceId, childRouter);
 	}
 
 }

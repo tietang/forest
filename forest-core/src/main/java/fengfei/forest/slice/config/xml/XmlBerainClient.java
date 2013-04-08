@@ -148,4 +148,10 @@ public class XmlBerainClient implements BerainClient {
 
 	}
 
+	@Override
+	public List<String> nextChildrenPath(String parentPath) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

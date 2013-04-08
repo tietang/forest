@@ -14,7 +14,6 @@ import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.Router;
-import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.database.MysqlConnectonUrlMaker;

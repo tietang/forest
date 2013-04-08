@@ -12,7 +12,6 @@ import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Plotter;
 import fengfei.forest.slice.Range;
 import fengfei.forest.slice.Router;
-import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.Slice;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
@@ -155,6 +154,15 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 				for (SliceResource resource : resources) {
 					resAndSlices.put(resource.getName(), i);
 				}
+			}
+		}
+	}
+
+	@Override
+	public void registerChild(Router<Key> childRouter, Range... ranges) {
+		for (Range range : ranges) {
+			for (long i = range.start; i <= range.end; i++) {
+				registerChild(Long.valueOf(i), childRouter);
 			}
 		}
 	}

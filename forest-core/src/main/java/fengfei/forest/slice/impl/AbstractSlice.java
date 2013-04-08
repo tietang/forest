@@ -3,7 +3,6 @@ package fengfei.forest.slice.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import fengfei.forest.slice.Failover;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.Slice;
 import fengfei.forest.slice.SliceResource;

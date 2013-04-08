@@ -2,7 +2,6 @@ package fengfei.forest.slice.example;
 
 import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Resource;
-import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.equalizer.LongEqualizer;

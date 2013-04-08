@@ -202,6 +202,27 @@ public class NavigableRouter<Key> extends AbstractRouter<Key> {
 	}
 
 	@Override
+	public void registerChild(Router<Key> childRouter, Range... ranges) {
+		for (Range range : ranges) {
+			if (range.end == range.start) {
+				registerChild(Long.valueOf(range.end), childRouter);
+			} else {
+				long previous = range.start - 1;
+				if (previous > 0) {
+					Slice<Key> startslice = slices.get(previous);
+					if (startslice == null) {
+						Slice<Key> nullslice = new NullSlice<>();
+						slices.put(previous, nullslice);
+
+					}
+				}
+			}
+			registerChild(Long.valueOf(range.end), childRouter);
+
+		}
+	}
+
+	@Override
 	public void map(String resourceName, String alias, Function function,
 			Range... ranges) {
 		for (Range range : ranges) {

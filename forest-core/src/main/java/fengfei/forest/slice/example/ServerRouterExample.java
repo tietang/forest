@@ -1,7 +1,6 @@
 package fengfei.forest.slice.example;
 
 import fengfei.forest.slice.OverflowType;
-import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.impl.AccuracyRouter;
 import fengfei.forest.slice.plotter.HashPlotter;

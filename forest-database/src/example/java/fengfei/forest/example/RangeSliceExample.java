@@ -1,19 +1,13 @@
 package fengfei.forest.example;
 
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import fengfei.forest.database.dbutils.ForestGrower;
-import fengfei.forest.database.dbutils.impl.DefaultForestGrower;
 import fengfei.forest.database.pool.TomcatPoolableDataSourceFactory;
 import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.Router;
-import fengfei.forest.slice.SelectType;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.database.MysqlConnectonUrlMaker;
