@@ -316,7 +316,7 @@ public class SliceConfigReader implements SliceReader<Config> {
 	}
 
 	String[] toResources(String res) {
-		String[] pairs = res.split(",|\\||，|	|\n|\r|\n\r");
+		String[] pairs = res.split("&|,|\\||，|	|\n|\r|\n\r");
 		return pairs;
 	}
 
@@ -325,7 +325,7 @@ public class SliceConfigReader implements SliceReader<Config> {
 			return null;
 		}
 		List<Range> ranges = new ArrayList<>();
-		String[] pairs = str.split(",|\\||，|	|\n|\r|\n\r");
+		String[] pairs = str.split("&|,|\\||，|	|\n|\r|\n\r");
 		for (String pair : pairs) {
 			if (pair != null && !"".equals(pair.trim())) {
 				String[] sks = pair.trim().split("~|-|－|——|—");
@@ -370,7 +370,9 @@ public class SliceConfigReader implements SliceReader<Config> {
 			return map;
 		}
 		if (value.contains("&")) {
-			String[] vs = value.split("&");
+			// if (value.matches("&|,|\\||，|	|\n|\r|\n\r")) {
+
+			String[] vs = value.split("&|,|\\||，|	|\n|\r|\n\r");
 			if (vs.length > 0) {
 				for (int i = 0; i < vs.length; i++) {
 					String[] kv = vs[i].split("=");
@@ -380,11 +382,15 @@ public class SliceConfigReader implements SliceReader<Config> {
 				}
 			}
 		} else {
-
 			map.put(KEY_WEIGHT, value);
 		}
 		return map;
 
+	}
+
+	public static void main(String[] args) {
+		String value = "	 *  		- name=weight/queryString (192.168.1.11:9080:db2=1)/(192.168.1.11:9080:db1=wight=1&user=root&password=pwd)";
+		System.out.println(value.matches("&|,|\\||，|	|\n|\r|\n\r"));
 	}
 
 	Map<String, String> toMap(List<BerainEntry> entries) {
