@@ -20,16 +20,33 @@ import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.config.Config.ResConfig;
 import fengfei.forest.slice.config.Config.RouterConfig;
 import fengfei.forest.slice.config.Config.SliceConfig;
+import fengfei.forest.slice.config.zk.SliceConfigReader;
 import fengfei.forest.slice.exception.NonExistedSliceException;
 import fengfei.forest.slice.impl.ReadWriteSlice;
 
-public class DefaultRouterFactory implements RouterFactory {
+public class DefaultRouterFactory extends AbstractRouterFactory {
 
 	protected Map<String, Router<?>> routers = new HashMap<>();
 	protected Map<String, RouterConfig> routerConfigCache = new HashMap<>();
 
 	public DefaultRouterFactory(Config config) {
 		config(config);
+	}
+
+	public static void main(String[] args) {
+		SliceConfigReader reader = new SliceConfigReader();
+
+		Config config = reader.read("/main");
+		RouterFactory factory = new DefaultRouterFactory(config);
+		Router<Long> router = factory.getRouter("r01");
+		System.out.println(router.locate(1l));
+		System.out.println(router.locate(31423l));
+		System.out.println(router.locate(12l));
+		router = factory.getRouter("r02");
+		System.out.println(router.locate(1l));
+		System.out.println(router.locate(31423l));
+		System.out.println(router.locate(12l));
+		// System.out.println(router);
 	}
 
 	public void config(Config config) {
@@ -262,25 +279,6 @@ public class DefaultRouterFactory implements RouterFactory {
 		}
 		if (router == null) {
 			throw new NonExistedSliceException("unitName=" + routerName);
-		}
-		return router;
-	}
-
-	public <Key> Router<Key> getRouter(Equalizer<Key> equalizer,
-			String routerName) {
-		Router<Key> router = getRouter(routerName);
-		if (equalizer != null) {
-			router.setEqualizer(equalizer);
-		}
-		return router;
-	}
-
-	@Override
-	public <Key> Router<Key> getRouter(Equalizer<Key> equalizer,
-			Plotter plotter, String routerName) {
-		Router<Key> router = getRouter(equalizer, routerName);
-		if (plotter != null) {
-			router.setPlotter(plotter);
 		}
 		return router;
 	}

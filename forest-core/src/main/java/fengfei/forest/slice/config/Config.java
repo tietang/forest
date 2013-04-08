@@ -35,20 +35,19 @@ public class Config {
 
 	public void addRouterConfig(RouterConfig routerConfig) {
 		this.routers.add(routerConfig);
+		routerMap.put(routerConfig.id, routerConfig);
 	}
 
 	public Map<String, RouterConfig> getRouterMap() {
-		if (routerMap == null) {
-			routerMap = new HashMap<>();
-		}
-		for (RouterConfig router : routers) {
-			routerMap.put(router.id, router);
-		}
+
 		return routerMap;
 	}
 
 	@Override
 	public String toString() {
+		for (RouterConfig config : routers) {
+			System.out.println(config);
+		}
 		return "Config [ routerMap=" + routerMap + "]";
 	}
 

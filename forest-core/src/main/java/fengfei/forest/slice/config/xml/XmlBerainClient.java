@@ -27,8 +27,9 @@ public class XmlBerainClient implements BerainClient {
 					.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			document = builder.parse(xmlFile);
+
 			XPathFactory xPathFactory = XPathFactory.newInstance();
-			XPath xpath = xPathFactory.newXPath();
+			xpath = xPathFactory.newXPath();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -43,7 +44,8 @@ public class XmlBerainClient implements BerainClient {
 
 	@Override
 	public boolean create(String path, String value) throws Exception {
-		// TODO Auto-generated method stub
+	    XPathExpression expr = xpath.compile("/path");
+	  
 		return false;
 	}
 
@@ -67,7 +69,8 @@ public class XmlBerainClient implements BerainClient {
 
 	@Override
 	public String get(String path) throws Exception {
-		// TODO Auto-generated method stub
+	    XPathExpression expr = xpath.compile("/path");
+	 
 		return null;
 	}
 
@@ -146,12 +149,6 @@ public class XmlBerainClient implements BerainClient {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public List<String> nextChildrenPath(String parentPath) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
