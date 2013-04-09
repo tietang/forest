@@ -8,7 +8,9 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.Properties;
 
-public class ResourcesUtils extends Object {
+public class ResourcesUtils {
+
+
 
 	/** */
 	/**
@@ -87,6 +89,8 @@ public class ResourcesUtils extends Object {
 		}
 		return in;
 	}
+
+
 
 	/** */
 	/**

@@ -1,13 +1,10 @@
-package fengfei.forest.slice.config.zk;
+package fengfei.forest.slice.config;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,92 +13,63 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fengfei.berain.client.BerainEntry;
-import fengfei.berain.client.zk.ZkBerainClient;
 import fengfei.forest.slice.Range;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SliceResource.Function;
-import fengfei.forest.slice.config.Config;
 import fengfei.forest.slice.config.Config.ResConfig;
 import fengfei.forest.slice.config.Config.RouterConfig;
 import fengfei.forest.slice.config.Config.SliceConfig;
-import fengfei.forest.slice.config.SliceReader;
+import fengfei.forest.slice.config.zk.MapUtils;
 import fengfei.forest.slice.exception.ConfigException;
-import fengfei.forest.slice.utils.ResourcesUtils;
 
 public class SliceConfigReader implements SliceReader<Config> {
 
 	static Logger log = LoggerFactory.getLogger(SliceConfigReader.class);
 	//
-	static final String FOREST_ROOT_PATH = "/routers";
+	public static final String FOREST_ROOT_PATH = "/routers";
 	//
-	static final String FOREST_ROUTER_CLASS = "/router_class";
-	static final String FOREST_EQUALIZER_CLASS = "/eq_class";
-	static final String FOREST_PLOTTER_CLASS = "/plotter_class";
-	static final String FOREST_PARENT_ID = "/parent_id";
-	static final String FOREST_PARENT_PATH = "/parent_path";
-	static final String FOREST_OVERFLOW = "/overflow";
+	public static final String FOREST_ROUTER_CLASS = "/routerClass";
+	public static final String FOREST_EQUALIZER_CLASS = "/eqClass";
+	public static final String FOREST_PLOTTER_CLASS = "/plotterClass";
+	public static final String FOREST_PARENT_ID = "/parentId";
+	public static final String FOREST_PARENT_PATH = "/parentPath";
+	public static final String FOREST_OVERFLOW = "/overflow";
 
-	static final String FOREST_RESOURCES_PATH = "/resources";
-	static final String FOREST_EXTRA_INFO_PATH = "/extra_infos";
-	static final String FOREST_SLICES_PATH = "/slices";
-	static final String S_SUB_SLICES_PATH = "/sub_slices";
+	public static final String FOREST_RESOURCES_PATH = "/resources";
+	public static final String FOREST_EXTRA_INFO_PATH = "/extraInfos";
+	public static final String FOREST_SLICES_PATH = "/slices";
+	public static final String S_SUB_SLICES_PATH = "/subSlices";
 
 	//
-	static final String KEY_HOST = "host";
-	static final String KEY_PORT = "port";
-	static final String KEY_WEIGHT = "weight";
-	static final String KEY_SCHEMA = "schema";
+	public static final String KEY_HOST = "host";
+	public static final String KEY_PORT = "port";
+	public static final String KEY_WEIGHT = "weight";
+	public static final String KEY_SCHEMA = "schema";
 	//
-	static final String S_ALIAS = "alias";
-	static final String S_FUNCTION = "func";
-	static final String S_RESOURCE_NAME = "res_name";
-	static final String S_READ = "read";
-	static final String S_WRITE = "write";
-	static final String S_READ_WRITE = "readwrite";
-	static final String S_RANGE = "range";
-	static final String S_SUB_ROUTER_ID = "sub_id";
-	static final String S_SUB_ROUTER_PATH = "sub_path";
+	public static final String S_ALIAS = "alias";
+	public static final String S_FUNCTION = "func";
+	public static final String S_RESOURCE_NAME = "resName";
+	public static final String S_READ = "read";
+	public static final String S_WRITE = "write";
+	public static final String S_READ_WRITE = "readwrite";
+	public static final String S_RANGE = "range";
+	public static final String S_SUB_ROUTER_ID = "subId";
+	public static final String S_SUB_ROUTER_PATH = "subPath";
 	//
-	static final String SPLIT_REG = "&|,|\\||，|	|\n|\r|\n\r";
-	static final String SPLIT_REG_BOUND = "~|-|－|——|—";
-	ZkBerainClient client;
-	String namespace = "";
+	public static final String SPLIT_REG = "&|,|\\||，|	|\n|\r|\n\r";
+	public static final String SPLIT_REG_BOUND = "~|-|－|——|—";
+	protected ConfigSource source;
+	protected String namespace = "";
 
 	public SliceConfigReader() {
-
-		try {
-			Properties properties = ResourcesUtils
-					.getResourceAsProperties("zk.properties");
-			init(properties);
-		} catch (IOException e) {
-			log.error("init error.", e);
-		}
-
 	}
 
-	public SliceConfigReader(String zkProperties) {
-
-		try {
-			Properties properties = new Properties();
-			properties.load(new FileInputStream(zkProperties));
-			init(properties);
-		} catch (IOException e) {
-			log.error("init error.", e);
-		}
-
+	public SliceConfigReader(ConfigSource source) {
+		this.source = source;
 	}
 
-	void init(Properties properties) {
-		client = new ZkBerainClient(properties);
-		client.start();
-		namespace = client.getClient().getNamespace();
-	}
-
-	public static void main(String[] args) {
-		SliceConfigReader reader = new SliceConfigReader();
-
-		Config config = reader.read("/main");
-		System.out.println(config);
+	public void setSource(ConfigSource source) {
+		this.source = source;
 	}
 
 	/**
@@ -122,7 +90,7 @@ public class SliceConfigReader implements SliceReader<Config> {
 
 		try {
 			check(config.path);
-			List<BerainEntry> routerEntries = client.nextChildren(config.path);
+			List<BerainEntry> routerEntries = source.children(config.path);
 			for (BerainEntry entry : routerEntries) {
 				System.out.println("====" + entry);
 				RouterConfig routerConfig = readRouterConfig(entry);
@@ -140,7 +108,7 @@ public class SliceConfigReader implements SliceReader<Config> {
 	}
 
 	void check(String path) throws Exception {
-		if (client.exists(path)) {
+		if (source.exists(path)) {
 			log.info(String.format("checked path : namespace=%s, path=%s",
 					namespace, path));
 		} else {
@@ -182,7 +150,7 @@ public class SliceConfigReader implements SliceReader<Config> {
 		routerConfig.slices = readSlices(routerConfig.path + FOREST_SLICES_PATH);
 		if (parentPath != null && !"".equals(parentPath)) {
 			check(parentPath);
-			BerainEntry parentEntry = client.getFull(parentPath);
+			BerainEntry parentEntry = source.getFull(parentPath);
 
 			RouterConfig config = readRouterConfig(parentEntry);
 			routerConfig.parentRouterConfig = config;
@@ -200,8 +168,8 @@ public class SliceConfigReader implements SliceReader<Config> {
 		String key = getKey(path);
 		log.debug(String.format("read path: %s", routerPath + path));
 		String value = null;
-		if (client.exists(routerPath + path)) {
-			value = client.get(routerPath + path);
+		if (source.exists(routerPath + path)) {
+			value = source.get(routerPath + path);
 			if (value == null || "".equals(value)
 					|| "null".equalsIgnoreCase(value)) {
 				return kv.get(key);
@@ -243,25 +211,24 @@ public class SliceConfigReader implements SliceReader<Config> {
 	 * 
 	 * @throws Exception
 	 */
-	Set<ResConfig> readResources(String path) throws Exception {
+	public Set<ResConfig> readResources(String path) throws Exception {
 
 		check(path);
 		Set<ResConfig> resConfigs = new HashSet<>();
 		//
 		log.info(String.format("read path: namespace=%s, path=%s", namespace,
 				path));
-		List<String> reses = client.getCuratorFramework().getChildren()
-				.forPath(path);
+		List<String> reses = source.listChildren(path);
 
 		for (String resPath : reses) {
 			String tmpPath = path + "/" + resPath;
 
-			BerainEntry res = client.getFull(tmpPath);
+			BerainEntry res = source.getFull(tmpPath);
 			String name = res.getKey();
 
 			ResConfig resource = new ResConfig();
 			resource.name = name;
-			List<BerainEntry> entries = client.nextChildren(tmpPath);
+			List<BerainEntry> entries = source.children(tmpPath);
 			Map<String, String> extraInfo = new HashMap<>();
 			Map<String, String> kv = toMap(entries);
 
@@ -303,13 +270,12 @@ public class SliceConfigReader implements SliceReader<Config> {
 	 * @param slicePath
 	 * @throws Exception
 	 */
-	Set<SliceConfig> readSlices(String slicePath) throws Exception {
+	public Set<SliceConfig> readSlices(String slicePath) throws Exception {
 		check(slicePath);
 		Set<SliceConfig> sliceConfigs = new HashSet<>();
 		log.info(String.format("read path: namespace=%s, path=%s", namespace,
 				slicePath));
-		List<String> slicePaths = client.getCuratorFramework().getChildren()
-				.forPath(slicePath);
+		List<String> slicePaths = source.listChildren(slicePath);
 
 		for (String path : slicePaths) {
 			String tmpPath = slicePath + "/" + path;
@@ -319,14 +285,15 @@ public class SliceConfigReader implements SliceReader<Config> {
 		return sliceConfigs;
 	}
 
-	SliceConfig readSliceConfig(String path) throws Exception {
-		BerainEntry entry = client.getFull(path);
+	public SliceConfig readSliceConfig(String path) throws Exception {
+		BerainEntry entry = source.getFull(path);
 
 		Map<String, String> kv = splitValue(entry.getValue());
 
-		List<BerainEntry> children = client.nextChildren(path);
-		long sliceId = getSliceId(entry, children);
+		List<BerainEntry> children = source.children(path);
+
 		Map<String, String> map = toMap(children);
+		long sliceId = getSliceId(entry, map);
 		kv.putAll(map);
 
 		String alias = MapUtils.getString(kv, S_ALIAS, String.valueOf(sliceId));
@@ -351,7 +318,7 @@ public class SliceConfigReader implements SliceReader<Config> {
 		sliceConfig.subRouterId = subRouterId;
 		sliceConfig.subRouterPath = subRouterPath;
 		if (subRouterPath != null && !"".equals(subRouterPath)) {
-			BerainEntry routerEntry = client.getFull(subRouterPath);
+			BerainEntry routerEntry = source.getFull(subRouterPath);
 			RouterConfig routerConfig = readRouterConfig(routerEntry);
 			sliceConfig.subRouter.add(routerConfig);
 		}
@@ -365,8 +332,8 @@ public class SliceConfigReader implements SliceReader<Config> {
 
 	}
 
-	<Key> void mapResource(Function function, String res, Router<Key> router,
-			long sliceId, String alias, Range[] ranges) {
+	public <Key> void mapResource(Function function, String res,
+			Router<Key> router, long sliceId, String alias, Range[] ranges) {
 		if (res != null && !"".equals(res)) {
 			String reses[] = toResources(res);
 			for (String resourceName : reses) {
@@ -380,12 +347,12 @@ public class SliceConfigReader implements SliceReader<Config> {
 		}
 	}
 
-	String[] toResources(String res) {
+	protected String[] toResources(String res) {
 		String[] pairs = res.split(SPLIT_REG);
 		return pairs;
 	}
 
-	Range[] toRanges(String str) {
+	protected Range[] toRanges(String str) {
 		if (str == null && "".equals(str)) {
 			return null;
 		}
@@ -412,11 +379,12 @@ public class SliceConfigReader implements SliceReader<Config> {
 		return ranges.toArray(array);
 	}
 
-	long getSliceId(BerainEntry sliceEntry, List<BerainEntry> children) {
+	protected long getSliceId(BerainEntry sliceEntry,
+			Map<String, String> children) {
 		return Long.parseLong(sliceEntry.getKey());
 	}
 
-	Map<String, String> splitName(String name) {
+	protected Map<String, String> splitName(String name) {
 		Map<String, String> map = new HashMap<>();
 
 		if (name.contains(":")) {
@@ -434,7 +402,7 @@ public class SliceConfigReader implements SliceReader<Config> {
 
 	}
 
-	Map<String, String> splitValue(String value) {
+	protected Map<String, String> splitValue(String value) {
 		Map<String, String> map = new HashMap<>();
 
 		if (value == null) {
@@ -459,14 +427,14 @@ public class SliceConfigReader implements SliceReader<Config> {
 
 	}
 
-	boolean matches(String str, String reg) {
+	protected boolean matches(String str, String reg) {
 		Pattern p = Pattern.compile(reg);
 		Matcher m = p.matcher(str);
 		boolean result = m.find();
 		return result;
 	}
 
-	Map<String, String> toMap(List<BerainEntry> entries) {
+	protected Map<String, String> toMap(List<BerainEntry> entries) {
 		Map<String, String> map = new HashMap<>();
 		for (BerainEntry entry : entries) {
 			map.put(entry.getKey(), entry.getValue());
@@ -474,9 +442,13 @@ public class SliceConfigReader implements SliceReader<Config> {
 		return map;
 	}
 
-	Map<String, String> readExtraInfos(String path) throws Exception {
-		List<BerainEntry> entries = client.nextChildren(path
+	protected Map<String, String> readExtraInfos(String path) throws Exception {
+		String info = source.get(path + FOREST_EXTRA_INFO_PATH);
+		Map<String, String> kv = splitValue(info);
+		List<BerainEntry> entries = source.children(path
 				+ FOREST_EXTRA_INFO_PATH);
-		return toMap(entries);
+		Map<String, String> map = toMap(entries);
+		kv.putAll(map);
+		return kv;
 	}
 }
