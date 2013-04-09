@@ -171,4 +171,15 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 	public Failover getFailover() {
 		return this;
 	}
+
+	Long registeredId;
+
+	public Long getRegisteredId() {
+		return registeredId;
+	}
+
+	public void setRegisteredId(Long registeredId) {
+		this.registeredId = registeredId;
+	}
+
 }

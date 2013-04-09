@@ -62,14 +62,11 @@ public class XmlConfigSource implements ConfigSource {
 	}
 
 	public static void main(String[] args) throws Exception {
-		XmlConfigSource source = new XmlConfigSource("cp:test.xml");
-		source.get("/inventory/book");
-		System.out.println(source.exists("/dfd"));
+		XmlConfigSource source = new XmlConfigSource("cp:config.xml");
 		System.out.println(source.exists("/"));
-		System.out.println(source.listChildren("/inventory"));
-		System.out.println(source.listChildren("/"));
 		System.out.println(source.children("/"));
-		System.out.println(source.children("/inventory"));
+		System.out.println(source.listChildren("/"));
+
 		// System.out.println(source.exists(""));
 	}
 
@@ -108,9 +105,7 @@ public class XmlConfigSource implements ConfigSource {
 		Object result = expr.evaluate(document, XPathConstants.NODE);
 		Node node = (Node) result;
 		String value = getNodeValue(node);
-		if (value == null) {
-			return null;
-		}
+
 		String key = getKey(path);
 		BerainEntry model = new BerainEntry();
 		model.key = key;
@@ -128,6 +123,9 @@ public class XmlConfigSource implements ConfigSource {
 	}
 
 	private String getNodeValue(Node node) {
+		if (node == null) {
+			return null;
+		}
 		String value = node.getNodeValue();
 		if (value == null) {
 			NamedNodeMap attrs = node.getAttributes();
@@ -148,9 +146,8 @@ public class XmlConfigSource implements ConfigSource {
 			return new ArrayList<>();
 		}
 		NodeList nodes = node.getChildNodes();
-		System.out.println("len:" + nodes.getLength());
+		// System.out.println("len:" + nodes.getLength());
 		List<BerainEntry> entries = new ArrayList<>();
-		System.out.println(nodes.getLength());
 		for (int i = 0; i < nodes.getLength(); i++) {
 			Node nd = nodes.item(i);
 			if (nd.getNodeType() == Node.ELEMENT_NODE) {

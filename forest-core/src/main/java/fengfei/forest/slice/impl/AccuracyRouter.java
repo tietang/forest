@@ -130,6 +130,7 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 	public void addslice(Slice<Key> slice) {
 		getSlices().put(slice.getSliceId(), slice);
 		sortedSlices.put(slice.getSliceId(), slice);
+
 		List<SliceResource> resources = slice.getResources();
 		for (SliceResource resource : resources) {
 			resAndSlices.put(resource.getName(), slice.getSliceId());

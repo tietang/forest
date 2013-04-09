@@ -51,6 +51,10 @@ public interface Slice<Key> extends Failover {
 
 	void setSliceId(Long sliceId);
 
+	Long getRegisteredId();
+
+	void setRegisteredId(Long registeredId);
+
 	String getAlias();
 
 	void setAlias(String alias);

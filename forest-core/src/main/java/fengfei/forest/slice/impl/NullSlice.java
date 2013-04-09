@@ -138,4 +138,16 @@ public class NullSlice<Key> implements Slice<Key> {
 		return false;
 	}
 
+	@Override
+	public Long getRegisteredId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setRegisteredId(Long registeredId) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

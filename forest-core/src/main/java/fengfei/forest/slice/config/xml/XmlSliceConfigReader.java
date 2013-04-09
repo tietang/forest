@@ -32,7 +32,7 @@ public class XmlSliceConfigReader extends SliceConfigReader {
 
 	public static void main(String[] args) {
 		XmlSliceConfigReader reader = new XmlSliceConfigReader("cp:config.xml");
-		Config config = reader.read("/");
+		Config config = reader.read("/root");
 		System.out.println(config);
 	}
 

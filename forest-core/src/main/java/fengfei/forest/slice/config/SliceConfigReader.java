@@ -84,6 +84,13 @@ public class SliceConfigReader implements SliceReader<Config> {
 	 */
 	@Override
 	public Config read(String rootPath) throws ConfigException {
+		if (null == rootPath || "".equals(rootPath) || "/".equals(rootPath)
+				|| rootPath.length() == 1) {
+			throw new ConfigException(String.format(
+					"root path is invalid: namespace=%s, path=%s", namespace,
+					rootPath));
+
+		}
 		Config config = new Config();
 
 		config.setPath(rootPath + FOREST_ROOT_PATH);
