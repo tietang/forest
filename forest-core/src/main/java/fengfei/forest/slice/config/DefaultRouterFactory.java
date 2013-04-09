@@ -20,6 +20,7 @@ import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.config.Config.ResConfig;
 import fengfei.forest.slice.config.Config.RouterConfig;
 import fengfei.forest.slice.config.Config.SliceConfig;
+import fengfei.forest.slice.config.xml.XmlSliceConfigReader;
 import fengfei.forest.slice.config.zk.ZKSliceConfigReader;
 import fengfei.forest.slice.exception.NonExistedSliceException;
 import fengfei.forest.slice.impl.ReadWriteSlice;
@@ -34,9 +35,10 @@ public class DefaultRouterFactory extends AbstractRouterFactory {
 	}
 
 	public static void main(String[] args) {
-		ZKSliceConfigReader reader = new ZKSliceConfigReader();
+		// SliceConfigReader reader = new ZKSliceConfigReader();
+		SliceConfigReader reader = new XmlSliceConfigReader("cp:config.xml");
 
-		Config config = reader.read("/main");
+		Config config = reader.read("/root/main");
 		RouterFactory factory = new DefaultRouterFactory(config);
 		Router<Long> router = factory.getRouter("r01");
 		System.out.println(router.locate(1l));

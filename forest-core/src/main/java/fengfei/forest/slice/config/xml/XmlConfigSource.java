@@ -75,23 +75,8 @@ public class XmlConfigSource implements ConfigSource {
 		XPathExpression expr = xpath.compile(path);
 		Object result = expr.evaluate(document, XPathConstants.NODE);
 		Node node = (Node) result;
-		if (node == null) {
-			return null;
-		}
-		String value = node.getNodeValue();
-		if (value == null) {
-			Node attr = node.getAttributes().getNamedItem(AttributeValueKey);
-			value = attr == null ? value : attr.getNodeValue();
-		}
-		// System.out.println(value);
-		// System.out.println(nodes.getLength());
-		// for (int i = 0; i < nodes.getLength(); i++) {
-		// Node node = nodes.item(i);
-		// System.out.println(node.getNodeName());
-		// System.out.println(node.getAttributes().getNamedItem("year").getNodeValue());
-		// // System.out.println(nodes.item(i).getNodeValue());
-		// }
-		return value;
+ 
+		return getNodeValue(node);
 	}
 
 	public static String getKey(String path) {
@@ -126,7 +111,11 @@ public class XmlConfigSource implements ConfigSource {
 		if (node == null) {
 			return null;
 		}
-		String value = node.getNodeValue();
+		String value = node.getTextContent();
+		if (value == null) {
+			value = node.getNodeValue();
+		}
+
 		if (value == null) {
 			NamedNodeMap attrs = node.getAttributes();
 			if (attrs != null) {
@@ -156,7 +145,7 @@ public class XmlConfigSource implements ConfigSource {
 				BerainEntry model = new BerainEntry();
 				model.key = nd.getNodeName();
 				model.path = path;
-				model.value = getNodeValue(node);
+				model.value = getNodeValue(nd);
 
 				entries.add(model);
 			}
@@ -174,16 +163,14 @@ public class XmlConfigSource implements ConfigSource {
 		}
 		NodeList nodes = node.getChildNodes();
 		List<String> entries = new ArrayList<>();
-		System.out.println(nodes.getLength());
+		// System.out.println(nodes.getLength());
 		for (int i = 0; i < nodes.getLength(); i++) {
 			Node nd = nodes.item(i);
 			if (nd.getNodeType() == Node.ELEMENT_NODE) {
-				System.out.printf("node: %s %s \n", nd.getNodeName(),
-						nd.getNodeType());
-				String path = ("/".equals(parentPath) ? "" : parentPath) + "/"
-						+ nd.getNodeName();
+				// System.out.printf("node: %s %s \n", nd.getNodeName(),
+				// nd.getNodeType());
 
-				entries.add(path);
+				entries.add(nd.getNodeName());
 			}
 
 		}

@@ -27,12 +27,14 @@ public class XmlSliceConfigReader extends SliceConfigReader {
 
 	protected long getSliceId(BerainEntry sliceEntry,
 			Map<String, String> children) {
+
 		return Long.parseLong(children.get(SliceIdKey));
 	}
 
 	public static void main(String[] args) {
 		XmlSliceConfigReader reader = new XmlSliceConfigReader("cp:config.xml");
-		Config config = reader.read("/root");
+
+		Config config = reader.read("/root/main");
 		System.out.println(config);
 	}
 

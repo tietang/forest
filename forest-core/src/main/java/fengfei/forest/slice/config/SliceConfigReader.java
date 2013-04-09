@@ -99,9 +99,7 @@ public class SliceConfigReader implements SliceReader<Config> {
 			check(config.path);
 			List<BerainEntry> routerEntries = source.children(config.path);
 			for (BerainEntry entry : routerEntries) {
-				System.out.println("====" + entry);
 				RouterConfig routerConfig = readRouterConfig(entry);
-				System.out.println("====" + routerConfig);
 				config.addRouterConfig(routerConfig);
 			}
 
@@ -280,8 +278,8 @@ public class SliceConfigReader implements SliceReader<Config> {
 	public Set<SliceConfig> readSlices(String slicePath) throws Exception {
 		check(slicePath);
 		Set<SliceConfig> sliceConfigs = new HashSet<>();
-		log.info(String.format("read path: namespace=%s, path=%s", namespace,
-				slicePath));
+		log.info(String.format("read slices path: namespace=%s, path=%s",
+				namespace, slicePath));
 		List<String> slicePaths = source.listChildren(slicePath);
 
 		for (String path : slicePaths) {
@@ -298,7 +296,6 @@ public class SliceConfigReader implements SliceReader<Config> {
 		Map<String, String> kv = splitValue(entry.getValue());
 
 		List<BerainEntry> children = source.children(path);
-
 		Map<String, String> map = toMap(children);
 		long sliceId = getSliceId(entry, map);
 		kv.putAll(map);

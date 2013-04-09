@@ -45,9 +45,9 @@ public class Config {
 
 	@Override
 	public String toString() {
-		for (RouterConfig config : routers) {
-			System.out.println(config);
-		}
+		// for (RouterConfig config : routers) {
+		// System.out.println(config);
+		// }
 		return "Config [ routerMap=" + routerMap + "]";
 	}
 
