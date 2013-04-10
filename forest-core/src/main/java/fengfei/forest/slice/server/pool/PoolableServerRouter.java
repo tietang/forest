@@ -1,7 +1,12 @@
 package fengfei.forest.slice.server.pool;
 
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SliceResource.Function;
@@ -11,9 +16,9 @@ import fengfei.forest.slice.server.ServerResource;
 import fengfei.forest.slice.server.ServerRouter;
 
 public class PoolableServerRouter<Key, D> extends ServerRouter<Key> {
-
-	private Map<String, PooledSource<D>> pooledDataSources = new ConcurrentHashMap<>();
-	private PoolableSourceFactory<D> poolableSourceFactory;
+	static Logger log = LoggerFactory.getLogger(PoolableServerRouter.class);
+	protected Map<String, PooledSource<D>> pooledDataSources = new ConcurrentHashMap<>();
+	protected PoolableSourceFactory<D> poolableSourceFactory;
 
 	public PoolableServerRouter(Router<Key> router,
 			PoolableSourceFactory<D> poolableSourceFactory) {
@@ -23,6 +28,19 @@ public class PoolableServerRouter<Key, D> extends ServerRouter<Key> {
 
 	public Map<String, PooledSource<D>> getPooledDataSources() {
 		return pooledDataSources;
+	}
+
+	public void close() {
+		Set<Entry<String, PooledSource<D>>> entries = pooledDataSources
+				.entrySet();
+		for (Entry<String, PooledSource<D>> entry : entries) {
+			try {
+				entry.getValue().close();
+			} catch (PoolableException e) {
+				log.error("close source error for " + entry.getKey(), e);
+			}
+		}
+
 	}
 
 	@Override
