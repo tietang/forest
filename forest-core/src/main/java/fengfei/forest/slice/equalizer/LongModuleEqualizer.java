@@ -1,9 +1,9 @@
 package fengfei.forest.slice.equalizer;
 
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
@@ -12,7 +12,8 @@ import fengfei.forest.slice.Equalizer;
 
 /**
  * <pre>
- * sliceSize=6 and moduleSize=1024
+ * 
+ * sliceSize=6 
  * 1=[1, 7, 13, 19, 25, 31, 37, 43, 49, 55, 61, 67, 73, 79, 85, 91, 97]
  * 2=[2, 8, 14, 20, 26, 32, 38, 44, 50, 56, 62, 68, 74, 80, 86, 92, 98]
  * 3=[3, 9, 15, 21, 27, 33, 39, 45, 51, 57, 63, 69, 75, 81, 87, 93, 99]
@@ -20,39 +21,29 @@ import fengfei.forest.slice.Equalizer;
  * 5=[5, 11, 17, 23, 29, 35, 41, 47, 53, 59, 65, 71, 77, 83, 89, 95]
  * 6=[6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 72, 78, 84, 90, 96]
  * 
+ * 
  * </pre>
  * 
  * @author wtt
  * 
  */
-public class LoopRoundEqualizer implements Equalizer<Long> {
+public class LongModuleEqualizer implements Equalizer<Long> {
 
-	private long moduleSize = 1024;
-
-	public LoopRoundEqualizer() {
-	}
-
-	public LoopRoundEqualizer(long moduleSize) {
-		super();
-		this.moduleSize = moduleSize;
-	}
-
-	public long getModuleSize() {
-		return moduleSize;
-	}
-
+	/**
+ * 
+ */
 	@Override
 	public long get(Long key, int sliceSize) {
-		long module = key % moduleSize+1;
-		long index = Math.abs(module % sliceSize);
-		return module;// == 0 ? moduleSize : module;
+
+		long index = Math.abs(key % sliceSize);
+		return index == 0 ? sliceSize : index;
 	}
 
 	public static void main(String[] args) {
-		int size = 6;
+		int size = 7;
 		MultiMap map = new MultiValueMap();
 		Random random = new Random();
-		LoopRoundEqualizer e = new LoopRoundEqualizer(6);
+		LongModuleEqualizer e = new LongModuleEqualizer();
 		for (int i = 1; i <= 100; i++) {
 			long key = i;
 			// key = random.nextLong();
@@ -64,8 +55,10 @@ public class LoopRoundEqualizer implements Equalizer<Long> {
 		Set<Entry> set = map.entrySet();
 		for (Entry entry : set) {
 			List list = (List) entry.getValue();
-			System.out.println(entry);
-			// System.out.println(entry.getKey() + "=" + list.size());
+
+			System.out.println(entry.getKey() + "=" + list.size() + "  "
+					+ entry);
+			// System.out.println(entry.getKey() + "=" + list.size() );
 		}
 
 	}
