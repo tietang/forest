@@ -30,18 +30,18 @@ public class RoundLongEqualizer implements Equalizer<Long> {
 	@Override
 	public long get(Long key, int sliceSize) {
 		long maxSize = maxKey * sliceSize;
-		long index = Math.abs(key % maxSize);
-		return index == 0 ? maxSize : index;
+		long index = Math.abs(key % maxSize % sliceSize);
+		return index == 0 ? sliceSize : index;
 	}
 
 	public static void main(String[] args) {
-		int size = 60;
+		int size = 6;
 		MultiMap map = new MultiValueMap();
 		Random random = new Random();
-		RoundLongEqualizer e = new RoundLongEqualizer(1024);
+		RoundLongEqualizer e = new RoundLongEqualizer(10);
 		for (int i = 1; i <= 1000000; i++) {
 			long key = i;
-			key = random.nextLong();
+			 key = random.nextLong();
 			long index = e.get(key, size);
 			map.put(index, key);
 			// System.out.println(i + " : " + index);
