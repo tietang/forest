@@ -173,4 +173,10 @@ public class ServerRouter<Key> implements Router<Key> {
 		getRouter().registerChild(sliceId, childRouter);
 	}
 
+	@Override
+	public Map<String, Resource> getResourceMap() {
+
+		return router.getResourceMap();
+	}
+
 }

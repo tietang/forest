@@ -1,5 +1,6 @@
 package fengfei.forest.slice;
 
+import java.util.List;
 import java.util.Map;
 
 public interface SliceRegistry<Key> {
@@ -28,5 +29,6 @@ public interface SliceRegistry<Key> {
 
 	Slice<Key> get(Long sliceId);
 
+	// List<SliceResource> getResources();
 	Map<Long, Slice<Key>> getSlices();
 }

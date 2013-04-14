@@ -7,6 +7,7 @@ public class DatabaseResource extends ServerResource {
 
 	public static final String KEY_DRIVER_CLASS = "driverClass";
 	public static final String KEY_DATABASE = "database";
+	public static final String KEY_URL = "url";
 
 	public DatabaseResource(SliceResource resource) {
 		super(resource);
@@ -18,6 +19,10 @@ public class DatabaseResource extends ServerResource {
 
 	public String setDriverClass(String driverClass) {
 		return getExtraInfo().put(KEY_DRIVER_CLASS, driverClass);
+	}
+
+	public String getURL() {
+		return getExtraInfo().get(KEY_URL);
 	}
 
 	public String getDatabase() {

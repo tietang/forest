@@ -1,5 +1,8 @@
 package fengfei.forest.slice;
 
+import java.util.List;
+import java.util.Map;
+
 import fengfei.forest.slice.SliceResource.Function;
 
 public interface SliceResourceRegistry {
@@ -12,5 +15,10 @@ public interface SliceResourceRegistry {
 
 	void map(String resourceName, Function function, Range... ranges);
 
-	void map(String resourceName, String alias, Function function, Range... ranges);
+	void map(String resourceName, String alias, Function function,
+			Range... ranges);
+
+
+
+	Map<String, Resource> getResourceMap();
 }

@@ -308,6 +308,11 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 	}
 
 	@Override
+	public Map<String, Resource> getResourceMap() {
+		return resources;
+	}
+
+	@Override
 	public Slice<Key> get(Long sliceId) {
 		return getSlices().get(sliceId);
 	}
