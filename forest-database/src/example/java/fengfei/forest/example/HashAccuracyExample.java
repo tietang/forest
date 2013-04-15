@@ -9,8 +9,8 @@ import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
-import fengfei.forest.slice.database.MysqlConnectonUrlMaker;
 import fengfei.forest.slice.database.PoolableDatabaseRouter;
+import fengfei.forest.slice.database.url.MysqlUrlMaker;
 import fengfei.forest.slice.equalizer.LongEqualizer;
 import fengfei.forest.slice.impl.AccuracyRouter;
 import fengfei.forest.slice.plotter.HashPlotter;
@@ -24,7 +24,7 @@ public class HashAccuracyExample {
 		AccuracyRouter<Long> faced = new AccuracyRouter<>(new LongEqualizer());
 		PoolableDatabaseRouter<Long> router = new PoolableDatabaseRouter<>(
 				faced,
-				new MysqlConnectonUrlMaker(),
+				new MysqlUrlMaker(),
 				new TomcatPoolableDataSourceFactory());
 		setupGroup(router);
 		router.setPlotter(new HashPlotter());

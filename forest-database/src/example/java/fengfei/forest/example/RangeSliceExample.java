@@ -10,8 +10,8 @@ import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
-import fengfei.forest.slice.database.MysqlConnectonUrlMaker;
 import fengfei.forest.slice.database.PoolableDatabaseRouter;
+import fengfei.forest.slice.database.url.MysqlUrlMaker;
 import fengfei.forest.slice.impl.NavigableRouter;
 import fengfei.forest.slice.plotter.HashPlotter;
 
@@ -23,7 +23,7 @@ public class RangeSliceExample {
 	 */
 	public static void main(String[] args) throws Exception {
 		PoolableDatabaseRouter<Long> router = new PoolableDatabaseRouter<>(
-				new NavigableRouter<Long>(), new MysqlConnectonUrlMaker(),
+				new NavigableRouter<Long>(), new MysqlUrlMaker(),
 				new TomcatPoolableDataSourceFactory());
 
 		router.setPlotter(new HashPlotter());

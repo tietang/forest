@@ -1,16 +1,14 @@
 package fengfei.exmaple;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.sql.DataSource;
-
-import org.apache.ibatis.mapping.ResultSetType;
 
 import fengfei.forest.database.dbutils.ForestGrower;
 import fengfei.forest.database.dbutils.impl.DefaultForestGrower;
@@ -19,12 +17,13 @@ import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.OverflowType;
 import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.Router;
+import fengfei.forest.slice.Slice;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
-import fengfei.forest.slice.database.DatabaseResource;
-import fengfei.forest.slice.database.MysqlConnectonUrlMaker;
 import fengfei.forest.slice.database.PoolableDatabaseResource;
 import fengfei.forest.slice.database.PoolableDatabaseRouter;
+import fengfei.forest.slice.database.UrlMaker;
+import fengfei.forest.slice.database.url.MysqlUrlMaker;
 import fengfei.forest.slice.impl.NavigableRouter;
 import fengfei.forest.slice.plotter.HashPlotter;
 
@@ -36,7 +35,7 @@ public class RangedExample {
 	 */
 	public static void main(String[] args) throws Exception {
 		PoolableDatabaseRouter<Long> router = new PoolableDatabaseRouter<>(
-				new NavigableRouter<Long>(), new MysqlConnectonUrlMaker(),
+				new NavigableRouter<Long>(), new MysqlUrlMaker(),
 				new TomcatPoolableDataSourceFactory());
 
 		router.setPlotter(new HashPlotter());
@@ -49,6 +48,7 @@ public class RangedExample {
 		});
 
 		setupGroup(router);
+		setup(router);
 		testWrite(router);
 		testRead(router);
 		testRead2(router);
@@ -90,7 +90,7 @@ public class RangedExample {
 		try (Connection conn = ds.getConnection();) {
 			ForestGrower grower = new DefaultForestGrower(conn);
 			User user = UserDao.get(grower, suffix, "test@163.com",
-					"testpassword");
+					"123456");
 			System.out.println("get user:" + user);
 		}
 	}
@@ -116,7 +116,7 @@ public class RangedExample {
 			Long sliceId = Long.valueOf((i + 1) * 1980);
 			for (int j = 0; j < 6; j++) {
 				// String name = "192.168.1." + (ip++) + ":3306";
-				String name = "127.0.0.1:3306";
+				String name = "s2.to:3306";
 				Resource resource = new Resource(name);
 				SliceResource sliceResource = new SliceResource(resource);
 				sliceResource.setFunction(j < 2 ? Function.Write
@@ -125,19 +125,36 @@ public class RangedExample {
 				router.register(sliceId, String.valueOf(i), sliceResource);
 			}
 		}
+
 	}
 
 	private static void setup(PoolableDatabaseRouter<Long> router) {
-		Set<PoolableDatabaseResource> resources = router
-				.getPoolableDatabaseResources();
-		for (PoolableDatabaseResource resource : resources) {
-			try (Connection connection = resource.getConnection()) {
-				Statement stmt = connection.createStatement();
-				// stmt.execute(sql);
+		router.followSetup();
+		Map<Long, Slice<Long>> slices = router.getSlices();
+		Set<Entry<Long, Slice<Long>>> entries = slices.entrySet();
+		for (Entry<Long, Slice<Long>> entry : entries) {
+			Slice<Long> slice = entry.getValue();
+			SliceResource facade = slice.get(10L, Function.Write);
+			PoolableDatabaseResource resource = new PoolableDatabaseResource(
+					facade);
+			UrlMaker urlMaker = router.getUrlMaker();
+			String url = resource.getURL();
+			url = url == null ? urlMaker.makeUrl(resource) : url;
+			DataSource ds = router.allPooledDataSources().get(url);
+			try {
+				String suffix = resource.getAlias();
+				execute(String.format(DropTable, suffix), ds);
+				execute(String.format(CreateTable, suffix), ds);
 			} catch (SQLException e) {
-
 				e.printStackTrace();
 			}
+		}
+	}
+
+	private static void execute(String sql, DataSource ds) throws SQLException {
+		try (Connection conn = ds.getConnection();
+				Statement stmt = conn.createStatement();) {
+			boolean executed = stmt.execute(sql);
 		}
 
 	}
@@ -145,10 +162,11 @@ public class RangedExample {
 	private static Map<String, String> extraInfo() {
 		Map<String, String> extraInfo = new HashMap<String, String>();
 		extraInfo.put("driverClass", "com.mysql.jdbc.Driver");
-		extraInfo.put("user", "root");
-		extraInfo.put("password", "");
-		extraInfo.put("host", "127.0.0.1");
+		extraInfo.put("username", "test");
+		extraInfo.put("password", "test");
+		extraInfo.put("host", "s2.to");
 		extraInfo.put("port", "3306");
+		extraInfo.put("schema", "test");
 		// pool config
 		extraInfo.put("maxActive", "10");
 		extraInfo.put("maxIdle", "10");
@@ -158,4 +176,15 @@ public class RangedExample {
 		extraInfo.put("testOnBorrow", "true");
 		return extraInfo;
 	}
+
+	static final String DropTable = "DROP TABLE IF EXISTS `user%s` ;";
+	static final String CreateTable = "CREATE TABLE `user%s` ("
+			+ " id_user int(11) NOT NULL AUTO_INCREMENT,"
+			+ "  email varchar(32) NOT NULL,"
+			+ "  username varchar(32) NOT NULL,"
+			+ "  password varchar(32) DEFAULT NULL,"
+			+ "  PRIMARY KEY (`id_user`),"
+			+ "  UNIQUE KEY `email_UNIQUE` (`email`),"
+			+ "  UNIQUE KEY `username_UNIQUE` (`username`)"
+			+ " ) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
 }

@@ -3,11 +3,14 @@ package fengfei.forest.slice.database;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import fengfei.forest.database.pool.PoolableDataSourceFactory;
 import fengfei.forest.database.pool.PoolableException;
@@ -20,13 +23,13 @@ import fengfei.forest.slice.exception.SliceRuntimeException;
 import fengfei.forest.slice.server.ServerRouter;
 
 public class PoolableDatabaseRouter<Key> extends ServerRouter<Key> {
-
+	static final Logger log = LoggerFactory
+			.getLogger(PoolableDatabaseRouter.class);
 	private Map<String, DataSource> pooledDataSources = new ConcurrentHashMap<>();
-	private ConnectonUrlMaker urlMaker;
+	private UrlMaker urlMaker;
 	private PoolableDataSourceFactory poolableDataSourceFactory;
 
-	public PoolableDatabaseRouter(Router<Key> router,
-			ConnectonUrlMaker urlMaker,
+	public PoolableDatabaseRouter(Router<Key> router, UrlMaker urlMaker,
 			PoolableDataSourceFactory poolableDataSourceFactory) {
 		super(router);
 		this.urlMaker = urlMaker;
@@ -51,6 +54,22 @@ public class PoolableDatabaseRouter<Key> extends ServerRouter<Key> {
 		return locate(res);
 	}
 
+	public void followSetup() {
+		Map<Long, Slice<Key>> slices = getSlices();
+		Set<Entry<Long, Slice<Key>>> entries = slices.entrySet();
+		for (Entry<Long, Slice<Key>> entry : entries) {
+			Slice<Key> slice = entry.getValue();
+			SliceResource facade = slice.get(10L, Function.Write);
+			PoolableDatabaseResource resource = new PoolableDatabaseResource(
+					facade);
+			locate(resource);
+		}
+	}
+
+	public UrlMaker getUrlMaker() {
+		return urlMaker;
+	}
+
 	private PoolableDatabaseResource locate(PoolableDatabaseResource res) {
 		String url = res.getURL();
 		if (url == null || "".equals(url)) {
@@ -70,6 +89,9 @@ public class PoolableDatabaseRouter<Key> extends ServerRouter<Key> {
 						res.getDriverClass(), url, res.getUsername(),
 						res.getPassword(), res.getExtraInfo());
 				pooledDataSources.put(url, dataSource);
+				log.debug(String.format("create pool for url: %s", url));
+				log.debug(String.format("create pool for user: %s %s",
+						res.getUsername(), res.getPassword()));
 			} catch (PoolableException e) {
 				throw new SliceRuntimeException(
 						"Can't create datasource for the slice " + res, e);
@@ -150,8 +172,6 @@ public class PoolableDatabaseRouter<Key> extends ServerRouter<Key> {
 	public PoolableDatabaseResource last(Function function) {
 		return new PoolableDatabaseResource(router.last(function));
 	}
-
-	 
 
 	public Set<PoolableDatabaseResource> getPoolableDatabaseResources() {
 		Set<Entry<Long, Slice<Key>>> entries = getSlices().entrySet();

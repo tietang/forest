@@ -39,7 +39,7 @@ public class UserDao {
 
 	public static User get(ForestGrower grower, String suffix, int idUser)
 			throws SQLException {
-		String sql = "SELECT id_user, email, username FROM user" + suffix
+		String sql = "SELECT id_user, email, username,password FROM user" + suffix
 				+ " where id_user=?";
 		User user = grower.selectOne(sql, new UserTransducer(), idUser);
 		return user;
@@ -47,7 +47,7 @@ public class UserDao {
 
 	public static User get(ForestGrower grower, String suffix, String email,
 			String pwd) throws SQLException {
-		String sql = "SELECT id_user, email, username FROM user" + suffix
+		String sql = "SELECT id_user, email, username,password  FROM user" + suffix
 				+ " where email=? and password=?";
 		User user = grower.selectOne(sql, new UserTransducer(), email, pwd);
 		return user;

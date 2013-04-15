@@ -1,6 +1,9 @@
-package fengfei.forest.slice.database;
+package fengfei.forest.slice.database.url;
 
-public class MysqlConnectonUrlMaker implements ConnectonUrlMaker {
+import fengfei.forest.slice.database.DatabaseResource;
+import fengfei.forest.slice.database.UrlMaker;
+
+public class MysqlUrlMaker implements UrlMaker {
 
 	@Override
 	public String makeUrl(DatabaseResource resource) {
