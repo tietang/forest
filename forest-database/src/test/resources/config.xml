@@ -22,7 +22,7 @@
 						<host>192.168.1.11</host>
 						<port>8022</port>
 						<schema>db1</schema>
-						<user>root</user>
+						<username>root</username>
 						<password>pwd</password>
 						<wight>1</wight>
 					</res01>
@@ -30,7 +30,7 @@
 						<host>192.168.1.11</host>
 						<port>8022</port>
 						<schema>db1</schema>
-						<user>root</user>
+						<username>root</username>
 						<password>pwd</password>
 						<wight>1</wight>
 					</res02>
@@ -38,7 +38,7 @@
 						<host>192.168.1.11</host>
 						<port>8022</port>
 						<schema>db1</schema>
-						<user>root</user>
+						<username>root</username>
 						<password>pwd</password>
 						<wight>1</wight>
 					</res03>
@@ -72,7 +72,7 @@
 				</plotterClass>
 				<overflow>Exception</overflow>
 				<extraInfos>
-					<driverClass>com.mysql.jdbc.Driver</driverClass>
+					<!-- <driverClass>com.mysql.jdbc.Driver</driverClass> -->
 					<maxActive>10</maxActive>
 					<minIdle>10</minIdle>
 					<initialSize>2</initialSize>
@@ -81,19 +81,19 @@
 				<resources>
 					<res01>
 						<url>jdbc:mysql://192.168.1.11:3306/db1</url>
-						<user>root</user>
+						<username>root</username>
 						<password>pwd</password>
 						<wight>1</wight>
 					</res01>
 					<res02>
 						<url>jdbc:mysql://192.168.1.11:3306/db2</url>
-						<user>root</user>
+						<username>root</username>
 						<password>pwd</password>
 						<wight>1</wight>
 					</res02>
 					<res03>
 						<url>jdbc:mysql://192.168.1.11:3306/db3</url>
-						<user>root</user>
+						<username>root</username>
 						<password>pwd</password>
 						<wight>1</wight>
 					</res03>

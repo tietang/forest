@@ -32,6 +32,7 @@ public class DatabaseRouterFactoryTest {
 		Assert.assertNotNull(router);
 		router = factory.getPoolableRouter("r02");
 		Assert.assertNotNull(router);
+		PoolableDatabaseResource resource=router.locate(1l);
 	}
 
 }

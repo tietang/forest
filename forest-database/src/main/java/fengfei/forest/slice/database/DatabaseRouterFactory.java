@@ -27,7 +27,8 @@ public class DatabaseRouterFactory extends DefaultRouterFactory {
 		super(config);
 	}
 
-	private static final Logger logger = LoggerFactory.getLogger(DatabaseRouterFactory.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(DatabaseRouterFactory.class);
 	public static final String Database = "database";
 	public static final String POOL_NAME = "poolName";
 	public static final String POOL_BONECP = "BoneCP";
@@ -37,7 +38,8 @@ public class DatabaseRouterFactory extends DefaultRouterFactory {
 	protected static Map<String, Class<? extends UrlMaker>> urlMakerClazz = new HashMap<>();
 	protected Map<String, PoolableDatabaseRouter<?>> poolableRouterCache = new HashMap<>();
 	static {
-		registerDriver("oracle.jdbc.driver.OracleDriver", OracleThinUrlMaker.class);
+		registerDriver("oracle.jdbc.driver.OracleDriver",
+				OracleThinUrlMaker.class);
 		registerDriver("org.gjt.mm.mysql.Driver", MysqlUrlMaker.class);
 		registerDriver("com.mysql.jdbc.Driver", MysqlUrlMaker.class);
 		registerDriver("org.postgresql.Driver", PostgreSQLUrlMaker.class);
@@ -50,14 +52,14 @@ public class DatabaseRouterFactory extends DefaultRouterFactory {
 	public <Key> PoolableDatabaseRouter<Key> getPoolableRouter(
 			UrlMaker urlMaker,
 			PoolableDataSourceFactory poolableDataSourceFactory,
-			Equalizer<Key> equalizer,
-			String routerName) {
+			Equalizer<Key> equalizer, String routerName) {
 		@SuppressWarnings("unchecked")
 		PoolableDatabaseRouter<Key> router = (PoolableDatabaseRouter<Key>) poolableRouterCache
 				.get(routerName);
 		if (router == null) {
 			Router<Key> origin = getRouter(routerName);
-			router = new PoolableDatabaseRouter<>(origin, urlMaker, poolableDataSourceFactory);
+			router = new PoolableDatabaseRouter<>(origin, urlMaker,
+					poolableDataSourceFactory);
 			router.setEqualizer(equalizer);
 			poolableRouterCache.put(routerName, router);
 		}
@@ -73,7 +75,8 @@ public class DatabaseRouterFactory extends DefaultRouterFactory {
 				.get(routerName);
 		if (router == null) {
 			Router<Key> origin = getRouter(routerName);
-			router = new PoolableDatabaseRouter<>(origin, urlMaker, poolableDataSourceFactory);
+			router = new PoolableDatabaseRouter<>(origin, urlMaker,
+					poolableDataSourceFactory);
 			poolableRouterCache.put(routerName, router);
 		}
 		return router;
@@ -88,7 +91,8 @@ public class DatabaseRouterFactory extends DefaultRouterFactory {
 		if (router == null) {
 			UrlMaker urlMaker = getUrlMaker(routerName);
 			Router<Key> origin = getRouter(routerName);
-			router = new PoolableDatabaseRouter<>(origin, urlMaker, poolableDataSourceFactory);
+			router = new PoolableDatabaseRouter<>(origin, urlMaker,
+					poolableDataSourceFactory);
 			poolableRouterCache.put(routerName, router);
 		}
 		return router;
@@ -102,14 +106,16 @@ public class DatabaseRouterFactory extends DefaultRouterFactory {
 			PoolableDataSourceFactory poolableDataSourceFactory = getPoolableDataSourceFactory(routerName);
 			UrlMaker urlMaker = getUrlMaker(routerName);
 			Router<Key> origin = getRouter(routerName);
-			router = new PoolableDatabaseRouter<>(origin, urlMaker, poolableDataSourceFactory);
+			router = new PoolableDatabaseRouter<>(origin, urlMaker,
+					poolableDataSourceFactory);
 			poolableRouterCache.put(routerName, router);
 		}
 		return router;
 	}
 
 	//
-	public PoolableDataSourceFactory getPoolableDataSourceFactory(String routerName) {
+	public PoolableDataSourceFactory getPoolableDataSourceFactory(
+			String routerName) {
 		RouterConfig router = routerConfigCache.get(routerName);
 		if (router == null) {
 			throw new NonExistedSliceException("routerName=" + routerName);
@@ -134,8 +140,7 @@ public class DatabaseRouterFactory extends DefaultRouterFactory {
 		}
 	}
 
-	public static void registerDriver(
-			String driverName,
+	public static void registerDriver(String driverName,
 			Class<? extends UrlMaker> clazz) {
 		urlMakerClazz.put(driverName, clazz);
 	}
@@ -149,9 +154,12 @@ public class DatabaseRouterFactory extends DefaultRouterFactory {
 		String driverName = info.get(DatabaseResource.KEY_DRIVER_CLASS);
 		Class<? extends UrlMaker> clazz = urlMakerClazz.get(driverName);
 		if (null == clazz) {
-			String msg = "Not registered ConnectonUrlMaker for driver: " + driverName;
-			logger.error(msg);
-			throw new RuntimeException(msg);
+			String msg = "Not registered UrlMaker for driver: "
+					+ driverName;
+			// logger.error(msg);
+			logger.warn(msg);
+			// throw new RuntimeException(msg);
+			return null;
 		}
 		try {
 			return clazz.newInstance();

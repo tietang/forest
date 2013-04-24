@@ -11,9 +11,10 @@ public class ServerResource extends SliceResource {
 	public static final String KEY_SCHEMA = "schema";
 
 	public ServerResource(SliceResource resource) {
-		super(resource.getSliceId(), resource.getFunction(), resource.getResource());
-		this.alias=resource.getAlias();
- 
+		super(resource.getSliceId(), resource.getFunction(), resource
+				.getResource());
+		this.alias = resource.getAlias();
+
 	}
 
 	public String getUsername() {
@@ -62,6 +63,7 @@ public class ServerResource extends SliceResource {
 
 	@Override
 	public String toString() {
-		return "ServerResource [sliceId=" + sliceId + ", alias=" + alias + ", function=" + function + ", resource=" + resource + "]";
+		return "ServerResource [sliceId=" + sliceId + ", alias=" + alias
+				+ ", function=" + function + ", resource=" + resource + "]";
 	}
 }

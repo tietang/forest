@@ -90,8 +90,8 @@ public class PoolableDatabaseRouter<Key> extends ServerRouter<Key> {
 						res.getPassword(), res.getExtraInfo());
 				pooledDataSources.put(url, dataSource);
 				log.debug(String.format("create pool for url: %s", url));
-				log.debug(String.format("create pool for user: %s %s",
-						res.getUsername(), res.getPassword()));
+				log.debug(String.format("create pool for user: %s",
+						res.getUsername()));
 			} catch (PoolableException e) {
 				throw new SliceRuntimeException(
 						"Can't create datasource for the slice " + res, e);
