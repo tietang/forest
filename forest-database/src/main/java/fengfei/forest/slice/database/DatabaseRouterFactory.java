@@ -34,7 +34,7 @@ public class DatabaseRouterFactory extends DefaultRouterFactory {
 	public static final String POOL_DBCP = "DBCP";
 	public static final String POOL_TOMCAT_JDBC = "TomcatJDBC";
 	public static final String POOL_DRUID = "Druid";
-	protected static Map<String, Class<? extends UrlMaker>> connectonUrlMakerClazz = new HashMap<>();
+	protected static Map<String, Class<? extends UrlMaker>> urlMakerClazz = new HashMap<>();
 	protected Map<String, PoolableDatabaseRouter<?>> poolableRouterCache = new HashMap<>();
 	static {
 		registerDriver("oracle.jdbc.driver.OracleDriver", OracleThinUrlMaker.class);
@@ -86,7 +86,7 @@ public class DatabaseRouterFactory extends DefaultRouterFactory {
 		PoolableDatabaseRouter<Key> router = (PoolableDatabaseRouter<Key>) poolableRouterCache
 				.get(routerName);
 		if (router == null) {
-			UrlMaker urlMaker = getConnectonUrlMaker(routerName);
+			UrlMaker urlMaker = getUrlMaker(routerName);
 			Router<Key> origin = getRouter(routerName);
 			router = new PoolableDatabaseRouter<>(origin, urlMaker, poolableDataSourceFactory);
 			poolableRouterCache.put(routerName, router);
@@ -100,7 +100,7 @@ public class DatabaseRouterFactory extends DefaultRouterFactory {
 				.get(routerName);
 		if (router == null) {
 			PoolableDataSourceFactory poolableDataSourceFactory = getPoolableDataSourceFactory(routerName);
-			UrlMaker urlMaker = getConnectonUrlMaker(routerName);
+			UrlMaker urlMaker = getUrlMaker(routerName);
 			Router<Key> origin = getRouter(routerName);
 			router = new PoolableDatabaseRouter<>(origin, urlMaker, poolableDataSourceFactory);
 			poolableRouterCache.put(routerName, router);
@@ -137,17 +137,17 @@ public class DatabaseRouterFactory extends DefaultRouterFactory {
 	public static void registerDriver(
 			String driverName,
 			Class<? extends UrlMaker> clazz) {
-		connectonUrlMakerClazz.put(driverName, clazz);
+		urlMakerClazz.put(driverName, clazz);
 	}
 
-	public UrlMaker getConnectonUrlMaker(String routerName) {
+	public UrlMaker getUrlMaker(String routerName) {
 		RouterConfig routerConfig = routerConfigCache.get(routerName);
 		if (routerConfig == null) {
 			throw new NonExistedSliceException("routerName=" + routerName);
 		}
 		Map<String, String> info = routerConfig.defaultExtraInfo;
 		String driverName = info.get(DatabaseResource.KEY_DRIVER_CLASS);
-		Class<? extends UrlMaker> clazz = connectonUrlMakerClazz.get(driverName);
+		Class<? extends UrlMaker> clazz = urlMakerClazz.get(driverName);
 		if (null == clazz) {
 			String msg = "Not registered ConnectonUrlMaker for driver: " + driverName;
 			logger.error(msg);

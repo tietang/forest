@@ -447,10 +447,11 @@ public class SliceConfigReader implements SliceReader<Config> {
 	}
 
 	protected Map<String, String> readExtraInfos(String path) throws Exception {
-		String info = source.get(path + FOREST_EXTRA_INFO_PATH);
+		check(path);
+		// String info = source.get(path + FOREST_EXTRA_INFO_PATH);
+		String info = source.get(path);
 		Map<String, String> kv = splitValue(info);
-		List<BerainEntry> entries = source.children(path
-				+ FOREST_EXTRA_INFO_PATH);
+		List<BerainEntry> entries = source.children(path);
 		Map<String, String> map = toMap(entries);
 		kv.putAll(map);
 		return kv;

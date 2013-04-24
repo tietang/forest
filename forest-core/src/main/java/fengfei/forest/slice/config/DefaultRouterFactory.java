@@ -21,7 +21,6 @@ import fengfei.forest.slice.config.Config.ResConfig;
 import fengfei.forest.slice.config.Config.RouterConfig;
 import fengfei.forest.slice.config.Config.SliceConfig;
 import fengfei.forest.slice.config.xml.XmlSliceConfigReader;
-import fengfei.forest.slice.config.zk.ZKSliceConfigReader;
 import fengfei.forest.slice.exception.NonExistedSliceException;
 import fengfei.forest.slice.impl.ReadWriteSlice;
 

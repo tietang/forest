@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<main>
+		<routers>
+			<r01>
+				<parentId></parentId>
+				<parentPath></parentPath>
+				<eqClass>fengfei.forest.slice.equalizer.LongEqualizer</eqClass>
+				<routerClass>fengfei.forest.slice.impl.AccuracyRouter</routerClass>
+				<plotterClass>fengfei.forest.slice.plotter.LoopPlotter
+				</plotterClass>
+				<overflow>Exception</overflow>
+				<resources>
+					<res01>
+						<host>192.168.1.11</host>
+						<port>8022</port>
+						<schema>db1</schema>
+						<user>root</user>
+						<password>pwd</password>
+						<wight>1</wight>
+					</res01>
+					<res02>
+						<host>192.168.1.11</host>
+						<port>8022</port>
+						<schema>db1</schema>
+						<user>root</user>
+						<password>pwd</password>
+						<wight>1</wight>
+					</res02>
+					<res03>
+						<host>192.168.1.11</host>
+						<port>8022</port>
+						<schema>db1</schema>
+						<user>root</user>
+						<password>pwd</password>
+						<wight>1</wight>
+					</res03>
+
+				</resources>
+				<slices>
+					<slice>
+						<id>1</id>
+						<alias>_1</alias>
+						<read>res01</read>
+						<write>res02</write>
+						<readwrite>res03</readwrite>
+						<range>1~100,1000~1024</range>
+					</slice>
+					<slice>
+						<id>2</id>
+						<alias>_2</alias>
+						<read>res01</read>
+						<write>res02</write>
+						<readwrite>res03</readwrite>
+						<range>101~999</range>
+					</slice>
+				</slices>
+			</r01>
+
+		</routers>
+	</main>
+</root>
