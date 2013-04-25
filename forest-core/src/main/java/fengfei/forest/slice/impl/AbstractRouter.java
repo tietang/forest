@@ -280,7 +280,7 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 		}
 		Resource resource = resources.get(resourceName);
 		if (resource == null) {
-			throw new NonExistedResourceException("can't register resource: "
+			throw new NonExistedResourceException("Non-exists resource, can't map resource: "
 					+ resourceName);
 		}
 		update(slice, slice.getAlias(), new SliceResource(sliceId, function,

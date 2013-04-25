@@ -21,7 +21,7 @@ import fengfei.forest.slice.Equalizer;
  * 5=[5, 11, 17, 23, 29, 35, 41, 47, 53, 59, 65, 71, 77, 83, 89, 95]
  * 6=[6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 72, 78, 84, 90, 96]
  * 
- * 
+ * reverse: seq*sliceSize+sliceId
  * </pre>
  * 
  * @author wtt

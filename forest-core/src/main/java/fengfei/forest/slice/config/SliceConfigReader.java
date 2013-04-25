@@ -96,10 +96,18 @@ public class SliceConfigReader implements SliceReader<Config> {
 		config.setPath(rootPath + FOREST_ROOT_PATH);
 
 		try {
+			List<BerainEntry> defaultExtraInfos = source.children(rootPath
+					+ FOREST_EXTRA_INFO_PATH);
+			Map<String, String> kv = toMap(defaultExtraInfos);
+			config.defaultExtraInfo.putAll(kv);
 			check(config.path);
 			List<BerainEntry> routerEntries = source.children(config.path);
 			for (BerainEntry entry : routerEntries) {
 				RouterConfig routerConfig = readRouterConfig(entry);
+				Map<String, String> infos = new HashMap<>(
+						routerConfig.defaultExtraInfo);
+				infos.putAll(routerConfig.defaultExtraInfo);
+				routerConfig.defaultExtraInfo.putAll(infos);
 				config.addRouterConfig(routerConfig);
 			}
 
@@ -447,7 +455,7 @@ public class SliceConfigReader implements SliceReader<Config> {
 	}
 
 	protected Map<String, String> readExtraInfos(String path) throws Exception {
-		check(path);
+		// check(path);
 		// String info = source.get(path + FOREST_EXTRA_INFO_PATH);
 		String info = source.get(path);
 		Map<String, String> kv = splitValue(info);

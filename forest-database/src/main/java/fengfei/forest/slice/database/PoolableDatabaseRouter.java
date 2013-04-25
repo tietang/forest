@@ -25,7 +25,7 @@ import fengfei.forest.slice.server.ServerRouter;
 public class PoolableDatabaseRouter<Key> extends ServerRouter<Key> {
 	static final Logger log = LoggerFactory
 			.getLogger(PoolableDatabaseRouter.class);
-	private Map<String, DataSource> pooledDataSources = new ConcurrentHashMap<>();
+	public static Map<String, DataSource> pooledDataSources = new ConcurrentHashMap<>();
 	private UrlMaker urlMaker;
 	private PoolableDataSourceFactory poolableDataSourceFactory;
 
@@ -138,7 +138,7 @@ public class PoolableDatabaseRouter<Key> extends ServerRouter<Key> {
 	// }
 	// }
 	// }
-	public Map<String, DataSource> allPooledDataSources() {
+	public static Map<String, DataSource> allPooledDataSources() {
 		return pooledDataSources;
 	}
 

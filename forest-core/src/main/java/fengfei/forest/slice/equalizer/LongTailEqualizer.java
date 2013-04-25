@@ -59,10 +59,10 @@ public class LongTailEqualizer implements Equalizer<Long> {
 		int size = 10;
 		MultiMap map = new MultiValueMap();
 		Random random = new Random();
-		LongTailEqualizer e = new LongTailEqualizer(1);
-		for (int i = 1; i <= 100; i++) {
+		LongTailEqualizer e = new LongTailEqualizer(2);
+		for (int i = 1; i <= 1000; i++) {
 			long key = i + 98;
-			key = Math.abs(random.nextLong() % 1000);
+//			key = Math.abs(random.nextLong() % 1000);
 			long index = e.get(key, size);
 			map.put(index, key);
 			System.out.println(i + " : " + key + " : " + index);

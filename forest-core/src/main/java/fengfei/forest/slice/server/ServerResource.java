@@ -26,11 +26,12 @@ public class ServerResource extends SliceResource {
 	}
 
 	public String getPassword() {
-		return getExtraInfo().get(KEY_PASSWORD);
+		String pwd = getExtraInfo().get(KEY_PASSWORD);
+		return pwd == null ? "" : pwd;
 	}
 
 	public void setPassword(String password) {
-		getExtraInfo().put(KEY_PASSWORD, password);
+		getExtraInfo().put(KEY_PASSWORD, password == null ? "" : password);
 	}
 
 	public String getHost() {

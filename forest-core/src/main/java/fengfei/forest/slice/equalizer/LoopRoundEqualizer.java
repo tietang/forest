@@ -43,9 +43,10 @@ public class LoopRoundEqualizer implements Equalizer<Long> {
 
 	@Override
 	public long get(Long key, int sliceSize) {
+		
 		long module = key % moduleSize+1;
 		long index = Math.abs(module % sliceSize);
-		return module;// == 0 ? moduleSize : module;
+		return index;// == 0 ? moduleSize : module;
 	}
 
 	public static void main(String[] args) {
@@ -54,7 +55,7 @@ public class LoopRoundEqualizer implements Equalizer<Long> {
 		Random random = new Random();
 		LoopRoundEqualizer e = new LoopRoundEqualizer(6);
 		for (int i = 1; i <= 100; i++) {
-			long key = i;
+			long key = i+1024;
 			// key = random.nextLong();
 			long index = e.get(key, size);
 			map.put(index, key);
