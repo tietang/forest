@@ -29,37 +29,36 @@ import fengfei.forest.slice.Equalizer;
  */
 public class LongModuleEqualizer implements Equalizer<Long> {
 
-	/**
+    /**
  * 
  */
-	@Override
-	public long get(Long key, int sliceSize) {
+    @Override
+    public long get(Long key, int sliceSize) {
 
-		long index = Math.abs(key % sliceSize);
-		return index == 0 ? sliceSize : index;
-	}
+        long index = Math.abs(key % sliceSize);
+        return index == 0 ? sliceSize : index;
+    }
 
-	public static void main(String[] args) {
-		int size = 7;
-		MultiMap map = new MultiValueMap();
-		Random random = new Random();
-		LongModuleEqualizer e = new LongModuleEqualizer();
-		for (int i = 1; i <= 100; i++) {
-			long key = i;
-			// key = random.nextLong();
-			long index = e.get(key, size);
-			map.put(index, key);
-			// System.out.println(i + " : " + index);
-			// System.out.println(i + " : " + e.get(random.nextLong(), 3));
-		}
-		Set<Entry> set = map.entrySet();
-		for (Entry entry : set) {
-			List list = (List) entry.getValue();
+    public static void main(String[] args) {
+        int size = 10;
+        MultiMap map = new MultiValueMap();
+        Random random = new Random();
+        LongModuleEqualizer e = new LongModuleEqualizer();
+        for (int i = 1; i <= 100; i++) {
+            long key = i;
+            // key = random.nextLong();
+            long index = e.get(key, size);
+            map.put(index, key);
+            // System.out.println(i + " : " + index);
+            // System.out.println(i + " : " + e.get(random.nextLong(), 3));
+        }
+        Set<Entry> set = map.entrySet();
+        for (Entry entry : set) {
+            List list = (List) entry.getValue();
 
-			System.out.println(entry.getKey() + "=" + list.size() + "  "
-					+ entry);
-			// System.out.println(entry.getKey() + "=" + list.size() );
-		}
+            System.out.println(entry.getKey() + "=" + list.size() + "  " + entry);
+            // System.out.println(entry.getKey() + "=" + list.size() );
+        }
 
-	}
+    }
 }

@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<main>
+		<resources>
+			<res01>
+				<host>192.168.1.11</host>
+				<port>8022</port>
+				<schema>db1</schema>
+				<user>root</user>
+				<password>pwd</password>
+				<wight>1</wight>
+			</res01>
+			<res02>
+				<host>192.168.1.11</host>
+				<port>8022</port>
+				<schema>db1</schema>
+				<user>root</user>
+				<password>pwd</password>
+				<wight>1</wight>
+			</res02>
+			<res03>
+				<host>192.168.1.11</host>
+				<port>8022</port>
+				<schema>db1</schema>
+				<user>root</user>
+				<password>pwd</password>
+				<wight>1</wight>
+			</res03>
+
+		</resources>
 		<routers>
 			<r01>
 				<parentId></parentId>

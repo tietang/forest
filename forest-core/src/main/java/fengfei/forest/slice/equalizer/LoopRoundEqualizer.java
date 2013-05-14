@@ -27,47 +27,48 @@ import fengfei.forest.slice.Equalizer;
  */
 public class LoopRoundEqualizer implements Equalizer<Long> {
 
-	private long moduleSize = 1024;
+    private long moduleSize = 1024;
 
-	public LoopRoundEqualizer() {
-	}
+    public LoopRoundEqualizer() {
+    }
 
-	public LoopRoundEqualizer(long moduleSize) {
-		super();
-		this.moduleSize = moduleSize;
-	}
+    public LoopRoundEqualizer(long moduleSize) {
+        super();
+        this.moduleSize = moduleSize;
+    }
 
-	public long getModuleSize() {
-		return moduleSize;
-	}
+    public long getModuleSize() {
+        return moduleSize;
+    }
 
-	@Override
-	public long get(Long key, int sliceSize) {
-		
-		long module = key % moduleSize+1;
-		long index = Math.abs(module % sliceSize);
-		return index;// == 0 ? moduleSize : module;
-	}
+    @Override
+    public long get(Long key, int sliceSize) {
 
-	public static void main(String[] args) {
-		int size = 6;
-		MultiMap map = new MultiValueMap();
-		Random random = new Random();
-		LoopRoundEqualizer e = new LoopRoundEqualizer(6);
-		for (int i = 1; i <= 100; i++) {
-			long key = i+1024;
-			// key = random.nextLong();
-			long index = e.get(key, size);
-			map.put(index, key);
-			// System.out.println(i + " : " + index);
-			// System.out.println(i + " : " + e.get(random.nextLong(), 3));
-		}
-		Set<Entry> set = map.entrySet();
-		for (Entry entry : set) {
-			List list = (List) entry.getValue();
-			System.out.println(entry);
-			// System.out.println(entry.getKey() + "=" + list.size());
-		}
+        long module = Math.abs(key % moduleSize + 1);
+        long index = Math.abs(module % sliceSize);
+        return module == 0 ? moduleSize : module;
+    }
 
-	}
+    public static void main(String[] args) {
+        int size = 10;
+
+        MultiMap map = new MultiValueMap();
+        Random random = new Random();
+        LoopRoundEqualizer e = new LoopRoundEqualizer(10);
+        for (int i = 1; i <= 100; i++) {
+            long key = i ;//+ 1024;
+             key = random.nextLong();
+            long index = e.get(key, size);
+            map.put(index, key);
+            // System.out.println(i + " : " + index);
+            // System.out.println(i + " : " + e.get(random.nextLong(), 3));
+        }
+        Set<Entry> set = map.entrySet();
+        for (Entry entry : set) {
+            List list = (List) entry.getValue();
+            System.out.println(entry);
+            // System.out.println(entry.getKey() + "=" + list.size());
+        }
+
+    }
 }

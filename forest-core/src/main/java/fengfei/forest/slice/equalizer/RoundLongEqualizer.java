@@ -55,13 +55,13 @@ public class RoundLongEqualizer implements Equalizer<Long> {
 	}
 
 	public static void main(String[] args) {
-		int size = 7;
+		int size = 10;
 		MultiMap map = new MultiValueMap();
 		Random random = new Random();
 		RoundLongEqualizer e = new RoundLongEqualizer(1024);
 		for (int i = 1; i <= 100; i++) {
 			long key = i;
-			// key = random.nextLong();
+//			 key = random.nextLong();
 			long index = e.get(key, size);
 			map.put(index, key);
 			// System.out.println(i + " : " + index);
