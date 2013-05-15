@@ -28,8 +28,11 @@ public class DefaultRouterFactory extends AbstractRouterFactory {
 
 	protected Map<String, Router<?>> routers = new HashMap<>();
 	protected Map<String, RouterConfig> routerConfigCache = new HashMap<>();
+	protected Set<ResConfig> globalResources = new HashSet<>();
+	protected Map<String, String>  globalExtraInfo = new HashMap<>();
 
 	public DefaultRouterFactory(Config config) {
+
 		config(config);
 	}
 
@@ -51,6 +54,8 @@ public class DefaultRouterFactory extends AbstractRouterFactory {
 	}
 
 	public void config(Config config) {
+		globalResources = config.getResources();
+		globalExtraInfo = config.defaultExtraInfo;
 		List<RouterConfig> rcs = config.getRouters();
 		for (RouterConfig rc : rcs) {
 			routerConfigCache.put(rc.id, rc);
@@ -149,10 +154,25 @@ public class DefaultRouterFactory extends AbstractRouterFactory {
 			Plotter plotter = newInstance(plotterClass);
 			router.setPlotter(plotter);
 		}
+		buildGolobalResources(router);
 		router.setOverflowType(OverflowType.find(routerConfig.overflow));
 		buildResources(routerConfig, router);
 		buildSlices(routerConfig, router);
 		return router;
+	}
+
+	<Key> void buildGolobalResources(Router<Key> router) throws Exception {
+
+		for (ResConfig res : globalResources) {
+			String name = res.name;
+			Resource resource = new Resource(name);	
+			// order 1. put router extraInfo
+			resource.addExtraInfo(globalExtraInfo);
+			// order 2. put key/value info
+			resource.addExtraInfo(res.extraInfo);
+			resource.setWeight(res.weight);
+			router.registerGlobal(resource);
+		}
 	}
 
 	<Key> void buildResources(RouterConfig routerConfig, Router<Key> router)
