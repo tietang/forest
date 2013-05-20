@@ -1,6 +1,5 @@
 package fengfei.forest.slice;
 
-import java.util.List;
 import java.util.Map;
 
 public interface SliceRegistry<Key> {

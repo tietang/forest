@@ -1,7 +1,6 @@
 package fengfei.forest.slice.example;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import fengfei.forest.slice.Range;
