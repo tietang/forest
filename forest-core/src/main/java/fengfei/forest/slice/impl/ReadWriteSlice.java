@@ -1,14 +1,19 @@
 package fengfei.forest.slice.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import fengfei.forest.slice.Failover;
 import fengfei.forest.slice.Plotter;
+import fengfei.forest.slice.Router;
+import fengfei.forest.slice.Slice;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
+import fengfei.forest.slice.Status;
 import fengfei.forest.slice.exception.SliceRuntimeException;
 import fengfei.forest.slice.exception.UnSupportedException;
 import fengfei.forest.slice.plotter.HashPlotter;
@@ -19,7 +24,12 @@ import fengfei.forest.slice.plotter.HashPlotter;
  * 
  * @param <Key>
  */
-public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
+public class ReadWriteSlice<Key> implements Slice<Key> {
+	protected Long sliceId;
+	protected String alias;
+	protected Map<String, String> params = new HashMap<>();
+	protected Router<Key> childRouter;
+
 	protected List<SliceResource> resources = new ArrayList<>();
 	protected Lock lock = new ReentrantLock();
 	private ResourceTribe read = new ResourceTribe();
@@ -28,7 +38,8 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 	protected Plotter plotter = new HashPlotter();
 
 	public ReadWriteSlice(Long sliceId) {
-		super(sliceId);
+		setSliceId(sliceId);
+		setAlias(String.valueOf(sliceId));
 	}
 
 	public ReadWriteSlice(Long sliceId, Plotter plotter) {
@@ -39,15 +50,13 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 	@Override
 	public void setPlotter(Plotter plotter) {
 		this.plotter = plotter;
-		read.setPlotter(plotter);
-		write.setPlotter(plotter);
-		all.setPlotter(plotter);
 	}
 
-	public void add(SliceResource resource, Function function) {
+	public void add(SliceResource resource) {
 		mergeInheritInfoTo(resource);
 		resource.setSliceId(sliceId);
 		resource.setAlias(alias);
+		Function function = resource.getFunction();
 		switch (function) {
 		case Read:
 			read.addResource(resource);
@@ -86,11 +95,11 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 	public SliceResource get(long seed, Function function) {
 		switch (function) {
 		case Read:
-			return read.next(seed);
+			return next(seed, read);
 		case Write:
-			return write.next(seed);
+			return next(seed, write);
 		case ReadWrite:
-			return all.next(seed);
+			return next(seed, all);
 		default:
 			break;
 		}
@@ -99,7 +108,13 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 
 	@Override
 	public SliceResource getAny(long seed) {
-		return all.next(seed);
+		return next(seed, all);
+	}
+
+	protected SliceResource next(long seed, ResourceTribe tribe) {
+
+		return plotter.to(seed, tribe.getAvailableResources(),
+				tribe.getFailResources());
 	}
 
 	public ResourceTribe getReadTribe() {
@@ -121,6 +136,7 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 	public boolean fail(SliceResource resource) {
 		lock.lock();
 		try {
+			resource.setStatus(Status.Error);
 			return (fail(read, resource) || fail(write, resource))
 					&& fail(all, resource);
 		} catch (Exception e) {
@@ -132,16 +148,19 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 	}
 
 	public boolean fail(ResourceTribe tribe, SliceResource resource) {
+
 		List<SliceResource> availableResources = tribe.getAvailableResources();
 		List<SliceResource> failResources = tribe.getFailResources();
 		availableResources.remove(resource);
 		failResources.add(resource);
+
 		return true;
 	}
 
 	public boolean recover(SliceResource resource) {
 		lock.lock();
 		try {
+			resource.setStatus(Status.Normal);
 			return (recover(read, resource) || recover(write, resource))
 					&& recover(all, resource);
 		} catch (Exception e) {
@@ -182,4 +201,73 @@ public class ReadWriteSlice<Key> extends AbstractSlice<Key> {
 		this.registeredId = registeredId;
 	}
 
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
+
+	public Long getSliceId() {
+		return sliceId;
+	}
+
+	public void setSliceId(Long sliceId) {
+		this.sliceId = sliceId;
+	}
+
+	public Router<Key> getChildRouter() {
+		return childRouter;
+	}
+
+	public void setChildRouter(Router<Key> childRouter) {
+		this.childRouter = childRouter;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see fengfei.forest.slice.ResourceSet#setExtraInfo(java.util.Map)
+	 */
+	@Override
+	public void setParams(Map<String, String> extraInfo) {
+		this.params = extraInfo;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see fengfei.forest.slice.ResourceSet#addExtraInfo(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public void addParams(String key, String value) {
+		params.put(key, value);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see fengfei.forest.slice.ResourceSet#getExtraInfo()
+	 */
+	@Override
+	public Map<String, String> getParams() {
+		return params;
+	}
+
+	@Override
+	public void addParams(Map<String, String> extraInfo) {
+		if (extraInfo == null) {
+			return;
+		}
+		this.params.putAll(new HashMap<>(extraInfo));
+	}
+
+	protected void mergeInheritInfoTo(SliceResource resource) {
+		Map<String, String> extraInfo = new HashMap<String, String>(
+				resource.getExtraInfo());
+		resource.addParams(getParams());
+		resource.addParams(extraInfo);
+	}
 }

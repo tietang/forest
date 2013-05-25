@@ -5,9 +5,7 @@ import java.util.Map;
 public class SliceResource {
 
 	public static enum Function {
-		Read,
-		Write,
-		ReadWrite;
+		Read, Write, ReadWrite;
 
 		public static Function find(String name) {
 			if (name == null || "".equals(name)) {
@@ -102,6 +100,10 @@ public class SliceResource {
 		return resource.status;
 	}
 
+	public void setStatus(Status status) {
+		this.resource.status = status;
+	}
+
 	public Function getFunction() {
 		return function;
 	}
@@ -112,6 +114,7 @@ public class SliceResource {
 
 	@Override
 	public String toString() {
-		return "SliceResource [sliceId=" + sliceId + ", alias=" + alias + ", function=" + function + ", resource=" + resource + "]";
+		return "SliceResource [sliceId=" + sliceId + ", alias=" + alias
+				+ ", function=" + function + ", resource=" + resource + "]";
 	}
 }

@@ -3,26 +3,14 @@ package fengfei.forest.slice.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import fengfei.forest.slice.Plotter;
 import fengfei.forest.slice.SliceResource;
-import fengfei.forest.slice.plotter.HashPlotter;
 
 public class ResourceTribe {
 
 	protected List<SliceResource> availableResources = new ArrayList<>();
 	protected List<SliceResource> failResources = new ArrayList<>();
-	protected Plotter plotter = new HashPlotter();
 
 	public ResourceTribe() {
-	}
-
-	public ResourceTribe(Plotter plotter) {
-		super();
-		this.plotter = plotter;
-	}
-
-	public void setPlotter(Plotter plotter) {
-		this.plotter = plotter;
 	}
 
 	public List<SliceResource> getAvailableResources() {
@@ -54,15 +42,9 @@ public class ResourceTribe {
 		return failResources;
 	}
 
-	public SliceResource next(long seed) {
-
-		return plotter.to(seed, availableResources, failResources);
-	}
-
 	@Override
 	public String toString() {
 		return "ResourceTribe [availableResources=" + availableResources
-				+ ", failResources=" + failResources + ", plotter=" + plotter
-				+ "]";
+				+ ", failResources=" + failResources + " ]";
 	}
 }

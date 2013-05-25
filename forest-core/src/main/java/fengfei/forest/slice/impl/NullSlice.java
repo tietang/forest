@@ -55,11 +55,6 @@ public class NullSlice<Key> implements Slice<Key> {
 	}
 
 	@Override
-	public void add(SliceResource resource, Function function) {
-
-	}
-
-	@Override
 	public void remove(SliceResource resource) {
 
 	}
@@ -94,7 +89,7 @@ public class NullSlice<Key> implements Slice<Key> {
 
 	@Override
 	public void setAlias(String alias) {
-		
+
 	}
 
 	@Override
@@ -147,7 +142,7 @@ public class NullSlice<Key> implements Slice<Key> {
 	@Override
 	public void setRegisteredId(Long registeredId) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

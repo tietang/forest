@@ -30,8 +30,7 @@ public interface Slice<Key> extends Failover {
 	void addParams(Map<String, String> params);
 
 	void add(SliceResource resource);
-
-	void add(SliceResource resource, Function function);
+ 
 
 	void remove(SliceResource resource);
 
