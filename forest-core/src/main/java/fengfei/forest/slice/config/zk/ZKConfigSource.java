@@ -38,7 +38,7 @@ public class ZKConfigSource implements ConfigSource {
 
 			init(properties);
 		} catch (IOException e) {
-			log.error("init error.", e);
+			log.error("init zookeeper error.", e);
 		}
 
 	}
