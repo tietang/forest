@@ -3,11 +3,12 @@ package fengfei.forest.slice.database;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import fengfei.forest.slice.config.Config;
 import fengfei.forest.slice.config.xml.XmlSliceConfigReader;
-
+@Ignore
 public class DatabaseRouterFactoryTest {
 	static DatabaseRouterFactory factory = null;
 
