@@ -163,13 +163,16 @@ public class Transactions {
             model = new TaModel<>();
             model = retryExecute(model, resource, callback, retries);
             return model.returnValue;
-        } catch (SQLException e) {
+            // } catch (SQLException e) {
+            // if (model != null && model.grower != null) {
+            // model.grower.rollback();
+            // }
+            //
+            // throw e;
+        } catch (Throwable e) {
             if (model != null && model.grower != null) {
                 model.grower.rollback();
             }
-
-            throw e;
-        } catch (Throwable e) {
             throw e;
         } finally {
             if (model != null && model.grower != null) {
@@ -190,13 +193,17 @@ public class Transactions {
             model = new TaModel<>();
             model = retryExecute(model, resource, callback, retries);
             return model.returnValue;
-        } catch (SQLException e) {
+            // } catch (SQLException e) {
+            // if (model != null && model.grower != null) {
+            // model.grower.rollback();
+            // }
+            //
+            // throw e;
+        } catch (Throwable e) {
             if (model != null && model.grower != null) {
                 model.grower.rollback();
             }
 
-            throw e;
-        } catch (Throwable e) {
             throw e;
         } finally {
             if (model != null && model.grower != null) {
@@ -300,13 +307,16 @@ public class Transactions {
             model = new TaModel<>();
             model = retryExecute(model, dataSource, callback, retries);
             return model.returnValue;
-        } catch (SQLException e) {
+            // } catch (SQLException e) {
+            // if (model != null && model.grower != null) {
+            // model.grower.rollback();
+            // }
+            //
+            // throw e;
+        } catch (Throwable e) {
             if (model != null && model.grower != null) {
                 model.grower.rollback();
             }
-
-            throw e;
-        } catch (Throwable e) {
             throw e;
         } finally {
             if (model != null && model.grower != null) {
