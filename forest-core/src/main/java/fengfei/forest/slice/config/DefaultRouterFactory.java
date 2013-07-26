@@ -211,6 +211,7 @@ public class DefaultRouterFactory extends AbstractRouterFactory {
 			} else {
 				router.register(slice, ranges);
 			}
+
 			mapResource(Function.Read, read, router, sliceId, alias, ranges);
 			mapResource(Function.Write, write, router, sliceId, alias, ranges);
 			mapResource(Function.ReadWrite, rw, router, sliceId, alias, ranges);
@@ -227,6 +228,10 @@ public class DefaultRouterFactory extends AbstractRouterFactory {
 		slice.setPlotter(plotter);
 		slice.addParams(defaultExtraInfo);
 		slice.addParams(sliceConfig.extraInfo);
+		if(sliceConfig.alias!=null && !"".equals(sliceConfig.alias)){
+		    slice.setAlias(sliceConfig.alias);
+		    
+		}
 		buildReource(routerConfig, sliceConfig, sliceConfig.resConfigs, slice);
 
 		//

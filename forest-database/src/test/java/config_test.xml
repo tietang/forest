@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<resources>
+		<res01>
+			<url>jdbc:mysql://172.17.20.72:3306/relationdb_edges</url>
+			<username>lj</username>
+			<password>livejournal</password>
+			<wight>1</wight>
+		</res01>
+
+	</resources>
+	<extraInfos>
+		<poolName>TomcatJDBC</poolName>
+		<driverClass>com.mysql.jdbc.Driver</driverClass>
+		<maxActive>10</maxActive>
+		<minIdle>2</minIdle>
+		<maxIdle>10</maxIdle>
+		<initialSize>2</initialSize>
+		<testOnBorrow>true</testOnBorrow>
+		<validationQuery>select 1</validationQuery>
+		<validationInterval>30000</validationInterval>
+	</extraInfos>
+	<routers>
+		<profile>
+			<parentId></parentId>
+			<parentPath></parentPath>
+			<eqClass>fengfei.forest.slice.equalizer.RemainderEqualizer</eqClass>
+			<routerClass>fengfei.forest.slice.impl.AccuracyRouter</routerClass>
+			<plotterClass>fengfei.forest.slice.plotter.LoopPlotter</plotterClass>
+			<overflow>Exception</overflow>
+			<slices>
+				<slice>
+					<id>1</id>
+					<alias>_1</alias>
+					<read>res01</read>
+					<write>res01</write>
+					<readwrite>res01</readwrite>
+					<range>1~500</range>
+				</slice>
+				<slice>
+					<id>2</id>
+					<alias>_2</alias>
+					<read>res01</read>
+					<write>res01</write>
+					<readwrite>res01</readwrite>
+					<range>501~1000</range>
+				</slice>
+			</slices>
+		</profile>
+
+	</routers>
+
+</root>
