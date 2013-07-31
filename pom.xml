@@ -23,9 +23,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:git:https://github.com/wtt2012/forest.git</connection>
-		<url>scm:git:https://github.com/wtt2012/forest.git</url>
-		<developerConnection>scm:git:https://github.com/wtt2012/forest.git</developerConnection>
+		<connection>scm:git:https://github.com/tietang/forest.git</connection>
+		<url>scm:git:https://github.com/tietang/forest.git</url>
+		<developerConnection>scm:git:https://github.com/tietang/forest.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 	<properties>
