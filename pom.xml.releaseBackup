@@ -5,7 +5,7 @@
 
 	<groupId>fengfei.forest</groupId>
 	<artifactId>forest</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>forest</name>
@@ -23,9 +23,10 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:git:https://github.com/wtt2012/forest.git</connection>
-		<url>scm:git:https://github.com/wtt2012/forest.git</url>
-		<developerConnection>scm:git:https://github.com/wtt2012/forest.git</developerConnection>
+		<connection>scm:git:https://github.com/tietang/forest.git</connection>
+		<url>scm:git:https://github.com/tietang/forest.git</url>
+		<developerConnection>scm:git:https://github.com/tietang/forest.git</developerConnection>
+		<tag>HEAD</tag>
 	</scm>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -43,6 +44,14 @@
 				<version>1.4</version> </extension> -->
 		</extensions>
 		<plugins>
+			<plugin>
+
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -153,13 +162,6 @@
 			<version>1.8.3</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-compiler-plugin</artifactId>
-			<version>2.5.1</version>
-			<type>maven-plugin</type>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 	<distributionManagement>
 		<repository>
