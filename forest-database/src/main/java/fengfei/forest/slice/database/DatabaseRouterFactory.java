@@ -2,6 +2,7 @@ package fengfei.forest.slice.database;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +35,8 @@ public class DatabaseRouterFactory extends DefaultRouterFactory {
     public static final String POOL_DBCP = "DBCP";
     public static final String POOL_TOMCAT_JDBC = "TomcatJDBC";
     public static final String POOL_DRUID = "Druid";
-    protected static Map<String, Class<? extends UrlMaker>> urlMakerClazz = new HashMap<>();
-    protected Map<String, PoolableDatabaseRouter<?>> poolableRouterCache = new HashMap<>();
+    protected static Map<String, Class<? extends UrlMaker>> urlMakerClazz = new ConcurrentHashMap<>();
+    protected Map<String, PoolableDatabaseRouter<?>> poolableRouterCache = new ConcurrentHashMap<>();
     static {
         registerDriver("oracle.jdbc.driver.OracleDriver", OracleThinUrlMaker.class);
         registerDriver("org.gjt.mm.mysql.Driver", MysqlUrlMaker.class);
@@ -52,60 +53,69 @@ public class DatabaseRouterFactory extends DefaultRouterFactory {
         PoolableDataSourceFactory poolableDataSourceFactory,
         Equalizer<Key> equalizer,
         String routerName) {
-        @SuppressWarnings("unchecked")
-        PoolableDatabaseRouter<Key> router = (PoolableDatabaseRouter<Key>) poolableRouterCache
-            .get(routerName);
-        if (router == null) {
-            Router<Key> origin = getRouter(routerName);
-            router = new PoolableDatabaseRouter<>(origin, urlMaker, poolableDataSourceFactory);
-            router.setEqualizer(equalizer);
-            poolableRouterCache.put(routerName, router);
+        synchronized (this) {
+
+            @SuppressWarnings("unchecked")
+            PoolableDatabaseRouter<Key> router = (PoolableDatabaseRouter<Key>) poolableRouterCache
+                .get(routerName);
+            if (router == null) {
+                Router<Key> origin = getRouter(routerName);
+                router = new PoolableDatabaseRouter<>(origin, urlMaker, poolableDataSourceFactory);
+                router.setEqualizer(equalizer);
+                poolableRouterCache.put(routerName, router);
+            }
+            return router;
         }
-        return router;
     }
 
     public <Key> PoolableDatabaseRouter<Key> getPoolableRouter(
         UrlMaker urlMaker,
         PoolableDataSourceFactory poolableDataSourceFactory,
         String routerName) {
-        @SuppressWarnings("unchecked")
-        PoolableDatabaseRouter<Key> router = (PoolableDatabaseRouter<Key>) poolableRouterCache
-            .get(routerName);
-        if (router == null) {
-            Router<Key> origin = getRouter(routerName);
-            router = new PoolableDatabaseRouter<>(origin, urlMaker, poolableDataSourceFactory);
-            poolableRouterCache.put(routerName, router);
+        synchronized (this) {
+            @SuppressWarnings("unchecked")
+            PoolableDatabaseRouter<Key> router = (PoolableDatabaseRouter<Key>) poolableRouterCache
+                .get(routerName);
+            if (router == null) {
+                Router<Key> origin = getRouter(routerName);
+                router = new PoolableDatabaseRouter<>(origin, urlMaker, poolableDataSourceFactory);
+                poolableRouterCache.put(routerName, router);
+            }
+            return router;
         }
-        return router;
     }
 
     public <Key> PoolableDatabaseRouter<Key> getPoolableRouter(
         PoolableDataSourceFactory poolableDataSourceFactory,
         String routerName) {
-        @SuppressWarnings("unchecked")
-        PoolableDatabaseRouter<Key> router = (PoolableDatabaseRouter<Key>) poolableRouterCache
-            .get(routerName);
-        if (router == null) {
-            UrlMaker urlMaker = getUrlMaker(routerName);
-            Router<Key> origin = getRouter(routerName);
-            router = new PoolableDatabaseRouter<>(origin, urlMaker, poolableDataSourceFactory);
-            poolableRouterCache.put(routerName, router);
+        synchronized (this) {
+            @SuppressWarnings("unchecked")
+            PoolableDatabaseRouter<Key> router = (PoolableDatabaseRouter<Key>) poolableRouterCache
+                .get(routerName);
+            if (router == null) {
+                UrlMaker urlMaker = getUrlMaker(routerName);
+                Router<Key> origin = getRouter(routerName);
+                router = new PoolableDatabaseRouter<>(origin, urlMaker, poolableDataSourceFactory);
+                poolableRouterCache.put(routerName, router);
+            }
+            return router;
         }
-        return router;
     }
 
     public <Key> PoolableDatabaseRouter<Key> getPoolableRouter(String routerName) {
-        @SuppressWarnings("unchecked")
-        PoolableDatabaseRouter<Key> router = (PoolableDatabaseRouter<Key>) poolableRouterCache
-            .get(routerName);
-        if (router == null) {
-            PoolableDataSourceFactory poolableDataSourceFactory = getPoolableDataSourceFactory(routerName);
-            UrlMaker urlMaker = getUrlMaker(routerName);
-            Router<Key> origin = getRouter(routerName);
-            router = new PoolableDatabaseRouter<>(origin, urlMaker, poolableDataSourceFactory);
-            poolableRouterCache.put(routerName, router);
+        synchronized (this) {
+            @SuppressWarnings("unchecked")
+            PoolableDatabaseRouter<Key> router = (PoolableDatabaseRouter<Key>) poolableRouterCache
+                .get(routerName);
+            if (router == null) {
+                PoolableDataSourceFactory poolableDataSourceFactory = getPoolableDataSourceFactory(routerName);
+                UrlMaker urlMaker = getUrlMaker(routerName);
+                Router<Key> origin = getRouter(routerName);
+                router = new PoolableDatabaseRouter<>(origin, urlMaker, poolableDataSourceFactory);
+                poolableRouterCache.put(routerName, router);
+            }
+            return router;
         }
-        return router;
     }
 
     //

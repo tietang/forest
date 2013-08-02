@@ -1,0 +1,1 @@
+java -Xms2048m -Xmx2048m -XX:NewSize=256m -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -server -cp .;../config/;../lib/* fengfei.shard.performance.WriteReadMain  10 200 0 30000000 30000000 

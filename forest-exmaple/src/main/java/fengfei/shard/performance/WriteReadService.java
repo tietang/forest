@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fengfei.exmaple.Stats;
 import fengfei.forest.database.DataAccessException;
 import fengfei.forest.database.dbutils.ForestGrower;
 import fengfei.forest.slice.SliceResource.Function;
@@ -23,10 +24,13 @@ public class WriteReadService {
 
     int port = 10000;
     public AtomicInteger sidGenerator = new AtomicInteger(1);
+    private int start = 1;
+    private int size = 30000000;
 
-    public WriteReadService() {
+    public WriteReadService(int start, int size) {
         super();
-
+        this.start = start;
+        this.size = size;
     }
 
     public static int random(int minNum, int maxNum) {
@@ -42,7 +46,7 @@ public class WriteReadService {
     public void write() throws Exception {
 
         int countNum = ct.getAndIncrement();
-        int sid = 30000000 + Math.abs(random.nextInt(40000000));
+        int sid = 30000000 + start + random(1, size);
         int did = sid + 100;
         String type = "X";
         writeSingle(sid, did, type);
@@ -61,6 +65,34 @@ public class WriteReadService {
     }
 
     final static String UnitName = "profile";
+
+    private void readSingle(final long sid, final String type) throws Exception {
+        try {
+
+            Integer up = Transactions.execute(
+                UnitName,
+                sid,
+                Function.Read,
+                new TaCallback<Integer>() {
+
+                    @Override
+                    public Integer execute(ForestGrower grower, String suffix) throws SQLException {
+                        String sql = "SELECT source_id, destination_id, edge_type, state, created_at, updated_at, valid_time, expired_at,created_at  FROM forward%s_edges WHERE source_id = ?  AND edge_type= ?";
+                        Map<String, Object> map = grower.selectOne(
+                            String.format(sql, suffix),
+                            sid,
+                            type);
+
+                        Stats.incr("read");
+                        return 1;
+                    }
+
+                });
+        } catch (Exception e) {
+            Stats.incr("read_error");
+            throw new DataAccessException("read  error.", e);
+        }
+    }
 
     private void writeSingle(final long sid, final long did, final String type) throws Exception {
         try {
@@ -107,13 +139,22 @@ public class WriteReadService {
                             );
 
                         }
+
                         return updated;
                     }
 
                 });
+            if (up > 0) {
+                Stats.incr("create_sucess");
+            } else {
+                Stats.incr("create_fail");
+            }
         } catch (Exception e) {
+            Stats.incr("create_error");
             throw new DataAccessException("write  error.", e);
+
         }
+        Stats.incr("create");
     }
 
 }
