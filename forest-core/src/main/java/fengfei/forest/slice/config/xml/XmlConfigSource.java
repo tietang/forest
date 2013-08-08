@@ -3,7 +3,9 @@ package fengfei.forest.slice.config.xml;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -69,7 +71,7 @@ public class XmlConfigSource implements ConfigSource {
         XmlConfigSource source = new XmlConfigSource("cp:config.xml");
         System.out.println(source.exists("/"));
         System.out.println(source.children("/"));
-        System.out.println(source.listChildren("/"));
+        System.out.println(source.listChildrenPath("/"));
 
         // System.out.println(source.exists(""));
     }
@@ -143,6 +145,7 @@ public class XmlConfigSource implements ConfigSource {
         List<BerainEntry> entries = new ArrayList<>();
         for (int i = 0; i < nodes.getLength(); i++) {
             Node nd = nodes.item(i);
+
             if (nd.getNodeType() == Node.ELEMENT_NODE) {
                 String path = ("/".equals(parentPath) ? "" : parentPath) + "/" + nd.getNodeName();
                 BerainEntry model = new BerainEntry();
@@ -157,7 +160,7 @@ public class XmlConfigSource implements ConfigSource {
     }
 
     @Override
-    public List<String> listChildren(String parentPath) throws Exception {
+    public List<String> listChildrenPath(String parentPath) throws Exception {
         XPathExpression expr = xpath.compile(parentPath);
         Object result = expr.evaluate(document, XPathConstants.NODE);
         Node node = (Node) result;
@@ -174,6 +177,52 @@ public class XmlConfigSource implements ConfigSource {
                 // nd.getNodeType());
 
                 entries.add(nd.getNodeName());
+            }
+
+        }
+        return entries;
+    }
+
+    public Map<String, Map<String, String>> listChildren(String parentPath) throws Exception {
+        XPathExpression expr = xpath.compile(parentPath);
+        Object result = expr.evaluate(document, XPathConstants.NODE);
+        Node node = (Node) result;
+        if (node == null) {
+            return new HashMap<String, Map<String, String>>();
+        }
+        NodeList nodes = node.getChildNodes();
+        Map<String, Map<String, String>> entries = new HashMap<>();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node nd = nodes.item(i);
+
+            if (nd.getNodeType() == Node.ELEMENT_NODE) {
+                Map<String, String> entry = new HashMap<>();
+                //
+                String pvalue = getNodeValue(nd);
+                entry.put(ValueKey, pvalue);
+                //
+                NamedNodeMap attrs = nd.getAttributes();
+                if (attrs != null) {
+                    for (int j = 0; j < attrs.getLength(); j++) {
+                        Node attr = attrs.item(j);
+                        String key = attr.getNodeName();
+                        String value = attr.getNodeValue();
+                        entry.put(key, value);
+                    }
+                }
+                //
+                NodeList childrens = nd.getChildNodes();
+                for (int j = 0; j < childrens.getLength(); j++) {
+                    Node n = nodes.item(i);
+                    if (n.getNodeType() == Node.ELEMENT_NODE) {
+                        String key = nd.getNodeName();
+                        String value = getNodeValue(nd);
+                        entry.put(key, value);
+                    }
+                }
+                String path = parentPath + "/" + nd.getNodeName();
+                entries.put(path, entry);
+
             }
 
         }

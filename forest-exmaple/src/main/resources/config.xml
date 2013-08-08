@@ -32,43 +32,171 @@
 		<profile>
 			<parentId></parentId>
 			<parentPath></parentPath>
-			<eqClass>fengfei.forest.slice.equalizer.RemainderEqualizer</eqClass>
+			<eqClass>fengfei.forest.slice.equalizer.HashEqualizer</eqClass>
 			<routerClass>fengfei.forest.slice.impl.AccuracyRouter</routerClass>
 			<plotterClass>fengfei.forest.slice.plotter.LoopPlotter</plotterClass>
 			<overflow>Exception</overflow>
 			<slices>
-				<slice>
+				<slice01>
 					<id>1</id>
 					<alias>_1</alias>
 					<read>res01</read>
 					<write>res01</write>
 					<readwrite>res01</readwrite>
-					<range>1~250</range>
-				</slice>
-				<slice>
+					<range>1~50</range>
+				</slice01>
+				<slice02>
 					<id>2</id>
 					<alias>_2</alias>
 					<read>res01</read>
 					<write>res01</write>
 					<readwrite>res01</readwrite>
-					<range>251~500</range>
-				</slice>
-				<slice>
+					<range>51~100</range>
+				</slice02>
+				<slice03>
 					<id>3</id>
 					<alias>_3</alias>
 					<read>res01</read>
 					<write>res01</write>
 					<readwrite>res01</readwrite>
-					<range>501~750</range>
-				</slice>
-				<slice>
+					<range>101~150</range>
+				</slice03>
+				<slice04>
 					<id>4</id>
 					<alias>_4</alias>
 					<read>res01</read>
 					<write>res01</write>
 					<readwrite>res01</readwrite>
-					<range>751~1000</range>
-				</slice>
+					<range>151~200</range>
+				</slice04>
+				<slice05>
+					<id>5</id>
+					<alias>_5</alias>
+					<read>res01</read>
+					<write>res01</write>
+					<readwrite>res01</readwrite>
+					<range>201~250</range>
+				</slice05>
+				<slice06>
+					<id>6</id>
+					<alias>_6</alias>
+					<read>res01</read>
+					<write>res01</write>
+					<readwrite>res01</readwrite>
+					<range>251~300</range>
+				</slice06>
+				<slice07>
+					<id>7</id>
+					<alias>_7</alias>
+					<read>res01</read>
+					<write>res01</write>
+					<readwrite>res01</readwrite>
+					<range>301~350</range>
+				</slice07>
+				<slice08>
+					<id>8</id>
+					<alias>_8</alias>
+					<read>res01</read>
+					<write>res01</write>
+					<readwrite>res01</readwrite>
+					<range>351~400</range>
+				</slice08>
+				<slice09>
+					<id>9</id>
+					<alias>_9</alias>
+					<read>res01</read>
+					<write>res01</write>
+					<readwrite>res01</readwrite>
+					<range>401~450</range>
+				</slice09>
+				<slice10>
+					<id>10</id>
+					<alias>_10</alias>
+					<read>res01</read>
+					<write>res01</write>
+					<readwrite>res01</readwrite>
+					<range>451~500</range>
+				</slice10>
+				<slice11>
+					<id>11</id>
+					<alias>_11</alias>
+					<read>res01</read>
+					<write>res01</write>
+					<readwrite>res01</readwrite>
+					<range>501~550</range>
+				</slice11>
+				<slice12>
+					<id>12</id>
+					<alias>_12</alias>
+					<read>res01</read>
+					<write>res01</write>
+					<readwrite>res01</readwrite>
+					<range>551~600</range>
+				</slice12>
+				<slice13>
+					<id>13</id>
+					<alias>_13</alias>
+					<read>res01</read>
+					<write>res01</write>
+					<readwrite>res01</readwrite>
+					<range>601~650</range>
+				</slice13>
+				<slice14>
+					<id>14</id>
+					<alias>_14</alias>
+					<read>res01</read>
+					<write>res01</write>
+					<readwrite>res01</readwrite>
+					<range>651~700</range>
+				</slice14>
+				<slice15>
+					<id>15</id>
+					<alias>_15</alias>
+					<read>res01</read>
+					<write>res01</write>
+					<readwrite>res01</readwrite>
+					<range>701~750</range>
+				</slice15>
+				<slice16>
+					<id>16</id>
+					<alias>_16</alias>
+					<read>res01</read>
+					<write>res01</write>
+					<readwrite>res01</readwrite>
+					<range>751~800</range>
+				</slice16>
+				<slice17>
+					<id>17</id>
+					<alias>_17</alias>
+					<read>res01</read>
+					<write>res01</write>
+					<readwrite>res01</readwrite>
+					<range>801~850</range>
+				</slice17>
+				<slice18>
+					<id>18</id>
+					<alias>_18</alias>
+					<read>res01</read>
+					<write>res01</write>
+					<readwrite>res01</readwrite>
+					<range>851~900</range>
+				</slice18>
+				<slice19>
+					<id>19</id>
+					<alias>_19</alias>
+					<read>res01</read>
+					<write>res01</write>
+					<readwrite>res01</readwrite>
+					<range>901~950</range>
+				</slice19>
+				<slice20>
+					<id>20</id>
+					<alias>_20</alias>
+					<read>res01</read>
+					<write>res01</write>
+					<readwrite>res01</readwrite>
+					<range>951~1000</range>
+				</slice20>
 
 			</slices>
 		</profile>

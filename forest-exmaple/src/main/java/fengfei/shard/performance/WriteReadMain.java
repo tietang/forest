@@ -5,6 +5,7 @@ import fengfei.forest.slice.config.Config;
 import fengfei.forest.slice.config.SliceConfigReader;
 import fengfei.forest.slice.config.xml.XmlSliceConfigReader;
 import fengfei.forest.slice.database.DatabaseRouterFactory;
+import fengfei.forest.slice.database.PoolableDatabaseResource;
 import fengfei.forest.slice.database.utils.Transactions;
 
 public class WriteReadMain implements Runnable {
@@ -12,7 +13,7 @@ public class WriteReadMain implements Runnable {
     // for test
     private static long sleepTime = 10;
     private static int startWriteNum = 0;
-    private static int threads = 100;
+    private static int threads = 10;
     private static int mode = 0;
     private static int start = 1;
     private static int size = 30000000;
@@ -49,7 +50,11 @@ public class WriteReadMain implements Runnable {
         // System.out.println(config.toString());
         DatabaseRouterFactory databaseRouterFactory = new DatabaseRouterFactory(config);
         Transactions.setDatabaseSliceGroupFactory(databaseRouterFactory);
-
+////       System.out.println( databaseRouterFactory.getRouter("profile"));
+//        for (int i = 0; i < 2; i++) {
+//            PoolableDatabaseResource r=    Transactions.get("profile", new Long(i));
+//            System.out.println(r);
+//        }
         //
         Thread[] ts = new Thread[threads];
         for (int i = 0; i < threads; i++) {

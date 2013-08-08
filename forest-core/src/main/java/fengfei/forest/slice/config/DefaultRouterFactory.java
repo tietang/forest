@@ -209,6 +209,7 @@ public class DefaultRouterFactory extends AbstractRouterFactory {
                 router.register(slice, ranges);
             }
 
+
             mapResource(Function.Read, read, router, sliceId, alias, ranges);
             mapResource(Function.Write, write, router, sliceId, alias, ranges);
             mapResource(Function.ReadWrite, rw, router, sliceId, alias, ranges);

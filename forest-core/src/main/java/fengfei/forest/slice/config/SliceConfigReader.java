@@ -22,7 +22,7 @@ import fengfei.forest.slice.config.Config.SliceConfig;
 import fengfei.forest.slice.exception.ConfigException;
 import fengfei.forest.slice.utils.MapUtils;
 
-public class SliceConfigReader implements SliceReader<Config> {
+public abstract class SliceConfigReader implements SliceReader<Config> {
 
     static Logger log = LoggerFactory.getLogger(SliceConfigReader.class);
     //
@@ -132,7 +132,7 @@ public class SliceConfigReader implements SliceReader<Config> {
         return config;
     }
 
-    void check(String path) throws Exception {
+    protected void check(String path) throws Exception {
         if (source.exists(path)) {
             log.info(String.format("checked path : namespace=%s, path=%s", namespace, path));
         } else {
@@ -143,7 +143,7 @@ public class SliceConfigReader implements SliceReader<Config> {
         }
     }
 
-    RouterConfig readRouterConfig(BerainEntry entry) throws Exception {
+   protected RouterConfig readRouterConfig(BerainEntry entry) throws Exception {
         String routerName = entry.getKey();
         String routerPath = entry.getPath();
 
@@ -243,7 +243,7 @@ public class SliceConfigReader implements SliceReader<Config> {
 
         //
         log.info(String.format("read path: namespace=%s, path=%s", namespace, path));
-        List<String> reses = source.listChildren(path);
+        List<String> reses = source.listChildrenPath(path);
 
         for (String resPath : reses) {
             String tmpPath = path + "/" + resPath;
@@ -295,16 +295,20 @@ public class SliceConfigReader implements SliceReader<Config> {
      * @param slicePath
      * @throws Exception
      */
+
     public Set<SliceConfig> readSlices(String slicePath) throws Exception {
         check(slicePath);
         Set<SliceConfig> sliceConfigs = new HashSet<>();
         log.info(String.format("read slices path: namespace=%s, path=%s", namespace, slicePath));
-        List<String> slicePaths = source.listChildren(slicePath);
+        List<String> slicePaths = source.listChildrenPath(slicePath);
 
         for (String path : slicePaths) {
             String tmpPath = slicePath + "/" + path;
+            System.out.println(tmpPath);
+
             SliceConfig sliceConfig = readSliceConfig(tmpPath);
             sliceConfigs.add(sliceConfig);
+            System.out.println(sliceConfig);
         }
         return sliceConfigs;
     }
