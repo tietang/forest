@@ -13,7 +13,7 @@ public class WriteReadMain implements Runnable {
     // for test
     private static long sleepTime = 10;
     private static int startWriteNum = 0;
-    private static int threads = 10;
+    private static int threads = 1;
     private static int mode = 0;
     private static int start = 1;
     private static int size = 30000000;
@@ -72,7 +72,7 @@ public class WriteReadMain implements Runnable {
         Count.setStartWriteNum(startWriteNum);
 
         try {
-            final WriteReadService writeRead = new WriteReadService(start, size);
+            final WriteReadService2 writeRead = new WriteReadService2(start, size);
 
             while (true) {
 

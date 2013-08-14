@@ -132,6 +132,25 @@ public class XmlConfigSource implements ConfigSource {
         return value;
     }
 
+    private String getNodeValueNoChild(Node node) {
+        if (node == null) {
+            return null;
+        }
+        String value = node.getNodeValue();
+        if (value == null) {
+            value = node.getNodeValue();
+        }
+
+        if (value == null) {
+            NamedNodeMap attrs = node.getAttributes();
+            if (attrs != null) {
+                Node attr = attrs.getNamedItem(AttributeValueKey);
+                value = attr == null ? value : attr.getNodeValue();
+            }
+        }
+        return value;
+    }
+
     @Override
     public List<BerainEntry> children(String parentPath) throws Exception {
         XPathExpression expr = xpath.compile(parentPath);
@@ -198,7 +217,7 @@ public class XmlConfigSource implements ConfigSource {
             if (nd.getNodeType() == Node.ELEMENT_NODE) {
                 Map<String, String> entry = new HashMap<>();
                 //
-                String pvalue = getNodeValue(nd);
+                String pvalue = getNodeValueNoChild(nd);
                 entry.put(ValueKey, pvalue);
                 //
                 NamedNodeMap attrs = nd.getAttributes();
@@ -213,10 +232,10 @@ public class XmlConfigSource implements ConfigSource {
                 //
                 NodeList childrens = nd.getChildNodes();
                 for (int j = 0; j < childrens.getLength(); j++) {
-                    Node n = nodes.item(i);
+                    Node n = childrens.item(j);
                     if (n.getNodeType() == Node.ELEMENT_NODE) {
-                        String key = nd.getNodeName();
-                        String value = getNodeValue(nd);
+                        String key = n.getNodeName();
+                        String value = getNodeValue(n);
                         entry.put(key, value);
                     }
                 }

@@ -46,6 +46,7 @@ public class XmlSliceConfigReader extends SliceConfigReader {
         log.info(String.format("read slices path: namespace=%s, path=%s", namespace, slicePath));
         // List<String> slicePaths = source.listChildrenPath(slicePath);
         Map<String, Map<String, String>> listChildren = source.listChildren(slicePath);
+        System.out.println(listChildren);
         Set<Entry<String, Map<String, String>>> childrenSets = listChildren.entrySet();
         for (Entry<String, Map<String, String>> entry : childrenSets) {
             String path = entry.getKey();
@@ -58,7 +59,6 @@ public class XmlSliceConfigReader extends SliceConfigReader {
     }
 
     public SliceConfig readSliceConfig(String path, Map<String, String> entries) throws Exception {
-
         Map<String, String> kv = splitValue(entries.get(ConfigSource.ValueKey));
         Long sliceId = MapUtils.getLong(entries, "id");
         kv.putAll(entries);

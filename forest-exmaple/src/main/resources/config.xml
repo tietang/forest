@@ -200,7 +200,22 @@
 
 			</slices>
 		</profile>
-
+		<user>
+			<parentId></parentId>
+			<parentPath></parentPath>
+			<eqClass>fengfei.forest.slice.equalizer.RemainderEqualizer</eqClass>
+			<routerClass>fengfei.forest.slice.impl.AccuracyRouter</routerClass>
+			<plotterClass>fengfei.forest.slice.plotter.LoopPlotter</plotterClass>
+			<overflow>Exception</overflow>
+			<slices>
+				<slice>
+					<id>1</id>
+					<alias>_1</alias>
+					<readwrite>res01</readwrite>
+					<range>1~1000</range>
+				</slice>
+			</slices>
+		</user>
 	</routers>
 
 </root>

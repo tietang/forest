@@ -15,7 +15,7 @@ import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.database.utils.Transactions;
 import fengfei.forest.slice.database.utils.Transactions.TaCallback;
 
-public class WriteReadService {
+public class WriteReadService2 {
 
     static Logger logger = LoggerFactory.getLogger("CLient");
     protected static Random rand = new Random(System.currentTimeMillis());
@@ -26,9 +26,8 @@ public class WriteReadService {
     public AtomicInteger sidGenerator = new AtomicInteger(1);
     private int start = 1;
     private int size = 30000000;
-    String type = "X";
 
-    public WriteReadService(int start, int size) {
+    public WriteReadService2(int start, int size) {
         super();
         this.start = start;
         this.size = size;
@@ -48,9 +47,7 @@ public class WriteReadService {
 
         int countNum = ct.getAndIncrement();
         int sid = start + random(1, size);
-        int did = sid + 100;
-
-        writeSingle(sid, did, type);
+        writeSingle(sid);
         // System.out.println(result.getResult().size());
         Count.incrementWriteNum();
         Count.increment();
@@ -60,15 +57,15 @@ public class WriteReadService {
 
         int countNum = ct.getAndIncrement();
         int sid = start + random(1, size);
-        readSingle(sid, type);
+        readSingle(sid);
         // System.out.println(result.getResult().size());
         Count.incrementReadNum();
         Count.increment();
     }
 
-    final static String UnitName = "profile";
+    final static String UnitName = "user";
 
-    private void readSingle(final long sid, final String type) throws Exception {
+    private void readSingle(final long sid) throws Exception {
         try {
 
             Integer up = Transactions.execute(
@@ -79,11 +76,10 @@ public class WriteReadService {
 
                     @Override
                     public Integer execute(ForestGrower grower, String suffix) throws SQLException {
-                        String sql = "SELECT source_id, destination_id, edge_type, state, created_at, updated_at, valid_time, expired_at,created_at  FROM forward%s_edges WHERE source_id = ?  AND edge_type= ?";
-                        Map<String, Object> map = grower.selectOne(
-                            String.format(sql, suffix),
-                            sid,
-                            type);
+                        suffix = "";
+                        String sql = "SELECT id_user, email, username FROM user" + suffix
+                                + " where id_user=?";
+                        Map<String, Object> map = grower.selectOne(sql, sid);
 
                         Stats.incr("read");
                         return 1;
@@ -96,7 +92,7 @@ public class WriteReadService {
         }
     }
 
-    private void writeSingle(final long sid, final long did, final String type) throws Exception {
+    private void writeSingle(final long sid) throws Exception {
         try {
 
             Integer up = Transactions.execute(
@@ -107,39 +103,30 @@ public class WriteReadService {
 
                     @Override
                     public Integer execute(ForestGrower grower, String suffix) throws SQLException {
-                        String sql = "SELECT source_id, destination_id, edge_type, state, created_at, updated_at, valid_time, expired_at,created_at  FROM forward%s_edges WHERE source_id = ? AND destination_id = ? AND edge_type= ? for update";
-                        Map<String, Object> map = grower.selectOne(
-                            String.format(sql, suffix),
-                            sid,
-                            did,
-                            type);
-                        long update_at = System.currentTimeMillis();
+                        suffix = "";
+                        String sql = "SELECT id_user, email, username FROM user" + suffix
+                                + " where id_user=?";
+                        Map<String, Object> map = grower.selectOne(sql, sid);
+                        long updateAt = System.currentTimeMillis();
+                        long createAt = updateAt / 1000;
                         int updated = 0;
                         if (map == null) {
-                            String insert = "INSERT INTO forward%s_edges (source_id, updated_at, destination_id, state, edge_type, valid_time, expired_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                            String insert = "INSERT INTO user"
+                                    + suffix
+                                    + " ( email, username, password,create_at,update_at) VALUES ( ?,?,?,?,?)";
+
                             updated = grower.update(
-                                String.format(insert, suffix),
-                                sid,
-                                update_at,
-                                did,
-                                0,
-                                type,
-                                60000,
-                                60000,
-                                update_at / 1000);
+                                insert,
+                                sid + "xxx@ccc.com",
+                                "username" + sid,
+                                "123456" + sid,
+                                createAt,
+                                updateAt);
 
                         } else {
-                            String update = "UPDATE forward%s_edges SET updated_at = ? "
-                                    + "WHERE source_id = ? AND edge_type = ?  AND destination_id = ? ";
-                            updated = grower.update(
-                                String.format(update, suffix),
-                                update_at,
-                                sid,
-                                type,
-                                did
-
-                            );
-
+                            String update = "update user" + suffix
+                                    + " set password=?,update_at=?   where   id_user=?";
+                            updated = grower.update(update, "newpassword" + sid, updateAt, sid);
                         }
 
                         return updated;
