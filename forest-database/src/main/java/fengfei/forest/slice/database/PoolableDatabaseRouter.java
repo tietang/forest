@@ -20,6 +20,7 @@ import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.exception.NonExistedSliceException;
 import fengfei.forest.slice.exception.SliceRuntimeException;
+import fengfei.forest.slice.impl.ResourceTribe;
 import fengfei.forest.slice.server.ServerRouter;
 
 public class PoolableDatabaseRouter<Key> extends ServerRouter<Key> {
@@ -60,9 +61,12 @@ public class PoolableDatabaseRouter<Key> extends ServerRouter<Key> {
         Set<Entry<Long, Slice<Key>>> entries = slices.entrySet();
         for (Entry<Long, Slice<Key>> entry : entries) {
             Slice<Key> slice = entry.getValue();
-            SliceResource facade = slice.get(10L, Function.Write);
-            PoolableDatabaseResource resource = new PoolableDatabaseResource(facade);
-            locate(resource);
+            List<SliceResource> availableResources = slice.getResources();
+            for (SliceResource facade : availableResources) {
+                PoolableDatabaseResource resource = new PoolableDatabaseResource(facade);
+                locate(resource);
+            }
+
         }
     }
 
@@ -85,13 +89,12 @@ public class PoolableDatabaseRouter<Key> extends ServerRouter<Key> {
         DataSource dataSource = pooledDataSources.get(url);
         if (dataSource == null) {
             try {
-                dataSource =
-                    poolableDataSourceFactory.createDataSource(
-                        res.getDriverClass(),
-                        url,
-                        res.getUsername(),
-                        res.getPassword(),
-                        res.getExtraInfo());
+                dataSource = poolableDataSourceFactory.createDataSource(
+                    res.getDriverClass(),
+                    url,
+                    res.getUsername(),
+                    res.getPassword(),
+                    res.getExtraInfo());
                 pooledDataSources.put(url, dataSource);
                 log.debug(String.format("create pool for url: %s", url));
                 log.debug(String.format("create pool for user: %s", res.getUsername()));
@@ -105,8 +108,6 @@ public class PoolableDatabaseRouter<Key> extends ServerRouter<Key> {
         res.setDataSource(dataSource);
         return res;
     }
-
-
 
     //
     // public Connection getConnection(Source key) throws SliceException {
@@ -152,7 +153,7 @@ public class PoolableDatabaseRouter<Key> extends ServerRouter<Key> {
     @Override
     public String toString() {
         return "PoolableDatabaseRouter [urlMaker=" + urlMaker + ", poolableDataSourceFactory="
-            + poolableDataSourceFactory + ", router=" + router + "]";
+                + poolableDataSourceFactory + ", router=" + router + "]";
     }
 
     @Override
