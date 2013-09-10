@@ -17,8 +17,8 @@ import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.impl.AccuracyRouter;
 import fengfei.forest.slice.server.pool.ServerHelper.Clientx;
 import fengfei.forest.slice.server.pool.ServerHelper.Serverx;
-@Ignore
-public class AbstractServerRouterTest {
+
+public abstract class AbstractServerRouterTest {
 
 	static CommonsPoolableSourceFactory<Clientx> commonsPoolableSourceFactory = null;
 	static PoolableServerRouter<Long, ServerHelper.Clientx> router;

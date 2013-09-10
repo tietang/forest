@@ -1,0 +1,172 @@
+2013-07-26 20:18:22.549[ERROR]: show photo error.
+fengfei.forest.database.DataAccessException: select photo error.
+        at fengfei.ucm.repository.impl.SqlPhotoRepository.view(SqlPhotoRepository.java:258)
+        at controllers.ShowAction.show(ShowAction.java:75)
+        at play.mvc.ActionInvoker.invokeWithContinuation(ActionInvoker.java:557)
+        at play.mvc.ActionInvoker.invoke(ActionInvoker.java:508)
+        at play.mvc.ActionInvoker.invokeControllerMethod(ActionInvoker.java:484)
+        at play.mvc.ActionInvoker.invokeControllerMethod(ActionInvoker.java:479)
+        at play.mvc.ActionInvoker.invoke(ActionInvoker.java:161)
+        at Invocation.HTTP Request(Play!)
+Caused by: fengfei.forest.database.DataAccessException: execute transaction error for unitName "user" and key 26.
+        at fengfei.forest.slice.database.utils.Transactions.execute(Transactions.java:105)
+        at fengfei.ucm.repository.impl.SqlPhotoRepository.view(SqlPhotoRepository.java:183)
+        ... 7 more
+Caused by: java.sql.SQLException: [play-thread-2] Timeout: Pool empty. Unable to fetch a connection in 30 seconds, none available[size:10; busy:10; idle:0; lastwait:30000].
+        at org.apache.tomcat.jdbc.pool.ConnectionPool.borrowConnection(ConnectionPool.java:638)
+        at org.apache.tomcat.jdbc.pool.ConnectionPool.getConnection(ConnectionPool.java:179)
+        at org.apache.tomcat.jdbc.pool.DataSourceProxy.getConnection(DataSourceProxy.java:124)
+        at fengfei.forest.slice.database.PoolableDatabaseResource.getConnection(PoolableDatabaseResource.java:33)
+        at fengfei.forest.slice.database.utils.Transactions.retryExecute(Transactions.java:223)
+        at fengfei.forest.slice.database.utils.Transactions.execute(Transactions.java:164)
+        at fengfei.forest.slice.database.utils.Transactions.execute(Transactions.java:103)
+        ... 8 more
+2013-07-26 20:18:22.553[ERROR]: show photo error.
+fengfei.forest.database.DataAccessException: select photo error.
+        at fengfei.ucm.repository.impl.SqlPhotoRepository.view(SqlPhotoRepository.java:258)
+        at controllers.ShowAction.show(ShowAction.java:75)
+        at play.mvc.ActionInvoker.invokeWithContinuation(ActionInvoker.java:557)
+        at play.mvc.ActionInvoker.invoke(ActionInvoker.java:508)
+        at play.mvc.ActionInvoker.invokeControllerMethod(ActionInvoker.java:484)
+        at play.mvc.ActionInvoker.invokeControllerMethod(ActionInvoker.java:479)
+        at play.mvc.ActionInvoker.invoke(ActionInvoker.java:161)
+        at Invocation.HTTP Request(Play!)
+Caused by: fengfei.forest.database.DataAccessException: execute transaction error for unitName "user" and key 15.
+        at fengfei.forest.slice.database.utils.Transactions.execute(Transactions.java:105)
+        at fengfei.ucm.repository.impl.SqlPhotoRepository.view(SqlPhotoRepository.java:183)
+        ... 7 more
+Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException: Communications link failure during rollback(). Transaction resolution unknown.
+        at com.mysql.jdbc.Util.handleNewInstance(Util.java:411)
+        at com.mysql.jdbc.Util.getInstance(Util.java:386)
+        at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1014)
+        at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:988)
+        at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:974)
+        at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:919)
+        at com.mysql.jdbc.ConnectionImpl.rollback(ConnectionImpl.java:4793)
+        at org.apache.tomcat.jdbc.pool.ProxyConnection.invoke(ProxyConnection.java:126)
+        at org.apache.tomcat.jdbc.pool.JdbcInterceptor.invoke(JdbcInterceptor.java:95)
+        at org.apache.tomcat.jdbc.pool.interceptor.AbstractCreateStatementInterceptor.invoke(AbstractCreateStatementInterceptor.java:71)
+        at org.apache.tomcat.jdbc.pool.JdbcInterceptor.invoke(JdbcInterceptor.java:95)
+        at org.apache.tomcat.jdbc.pool.interceptor.ConnectionState.invoke(ConnectionState.java:140)
+        at org.apache.tomcat.jdbc.pool.JdbcInterceptor.invoke(JdbcInterceptor.java:95)
+        at org.apache.tomcat.jdbc.pool.TrapException.invoke(TrapException.java:41)
+        at com.sun.proxy.$Proxy17.rollback(Unknown Source)
+        at fengfei.forest.database.dbutils.impl.DefaultForestGrower.rollback(DefaultForestGrower.java:190)
+        at fengfei.forest.slice.database.utils.Transactions.execute(Transactions.java:174)
+        at fengfei.forest.slice.database.utils.Transactions.execute(Transactions.java:103)
+        ... 8 more
+2013-07-26 20:21:23.380[ERROR]: show photo error.
+fengfei.forest.database.DataAccessException: select photo error.
+        at fengfei.ucm.repository.impl.SqlPhotoRepository.view(SqlPhotoRepository.java:258)
+        at controllers.ShowAction.show(ShowAction.java:75)
+        at play.mvc.ActionInvoker.invokeWithContinuation(ActionInvoker.java:557)
+        at play.mvc.ActionInvoker.invoke(ActionInvoker.java:508)
+        at play.mvc.ActionInvoker.invokeControllerMethod(ActionInvoker.java:484)
+        at play.mvc.ActionInvoker.invokeControllerMethod(ActionInvoker.java:479)
+        at play.mvc.ActionInvoker.invoke(ActionInvoker.java:161)
+        at Invocation.HTTP Request(Play!)
+Caused by: fengfei.forest.database.DataAccessException: execute transaction error for unitName "user" and key 26.
+        at fengfei.forest.slice.database.utils.Transactions.execute(Transactions.java:105)
+        at fengfei.ucm.repository.impl.SqlPhotoRepository.view(SqlPhotoRepository.java:183)
+        ... 7 more
+Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException: Communications link failure during rollback(). Transaction resolution unknown.
+        at com.mysql.jdbc.Util.handleNewInstance(Util.java:411)
+        at com.mysql.jdbc.Util.getInstance(Util.java:386)
+        at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1014)
+        at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:988)
+        at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:974)
+        at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:919)
+        at com.mysql.jdbc.ConnectionImpl.rollback(ConnectionImpl.java:4793)
+        at org.apache.tomcat.jdbc.pool.ProxyConnection.invoke(ProxyConnection.java:126)
+        at org.apache.tomcat.jdbc.pool.JdbcInterceptor.invoke(JdbcInterceptor.java:95)
+        at org.apache.tomcat.jdbc.pool.interceptor.AbstractCreateStatementInterceptor.invoke(AbstractCreateStatementInterceptor.java:71)
+        at org.apache.tomcat.jdbc.pool.JdbcInterceptor.invoke(JdbcInterceptor.java:95)
+        at org.apache.tomcat.jdbc.pool.interceptor.ConnectionState.invoke(ConnectionState.java:140)
+        at org.apache.tomcat.jdbc.pool.JdbcInterceptor.invoke(JdbcInterceptor.java:95)
+        at org.apache.tomcat.jdbc.pool.TrapException.invoke(TrapException.java:41)
+        at com.sun.proxy.$Proxy17.rollback(Unknown Source)
+        at fengfei.forest.database.dbutils.impl.DefaultForestGrower.rollback(DefaultForestGrower.java:190)
+        at fengfei.forest.slice.database.utils.Transactions.execute(Transactions.java:174)
+        at fengfei.forest.slice.database.utils.Transactions.execute(Transactions.java:103)
+        ... 8 more
+2013-07-26 20:21:53.387[ERROR]: show photo error.
+fengfei.forest.database.DataAccessException: select photo error.
+        at fengfei.ucm.repository.impl.SqlPhotoRepository.view(SqlPhotoRepository.java:258)
+        at controllers.ShowAction.show(ShowAction.java:75)
+        at play.mvc.ActionInvoker.invokeWithContinuation(ActionInvoker.java:557)
+        at play.mvc.ActionInvoker.invoke(ActionInvoker.java:508)
+        at play.mvc.ActionInvoker.invokeControllerMethod(ActionInvoker.java:484)
+        at play.mvc.ActionInvoker.invokeControllerMethod(ActionInvoker.java:479)
+        at play.mvc.ActionInvoker.invoke(ActionInvoker.java:161)
+        at Invocation.HTTP Request(Play!)
+Caused by: fengfei.forest.database.DataAccessException: execute transaction error for unitName "user" and key 28.
+        at fengfei.forest.slice.database.utils.Transactions.execute(Transactions.java:105)
+        at fengfei.ucm.repository.impl.SqlPhotoRepository.view(SqlPhotoRepository.java:183)
+        ... 7 more
+Caused by: java.sql.SQLException: [play-thread-1] Timeout: Pool empty. Unable to fetch a connection in 30 seconds, none available[size:10; busy:10; idle:0; lastwait:30000].
+        at org.apache.tomcat.jdbc.pool.ConnectionPool.borrowConnection(ConnectionPool.java:638)
+        at org.apache.tomcat.jdbc.pool.ConnectionPool.getConnection(ConnectionPool.java:179)
+        at org.apache.tomcat.jdbc.pool.DataSourceProxy.getConnection(DataSourceProxy.java:124)
+        at fengfei.forest.slice.database.PoolableDatabaseResource.getConnection(PoolableDatabaseResource.java:33)
+        at fengfei.forest.slice.database.utils.Transactions.retryExecute(Transactions.java:223)
+        at fengfei.forest.slice.database.utils.Transactions.execute(Transactions.java:164)
+        at fengfei.forest.slice.database.utils.Transactions.execute(Transactions.java:103)
+        ... 8 more
+2013-07-26 20:21:53.394[ERROR]: show photo error.
+fengfei.forest.database.DataAccessException: select photo error.
+        at fengfei.ucm.repository.impl.SqlPhotoRepository.view(SqlPhotoRepository.java:258)
+        at controllers.ShowAction.show(ShowAction.java:75)
+        at play.mvc.ActionInvoker.invokeWithContinuation(ActionInvoker.java:557)
+        at play.mvc.ActionInvoker.invoke(ActionInvoker.java:508)
+        at play.mvc.ActionInvoker.invokeControllerMethod(ActionInvoker.java:484)
+        at play.mvc.ActionInvoker.invokeControllerMethod(ActionInvoker.java:479)
+        at play.mvc.ActionInvoker.invoke(ActionInvoker.java:161)
+        at Invocation.HTTP Request(Play!)
+Caused by: fengfei.forest.database.DataAccessException: execute transaction error for unitName "user" and key 26.
+        at fengfei.forest.slice.database.utils.Transactions.execute(Transactions.java:105)
+        at fengfei.ucm.repository.impl.SqlPhotoRepository.view(SqlPhotoRepository.java:183)
+        ... 7 more
+Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException: Communications link failure during rollback(). Transaction resolution unknown.
+        at com.mysql.jdbc.Util.handleNewInstance(Util.java:411)
+        at com.mysql.jdbc.Util.getInstance(Util.java:386)
+        at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1014)
+        at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:988)
+        at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:974)
+        at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:919)
+        at com.mysql.jdbc.ConnectionImpl.rollback(ConnectionImpl.java:4793)
+        at org.apache.tomcat.jdbc.pool.ProxyConnection.invoke(ProxyConnection.java:126)
+        at org.apache.tomcat.jdbc.pool.JdbcInterceptor.invoke(JdbcInterceptor.java:95)
+        at org.apache.tomcat.jdbc.pool.interceptor.AbstractCreateStatementInterceptor.invoke(AbstractCreateStatementInterceptor.java:71)
+        at org.apache.tomcat.jdbc.pool.JdbcInterceptor.invoke(JdbcInterceptor.java:95)
+        at org.apache.tomcat.jdbc.pool.interceptor.ConnectionState.invoke(ConnectionState.java:140)
+        at org.apache.tomcat.jdbc.pool.JdbcInterceptor.invoke(JdbcInterceptor.java:95)
+        at org.apache.tomcat.jdbc.pool.TrapException.invoke(TrapException.java:41)
+        at com.sun.proxy.$Proxy17.rollback(Unknown Source)
+        at fengfei.forest.database.dbutils.impl.DefaultForestGrower.rollback(DefaultForestGrower.java:190)
+        at fengfei.forest.slice.database.utils.Transactions.execute(Transactions.java:174)
+        at fengfei.forest.slice.database.utils.Transactions.execute(Transactions.java:103)
+        ... 8 more
+2013-07-27 08:59:23.095[ERROR]: show photo error.
+fengfei.forest.database.DataAccessException: select photo error.
+        at fengfei.ucm.repository.impl.SqlPhotoRepository.view(SqlPhotoRepository.java:258)
+        at controllers.ShowAction.show(ShowAction.java:75)
+        at play.mvc.ActionInvoker.invokeWithContinuation(ActionInvoker.java:557)
+        at play.mvc.ActionInvoker.invoke(ActionInvoker.java:508)
+        at play.mvc.ActionInvoker.invokeControllerMethod(ActionInvoker.java:484)
+        at play.mvc.ActionInvoker.invokeControllerMethod(ActionInvoker.java:479)
+        at play.mvc.ActionInvoker.invoke(ActionInvoker.java:161)
+        at Invocation.HTTP Request(Play!)
+Caused by: fengfei.forest.database.DataAccessException: execute transaction error for unitName "user" and key 28.
+        at fengfei.forest.slice.database.utils.Transactions.execute(Transactions.java:105)
+        at fengfei.ucm.repository.impl.SqlPhotoRepository.view(SqlPhotoRepository.java:183)
+        ... 7 more
+Caused by: java.sql.SQLException: [play-thread-1] Timeout: Pool empty. Unable to fetch a connection in 30 seconds, none available[size:10; busy:10; idle:0; lastwait:30000].
+        at org.apache.tomcat.jdbc.pool.ConnectionPool.borrowConnection(ConnectionPool.java:638)
+        at org.apache.tomcat.jdbc.pool.ConnectionPool.getConnection(ConnectionPool.java:179)
+        at org.apache.tomcat.jdbc.pool.DataSourceProxy.getConnection(DataSourceProxy.java:124)
+        at fengfei.forest.slice.database.PoolableDatabaseResource.getConnection(PoolableDatabaseResource.java:33)
+        at fengfei.forest.slice.database.utils.Transactions.retryExecute(Transactions.java:223)
+        at fengfei.forest.slice.database.utils.Transactions.retryExecute(Transactions.java:251)
+        at fengfei.forest.slice.database.utils.Transactions.execute(Transactions.java:164)
+        at fengfei.forest.slice.database.utils.Transactions.execute(Transactions.java:103)
+        ... 8 more
