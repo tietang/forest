@@ -1,19 +1,17 @@
 package fengfei.shard.performance;
 
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import fengfei.exmaple.Stats;
-import fengfei.forest.database.DataAccessException;
 import fengfei.forest.database.dbutils.ForestGrower;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.database.utils.Transactions;
 import fengfei.forest.slice.database.utils.Transactions.TaCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class WriteReadService {
 
@@ -72,27 +70,27 @@ public class WriteReadService {
         try {
 
             Integer up = Transactions.execute(
-                UnitName,
-                sid,
-                Function.Read,
-                new TaCallback<Integer>() {
+                    UnitName,
+                    sid,
+                    Function.Read,
+                    new TaCallback<Integer>() {
 
-                    @Override
-                    public Integer execute(ForestGrower grower, String suffix) throws SQLException {
-                        String sql = "SELECT source_id, destination_id, edge_type, state, created_at, updated_at, valid_time, expired_at,created_at  FROM forward%s_edges WHERE source_id = ?  AND edge_type= ?";
-                        Map<String, Object> map = grower.selectOne(
-                            String.format(sql, suffix),
-                            sid,
-                            type);
+                        @Override
+                        public Integer execute(ForestGrower grower, String suffix) throws SQLException {
+                            String sql = "SELECT source_id, destination_id, edge_type, state, created_at, updated_at, valid_time, expired_at,created_at  FROM forward%s_edges WHERE source_id = ?  AND edge_type= ?";
+                            Map<String, Object> map = grower.selectOne(
+                                    String.format(sql, suffix),
+                                    sid,
+                                    type);
 
-                        Stats.incr("read");
-                        return 1;
-                    }
+                            Stats.incr("read");
+                            return 1;
+                        }
 
-                });
+                    });
         } catch (Exception e) {
             Stats.incr("read_error");
-            throw new DataAccessException("read  error.", e);
+            throw e;
         }
     }
 
@@ -100,52 +98,52 @@ public class WriteReadService {
         try {
 
             Integer up = Transactions.execute(
-                UnitName,
-                sid,
-                Function.Read,
-                new TaCallback<Integer>() {
+                    UnitName,
+                    sid,
+                    Function.Read,
+                    new TaCallback<Integer>() {
 
-                    @Override
-                    public Integer execute(ForestGrower grower, String suffix) throws SQLException {
-                        String sql = "SELECT source_id, destination_id, edge_type, state, created_at, updated_at, valid_time, expired_at,created_at  FROM forward%s_edges WHERE source_id = ? AND destination_id = ? AND edge_type= ? for update";
-                        Map<String, Object> map = grower.selectOne(
-                            String.format(sql, suffix),
-                            sid,
-                            did,
-                            type);
-                        long update_at = System.currentTimeMillis();
-                        int updated = 0;
-                        if (map == null) {
-                            String insert = "INSERT INTO forward%s_edges (source_id, updated_at, destination_id, state, edge_type, valid_time, expired_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-                            updated = grower.update(
-                                String.format(insert, suffix),
-                                sid,
-                                update_at,
-                                did,
-                                0,
-                                type,
-                                60000,
-                                60000,
-                                update_at / 1000);
+                        @Override
+                        public Integer execute(ForestGrower grower, String suffix) throws SQLException {
+                            String sql = "SELECT source_id, destination_id, edge_type, state, created_at, updated_at, valid_time, expired_at,created_at  FROM forward%s_edges WHERE source_id = ? AND destination_id = ? AND edge_type= ? for update";
+                            Map<String, Object> map = grower.selectOne(
+                                    String.format(sql, suffix),
+                                    sid,
+                                    did,
+                                    type);
+                            long update_at = System.currentTimeMillis();
+                            int updated = 0;
+                            if (map == null) {
+                                String insert = "INSERT INTO forward%s_edges (source_id, updated_at, destination_id, state, edge_type, valid_time, expired_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                                updated = grower.update(
+                                        String.format(insert, suffix),
+                                        sid,
+                                        update_at,
+                                        did,
+                                        0,
+                                        type,
+                                        60000,
+                                        60000,
+                                        update_at / 1000);
 
-                        } else {
-                            String update = "UPDATE forward%s_edges SET updated_at = ? "
-                                    + "WHERE source_id = ? AND edge_type = ?  AND destination_id = ? ";
-                            updated = grower.update(
-                                String.format(update, suffix),
-                                update_at,
-                                sid,
-                                type,
-                                did
+                            } else {
+                                String update = "UPDATE forward%s_edges SET updated_at = ? "
+                                        + "WHERE source_id = ? AND edge_type = ?  AND destination_id = ? ";
+                                updated = grower.update(
+                                        String.format(update, suffix),
+                                        update_at,
+                                        sid,
+                                        type,
+                                        did
 
-                            );
+                                );
 
+                            }
+
+                            return updated;
                         }
 
-                        return updated;
-                    }
-
-                });
+                    });
             if (up > 0) {
                 Stats.incr("create_sucess");
             } else {
@@ -153,7 +151,7 @@ public class WriteReadService {
             }
         } catch (Exception e) {
             Stats.incr("create_error");
-            throw new DataAccessException("write  error.", e);
+            throw e;
 
         }
         Stats.incr("create");

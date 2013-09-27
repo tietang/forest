@@ -239,7 +239,7 @@ public class XmlConfigSource implements ConfigSource {
                         entry.put(key, value);
                     }
                 }
-                String path = parentPath + "/" + nd.getNodeName();
+                String path = parentPath + "/" + nd.getNodeName()+i;
                 entries.put(path, entry);
 
             }

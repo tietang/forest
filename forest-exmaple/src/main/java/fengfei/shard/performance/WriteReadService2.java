@@ -1,19 +1,17 @@
 package fengfei.shard.performance;
 
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import fengfei.exmaple.Stats;
-import fengfei.forest.database.DataAccessException;
 import fengfei.forest.database.dbutils.ForestGrower;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.database.utils.Transactions;
 import fengfei.forest.slice.database.utils.Transactions.TaCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class WriteReadService2 {
 
@@ -88,7 +86,7 @@ public class WriteReadService2 {
                 });
         } catch (Exception e) {
             Stats.incr("read_error");
-            throw new DataAccessException("read  error.", e);
+            throw e;
         }
     }
 
@@ -140,7 +138,7 @@ public class WriteReadService2 {
             }
         } catch (Exception e) {
             Stats.incr("create_error");
-            throw new DataAccessException("write  error.", e);
+            throw e;
 
         }
         Stats.incr("create");

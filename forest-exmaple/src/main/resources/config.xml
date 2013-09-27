@@ -7,6 +7,12 @@
 			<password>livejournal</password>
 			<wight>1</wight>
 		</res01>
+		<res02>
+			<url>jdbc:mysql://172.17.20.72:3306/test</url>
+			<username>lj</username>
+			<password>livejournal</password>
+			<wight>1</wight>
+		</res02>
 
 	</resources>
 	<extraInfos>
@@ -211,7 +217,7 @@
 				<slice>
 					<id>1</id>
 					<alias>_1</alias>
-					<readwrite>res01</readwrite>
+					<readwrite>res02</readwrite>
 					<range>1~1000</range>
 				</slice>
 			</slices>

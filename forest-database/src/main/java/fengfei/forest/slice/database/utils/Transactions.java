@@ -1,17 +1,5 @@
 package fengfei.forest.slice.database.utils;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.sql.SQLTransactionRollbackException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.sql.DataSource;
-
-import fengfei.forest.database.DataAccessException;
 import fengfei.forest.database.dbutils.ForestGrower;
 import fengfei.forest.database.dbutils.impl.DefaultForestGrower;
 import fengfei.forest.database.pool.PoolableException;
@@ -20,8 +8,17 @@ import fengfei.forest.slice.config.Config;
 import fengfei.forest.slice.database.DatabaseRouterFactory;
 import fengfei.forest.slice.database.PoolableDatabaseResource;
 import fengfei.forest.slice.database.PoolableDatabaseRouter;
-import fengfei.forest.slice.database.utils.MutiTransaction.MutiTaCallback;
 import fengfei.forest.slice.exception.SliceException;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.SQLTransactionRollbackException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 public class Transactions {
 
@@ -43,12 +40,12 @@ public class Transactions {
     }
 
     public static void setDatabaseSliceGroupFactory(
-        DatabaseRouterFactory databaseRouterFactory,
-        boolean isDev) {
+            DatabaseRouterFactory databaseRouterFactory,
+            boolean isDev) {
         if (Transactions.databaseRouterFactory == null || isDev) {
             if (Transactions.databaseRouterFactory != null) {
                 Map<String, PoolableDatabaseRouter<?>> routers =
-                    Transactions.databaseRouterFactory.allPoolableRouters();
+                        Transactions.databaseRouterFactory.allPoolableRouters();
                 Set<Entry<String, PoolableDatabaseRouter<?>>> sets = routers.entrySet();
                 for (Entry<String, PoolableDatabaseRouter<?>> entry : sets) {
                     PoolableDatabaseRouter<?> router = entry.getValue();
@@ -63,13 +60,13 @@ public class Transactions {
             Transactions.databaseRouterFactory = databaseRouterFactory;
         } else {
             throw new IllegalArgumentException(
-                "DatabaseRouterFactory is already seted up, don't repeat configuration.");
+                    "DatabaseRouterFactory is already seted up, don't repeat configuration.");
         }
 
     }
 
     private static void releaseDataSource(PoolableDatabaseRouter<?> router)
-        throws PoolableException {
+            throws PoolableException {
         Map<String, DataSource> dses = router.allPooledDataSources();
         Set<Entry<String, DataSource>> sets = dses.entrySet();
         for (Entry<String, DataSource> entry : sets) {
@@ -78,9 +75,9 @@ public class Transactions {
 
     }
 
-    private static void check() throws DataAccessException {
+    private static void check() throws Exception {
         if (databaseRouterFactory == null) {
-            throw new DataAccessException("DatabaseRouterFactory don't configed.");
+            throw new Exception("DatabaseRouterFactory don't configurated.");
         }
     }
 
@@ -89,75 +86,57 @@ public class Transactions {
             databaseRouterFactory = new DatabaseRouterFactory(config);
         } else {
             throw new IllegalArgumentException(
-                "DatabaseRouterFactory have configed, don't repeat configuration.");
+                    "DatabaseRouterFactory have configed, don't repeat configuration.");
         }
     }
 
     public static <T, E> T execute(
-        String unitName,
-        E key,
-        Function function,
-        TransactionCallback<T> callback) throws DataAccessException {
-        try {
-            PoolableDatabaseResource resource = get(unitName, key, function);
-            return execute(resource, key, function, callback);
-        } catch (SliceException | SQLException e) {
-            throw new DataAccessException(String.format(
-                "execute transaction error for unitName \"%s\" and key %s.",
-                unitName,
-                key.toString()), e);
-        }
+            String unitName,
+            E key,
+            Function function,
+            TransactionCallback<T> callback) throws SQLException, SliceException {
+
+        PoolableDatabaseResource resource = get(unitName, key, function);
+        return execute(resource, key, function, callback);
+
     }
 
     public static <T, E> T execute(String unitName, E key, TransactionCallback<T> callback)
-        throws DataAccessException {
-        try {
-            PoolableDatabaseResource resource = get(unitName, key);
-            return execute(resource, key, callback);
-        } catch (SliceException | SQLException e) {
-            throw new DataAccessException(String.format(
-                "execute transaction error for unitName %s and key %s.",
-                unitName,
-                key.toString()));
-        }
+            throws SQLException, SliceException {
+
+        PoolableDatabaseResource resource = get(unitName, key);
+        return execute(resource, key, callback);
+
     }
 
     public static <T, E> T execute(
-        PoolableDatabaseRouter<E> router,
-        E key,
-        Function function,
-        TransactionCallback<T> callback) throws DataAccessException {
+            PoolableDatabaseRouter<E> router,
+            E key,
+            Function function,
+            TransactionCallback<T> callback) throws SQLException {
 
-        try {
-            PoolableDatabaseResource resource = router.locate(key, function);
-            return execute(resource, key, function, callback);
-        } catch (Exception e) {
-            throw new DataAccessException(String.format(
-                "execute transaction error for key %s.",
-                key.toString()));
-        }
+
+        PoolableDatabaseResource resource = router.locate(key, function);
+        return execute(resource, key, function, callback);
+
     }
 
     public static <T, E> T execute(
-        PoolableDatabaseRouter<E> router,
-        E key,
-        TransactionCallback<T> callback) throws DataAccessException {
+            PoolableDatabaseRouter<E> router,
+            E key,
+            TransactionCallback<T> callback) throws SQLException {
 
-        try {
-            PoolableDatabaseResource resource = router.locate(key);
-            return execute(resource, key, callback);
-        } catch (Exception e) {
-            throw new DataAccessException(String.format(
-                "execute transaction error for key %s.",
-                key.toString()));
-        }
+
+        PoolableDatabaseResource resource = router.locate(key);
+        return execute(resource, key, callback);
+
     }
 
     public static <T, E> T execute(
-        PoolableDatabaseResource resource,
-        E key,
-        Function function,
-        TransactionCallback<T> callback) throws SQLException {
+            PoolableDatabaseResource resource,
+            E key,
+            Function function,
+            TransactionCallback<T> callback) throws SQLException {
         TaModel<T> model = null;
         try {
             model = new TaModel<>();
@@ -184,9 +163,9 @@ public class Transactions {
     }
 
     public static <T, E> T execute(
-        PoolableDatabaseResource resource,
-        E key,
-        TransactionCallback<T> callback) throws SQLException {
+            PoolableDatabaseResource resource,
+            E key,
+            TransactionCallback<T> callback) throws SQLException {
         TaModel<T> model = null;
         try {
 
@@ -215,10 +194,10 @@ public class Transactions {
     }
 
     protected static <T> TaModel<T> retryExecute(
-        TaModel<T> model,
-        PoolableDatabaseResource resource,
-        final TransactionCallback<T> callback,
-        int tries) throws SQLException {
+            TaModel<T> model,
+            PoolableDatabaseResource resource,
+            final TransactionCallback<T> callback,
+            int tries) throws SQLException {
         T t = null;
         Connection connection = resource.getConnection();
         ForestGrower grower = new DefaultForestGrower(connection);
@@ -234,15 +213,15 @@ public class Transactions {
             // re try write
             Throwable e2 = e.getCause();
             boolean isReTry =
-                (e2 != null && (e2 instanceof SQLIntegrityConstraintViolationException
-                // Duplicate entry for key 'PRIMARY'
-                    || e2 instanceof SQLTransactionRollbackException
-                    // for Deadlock found when trying to get lock; try
+                    (e2 != null && (e2 instanceof SQLIntegrityConstraintViolationException
+                            // Duplicate entry for key 'PRIMARY'
+                            || e2 instanceof SQLTransactionRollbackException
+                            // for Deadlock found when trying to get lock; try
                     ))
-                    || e instanceof SQLIntegrityConstraintViolationException
-                    // for Deadlock found when trying to get lock; try
-                    // restarting transaction
-                    || e instanceof SQLTransactionRollbackException;
+                            || e instanceof SQLIntegrityConstraintViolationException
+                            // for Deadlock found when trying to get lock; try
+                            // restarting transaction
+                            || e instanceof SQLTransactionRollbackException;
 
             if (tries > 0 && isReTry) {
                 // GlobalStats.incr("retry times");
@@ -257,10 +236,10 @@ public class Transactions {
     }
 
     protected static <T> TaModel<T> retryExecute(
-        TaModel<T> model,
-        DataSource dataSource,
-        final JdbcCallback<T> callback,
-        int tries) throws SQLException {
+            TaModel<T> model,
+            DataSource dataSource,
+            final JdbcCallback<T> callback,
+            int tries) throws SQLException {
         T t = null;
         Connection connection = dataSource.getConnection();
         ForestGrower grower = new DefaultForestGrower(connection);
@@ -276,15 +255,15 @@ public class Transactions {
             // re try write
             Throwable e2 = e.getCause();
             boolean isReTry =
-                (e2 != null && (e2 instanceof SQLIntegrityConstraintViolationException
-                // Duplicate entry for key 'PRIMARY'
-                    || e2 instanceof SQLTransactionRollbackException
-                    // for Deadlock found when trying to get lock; try
+                    (e2 != null && (e2 instanceof SQLIntegrityConstraintViolationException
+                            // Duplicate entry for key 'PRIMARY'
+                            || e2 instanceof SQLTransactionRollbackException
+                            // for Deadlock found when trying to get lock; try
                     ))
-                    || e instanceof SQLIntegrityConstraintViolationException
-                    // for Deadlock found when trying to get lock; try
-                    // restarting transaction
-                    || e instanceof SQLTransactionRollbackException;
+                            || e instanceof SQLIntegrityConstraintViolationException
+                            // for Deadlock found when trying to get lock; try
+                            // restarting transaction
+                            || e instanceof SQLTransactionRollbackException;
 
             if (tries > 0 && isReTry) {
                 // GlobalStats.incr("retry times");
@@ -299,7 +278,7 @@ public class Transactions {
     }
 
     public static <T, E> T execute(DataSource dataSource, JdbcCallback<T> callback)
-        throws SQLException {
+            throws SQLException {
 
         TaModel<T> model = null;
         try {
@@ -331,7 +310,7 @@ public class Transactions {
 
         @SuppressWarnings("unchecked")
         PoolableDatabaseRouter<T> router =
-            (PoolableDatabaseRouter<T>) poolableRouterCache.get(unitName);
+                (PoolableDatabaseRouter<T>) poolableRouterCache.get(unitName);
         if (router == null && databaseRouterFactory != null) {
             router = databaseRouterFactory.getPoolableRouter(unitName);
         }
@@ -341,10 +320,10 @@ public class Transactions {
     }
 
     public static <T> PoolableDatabaseResource get(String unitName, T id, Function function)
-        throws SliceException {
+            throws SliceException {
         @SuppressWarnings("unchecked")
         PoolableDatabaseRouter<T> router =
-            (PoolableDatabaseRouter<T>) poolableRouterCache.get(unitName);
+                (PoolableDatabaseRouter<T>) poolableRouterCache.get(unitName);
         if (router == null && databaseRouterFactory != null) {
             router = databaseRouterFactory.getPoolableRouter(unitName);
         }
@@ -367,7 +346,7 @@ public class Transactions {
         public abstract T execute(ForestGrower grower, String suffix) throws SQLException;
 
         public T execute(ForestGrower grower, PoolableDatabaseResource resource)
-            throws SQLException {
+                throws SQLException {
             String suffix = resource.getAlias();
             return execute(grower, suffix);
 
