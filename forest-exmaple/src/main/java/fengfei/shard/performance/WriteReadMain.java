@@ -75,7 +75,7 @@ public class WriteReadMain implements Runnable {
             final WriteReadService2 writeRead = new WriteReadService2(start, size);
 
             while (true) {
-
+mode=1;
                 try {
                     if (mode == 0) {
                         writeRead.write();
