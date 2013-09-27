@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <resources>
+        <res01>
+            <url>jdbc:mysql://127.0.0.1:4000/spruce?useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true
+            </url>
+            <username>root</username>
+            <password></password>
+            <wight>1</wight>
+        </res01>
+        <res02>
+            <url>jdbc:mysql://192.168.1.11:4000/relation</url>
+            <username>root</username>
+            <password></password>
+            <wight>1</wight>
+        </res02>
+
+    </resources>
+    <extraInfos>
+        <poolName>TomcatJDBC</poolName>
+        <driverClass>com.mysql.jdbc.Driver</driverClass>
+        <maxActive>10</maxActive>
+        <minIdle>2</minIdle>
+        <maxIdle>10</maxIdle>
+        <initialSize>2</initialSize>
+        <testOnBorrow>true</testOnBorrow>
+        <testWhileIdle>true</testWhileIdle>
+        <timeBetweenEvictionRunsMillis>30000</timeBetweenEvictionRunsMillis>
+        <minEvictableIdleTimeMillis>30000</minEvictableIdleTimeMillis>
+        <maxPoolPreparedStatementPerConnectionSize>3</maxPoolPreparedStatementPerConnectionSize>
+        <removeAbandoned>true</removeAbandoned>
+        <removeAbandonedTimeout>60</removeAbandonedTimeout>
+        <logAbandoned>true</logAbandoned>
+        <validationQuery>select 1</validationQuery>
+        <validationInterval>30000</validationInterval>
+    </extraInfos>
+    <routers>
+        <Sequence>
+            <parentId></parentId>
+            <parentPath></parentPath>
+            <eqClass>fengfei.forest.slice.equalizer.RemainderEqualizer</eqClass>
+            <routerClass>fengfei.forest.slice.impl.AccuracyRouter</routerClass>
+            <plotterClass>fengfei.forest.slice.plotter.LoopPlotter</plotterClass>
+            <overflow>Exception</overflow>
+            <slices>
+                <slice>
+                    <id>1</id>
+                    <alias>_1</alias>
+                    <read>res01</read>
+                    <write>res01</write>
+                    <readwrite>res01</readwrite>
+                    <range>1</range>
+                </slice>
+                <slice>
+                    <id>2</id>
+                    <alias>_2</alias>
+                    <read>res01</read>
+                    <write>res01</write>
+                    <readwrite>res01</readwrite>
+                    <range>2</range>
+                </slice>
+            </slices>
+        </Sequence>
+
+
+    </routers>
+
+</root>
