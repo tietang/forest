@@ -53,6 +53,22 @@ public class BasicMain {
                             }
 
                         });
+                final int id2=2;
+                  created = Transactions.execute(
+                        "Sequence",
+                        new Long(id2),
+                        SliceResource.Function.Write,
+                        new Transactions.TaCallback<Boolean>() {
+
+                            @Override
+                            public Boolean execute(ForestGrower grower, String suffix) throws SQLException {
+                                System.out.println(id2 + " " + suffix);
+                                suffix = String.valueOf(id % 2 + 1);
+                                System.out.println(id2 + " " + suffix);
+                                return true;
+                            }
+
+                        });
 
             } catch (Exception e) {
                 e.printStackTrace();

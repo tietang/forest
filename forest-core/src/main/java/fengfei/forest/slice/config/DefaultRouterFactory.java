@@ -73,7 +73,7 @@ public class DefaultRouterFactory extends AbstractRouterFactory {
     }
 
     private RouterConfig inheritByParentId(RouterConfig routerConfig)
-        throws CloneNotSupportedException {
+            throws CloneNotSupportedException {
 
         String parentId = routerConfig.parentId;
 
@@ -107,7 +107,7 @@ public class DefaultRouterFactory extends AbstractRouterFactory {
     }
 
     private RouterConfig inheritByParentRouterConfig(RouterConfig routerConfig)
-        throws CloneNotSupportedException {
+            throws CloneNotSupportedException {
         RouterConfig parentRouterConfig = routerConfig.parentRouterConfig;
 
         if (parentRouterConfig == null) {
@@ -217,10 +217,9 @@ public class DefaultRouterFactory extends AbstractRouterFactory {
         }
     }
 
-    public
-        <Key>
-        Slice<Key>
-        create(Long sliceId, SliceConfig sliceConfig, RouterConfig routerConfig) throws Exception {
+    public <Key>
+    Slice<Key>
+    create(Long sliceId, SliceConfig sliceConfig, RouterConfig routerConfig) throws Exception {
         Map<String, String> defaultExtraInfo = routerConfig.defaultExtraInfo;
         Slice<Key> slice = new ReadWriteSlice<>(sliceId);
 
@@ -248,10 +247,10 @@ public class DefaultRouterFactory extends AbstractRouterFactory {
     }
 
     private <Key> void buildReource(
-        RouterConfig routerConfig,
-        SliceConfig sliceConfig,
-        List<ResConfig> resConfigs,
-        Slice<Key> slice) {
+            RouterConfig routerConfig,
+            SliceConfig sliceConfig,
+            List<ResConfig> resConfigs,
+            Slice<Key> slice) {
         if (resConfigs == null || resConfigs.isEmpty()) {
             return;
         }
@@ -265,9 +264,9 @@ public class DefaultRouterFactory extends AbstractRouterFactory {
     }
 
     public SliceResource create(
-        RouterConfig routerConfig,
-        SliceConfig sliceConfig,
-        ResConfig resConfig) {
+            RouterConfig routerConfig,
+            SliceConfig sliceConfig,
+            ResConfig resConfig) {
         //
         Resource resource = new Resource(resConfig.name);
         // order 1. put router extraInfo
@@ -286,9 +285,17 @@ public class DefaultRouterFactory extends AbstractRouterFactory {
     @SuppressWarnings("unchecked")
     protected <T> T newInstance(String className) {
         try {
+            //
             return (T) Class.forName(className.trim()).newInstance();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            throw new IllegalArgumentException("non-exist class: " + className);
+//            try {
+//
+//                Class<?> clazz = getClass().getClassLoader().loadClass(className.trim());
+//                return (T) clazz.newInstance();
+//            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e1) {
+//            }
+            throw new IllegalArgumentException("non-exist class: " + className, e);
+
         }
     }
 
@@ -315,12 +322,12 @@ public class DefaultRouterFactory extends AbstractRouterFactory {
     }
 
     <Key> void mapResource(
-        Function function,
-        String res,
-        Router<Key> router,
-        long sliceId,
-        String alias,
-        Range[] ranges) {
+            Function function,
+            String res,
+            Router<Key> router,
+            long sliceId,
+            String alias,
+            Range[] ranges) {
         if (res != null && !"".equals(res)) {
             String reses[] = toResources(res);
             for (String resourceName : reses) {
