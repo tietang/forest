@@ -10,14 +10,14 @@ import fengfei.forest.slice.config.xml.XmlSliceConfigReader;
 
 public class DefaultRouterFactoryTest {
 
-	static DefaultRouterFactory factory = null;
+	static GeneralRouterFactory factory = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		XmlSliceConfigReader reader = new XmlSliceConfigReader("cp:config.xml");
 
 		Config config = reader.read("/root/main");
-		factory = new DefaultRouterFactory(config);
+		factory = new GeneralRouterFactory(config);
 
 	}
 

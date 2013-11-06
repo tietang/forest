@@ -1,6 +1,5 @@
 package fengfei.forest.slice.database;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,13 +15,13 @@ import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.config.Config;
 import fengfei.forest.slice.config.Config.RouterConfig;
-import fengfei.forest.slice.config.DefaultRouterFactory;
+import fengfei.forest.slice.config.GeneralRouterFactory;
 import fengfei.forest.slice.database.url.MysqlUrlMaker;
 import fengfei.forest.slice.database.url.OracleThinUrlMaker;
 import fengfei.forest.slice.database.url.PostgreSQLUrlMaker;
 import fengfei.forest.slice.exception.NonExistedSliceConfigException;
 
-public class DatabaseRouterFactory extends DefaultRouterFactory {
+public class DatabaseRouterFactory extends GeneralRouterFactory {
 
     public DatabaseRouterFactory(Config config) {
         super(config);

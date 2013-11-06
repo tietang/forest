@@ -67,7 +67,7 @@ public class Transactions {
 
     private static void releaseDataSource(PoolableDatabaseRouter<?> router)
             throws PoolableException {
-        Map<String, DataSource> dses = router.allPooledDataSources();
+        Map<String, DataSource> dses = PoolableDatabaseRouter.allPooledDataSources();
         Set<Entry<String, DataSource>> sets = dses.entrySet();
         for (Entry<String, DataSource> entry : sets) {
             router.getPoolableDataSourceFactory().destory(entry.getValue());
