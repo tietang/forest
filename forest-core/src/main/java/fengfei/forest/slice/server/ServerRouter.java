@@ -1,5 +1,8 @@
 package fengfei.forest.slice.server;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import fengfei.forest.slice.Detector;
@@ -188,4 +191,47 @@ public class ServerRouter<Key> implements Router<Key> {
         return router.getGlobalResources();
     }
 
+    @Override
+    public Map<? extends ServerResource, List<Key>> groupLocate(Function function, Key... keys) {
+        Map<ServerResource, List<Key>> sliceResourceMap = new HashMap<>();
+        for (Key key : keys) {
+            ServerResource sr = locate(key, function);
+            if (sr != null) {
+                List<Key> ks = sliceResourceMap.get(sr);
+                if (ks == null) {
+                    ks = new ArrayList<>();
+                }
+                ks.add(key);
+                sliceResourceMap.put(sr, ks);
+            }
+        }
+        return sliceResourceMap;
+    }
+
+    @Override
+    public Map<? extends ServerResource, List<Key>> groupLocate(Key... keys) {
+        return groupLocate(keys);
+    }
+
+    @Override
+    public Map<? extends ServerResource, List<Key>> groupLocate(Function function, List<Key> keys) {
+        Map<ServerResource, List<Key>> sliceResourceMap = new HashMap<>();
+        for (Key key : keys) {
+            ServerResource sr = locate(key, function);
+            if (sr != null) {
+                List<Key> ks = sliceResourceMap.get(sr);
+                if (ks == null) {
+                    ks = new ArrayList<>();
+                }
+                ks.add(key);
+                sliceResourceMap.put(sr, ks);
+            }
+        }
+        return sliceResourceMap;
+    }
+
+    @Override
+    public Map<? extends ServerResource, List<Key>> groupLocate(List<Key> keys) {
+        return groupLocate(keys);
+    }
 }

@@ -1,10 +1,7 @@
 package fengfei.forest.slice.database;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
@@ -55,7 +52,49 @@ public class PoolableDatabaseRouter<Key> extends ServerRouter<Key> {
         PoolableDatabaseResource res = new PoolableDatabaseResource(router.locate(key, function));
         return locate(res);
     }
+    @Override
+    public Map<PoolableDatabaseResource, List<Key>> groupLocate(Function function, Key... keys) {
+        Map<PoolableDatabaseResource, List<Key>> sliceResourceMap = new HashMap<>();
+        for (Key key : keys) {
+            PoolableDatabaseResource sr = locate(key, function);
+            if (sr != null) {
+                List<Key> ks = sliceResourceMap.get(sr);
+                if (ks == null) {
+                    ks = new ArrayList<>();
+                }
+                ks.add(key);
+                sliceResourceMap.put(sr, ks);
+            }
+        }
+        return sliceResourceMap;
+    }
 
+    @Override
+    public Map<PoolableDatabaseResource, List<Key>> groupLocate(Key... keys) {
+        return groupLocate(keys);
+    }
+
+    @Override
+    public Map<PoolableDatabaseResource, List<Key>> groupLocate(Function function, List<Key> keys) {
+        Map<PoolableDatabaseResource, List<Key>> sliceResourceMap = new HashMap<>();
+        for (Key key : keys) {
+            PoolableDatabaseResource sr = locate(key, function);
+            if (sr != null) {
+                List<Key> ks = sliceResourceMap.get(sr);
+                if (ks == null) {
+                    ks = new ArrayList<>();
+                }
+                ks.add(key);
+                sliceResourceMap.put(sr, ks);
+            }
+        }
+        return sliceResourceMap;
+    }
+
+    @Override
+    public Map<PoolableDatabaseResource, List<Key>> groupLocate(List<Key> keys) {
+        return groupLocate(keys);
+    }
     public void followSetup() {
         Map<Long, Slice<Key>> slices = getSlices();
         Set<Entry<Long, Slice<Key>>> entries = slices.entrySet();
@@ -111,7 +150,7 @@ public class PoolableDatabaseRouter<Key> extends ServerRouter<Key> {
 
     //
     // public Connection getConnection(Source key) throws SliceException {
-    // PoolableServerResource slice = get(key);
+    // PoolablePoolableDatabaseResource slice = get(key);
     // DataSource dataSource = getDataSource(slice);
     // if (dataSource == null) {
     // throw new SliceException("");
@@ -128,7 +167,7 @@ public class PoolableDatabaseRouter<Key> extends ServerRouter<Key> {
     //
     // public Connection getConnection(Source key, Function function)
     // throws SliceException {
-    // PoolableServerResource slice = get(key, function);
+    // PoolablePoolableDatabaseResource slice = get(key, function);
     // DataSource dataSource = getDataSource(slice);
     // if (dataSource == null) {
     // throw new SliceException("");

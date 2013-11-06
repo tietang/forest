@@ -1,25 +1,15 @@
 package fengfei.forest.slice.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ListMultimap;
 
-import fengfei.forest.slice.Detector;
-import fengfei.forest.slice.Equalizer;
-import fengfei.forest.slice.OverflowType;
-import fengfei.forest.slice.Plotter;
-import fengfei.forest.slice.Range;
-import fengfei.forest.slice.Resource;
-import fengfei.forest.slice.Router;
-import fengfei.forest.slice.Slice;
-import fengfei.forest.slice.SliceResource;
+import fengfei.forest.slice.*;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.equalizer.LongEqualizer;
 import fengfei.forest.slice.exception.NonExistedResourceException;
@@ -54,9 +44,9 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
     }
 
     public AbstractRouter(
-        Equalizer<Key> equalizer,
-        Plotter plotter,
-        Map<String, String> defaultExtraInfo) {
+            Equalizer<Key> equalizer,
+            Plotter plotter,
+            Map<String, String> defaultExtraInfo) {
         this(equalizer, plotter);
         this.defaultExtraInfo = defaultExtraInfo;
 
@@ -79,23 +69,22 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
             throw new NonExistedSliceException("id=" + id + " non-existed slice.");
         }
         switch (overflowType) {
-        case First:
-            return function == null ? first() : first(function);
-        case Last:
-            return function == null ? last() : last(function);
-        case New:
-            return null;
-        case Exception:
-            throw new NonExistedSliceException("id=" + id + " non-existed slice.");
-        default:
-            throw new NonExistedSliceException("id=" + id + " non-existed slice.");
+            case First:
+                return function == null ? first() : first(function);
+            case Last:
+                return function == null ? last() : last(function);
+            case New:
+                return null;
+            case Exception:
+                throw new NonExistedSliceException("id=" + id + " non-existed slice.");
+            default:
+                throw new NonExistedSliceException("id=" + id + " non-existed slice.");
         }
     }
 
     /**
      * get a special function slice of logicslice
-     * 
-     * @param logicSlice
+     *
      * @param key
      * @param function
      * @param id
@@ -103,11 +92,11 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
      * @return
      */
     protected SliceResource getResource(
-        Slice<Key> slice,
-        Key key,
-        Function function,
-        long id,
-        boolean isDealOver) {
+            Slice<Key> slice,
+            Key key,
+            Function function,
+            long id,
+            boolean isDealOver) {
         if (slice == null) {
             return dealOverflow(key, function, id, isDealOver);
         }
@@ -311,8 +300,54 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
         return getSlices().get(sliceId);
     }
 
-    public void startAutoFailover() {
+//    public void startAutoFailover() {
+//
+//    }
 
+
+    @Override
+    public Map<SliceResource, List<Key>> groupLocate(Function function, Key... keys) {
+        Map<SliceResource, List<Key>> sliceResourceMap = new HashMap<>();
+        for (Key key : keys) {
+            SliceResource sr = locate(key, function);
+            if (sr != null) {
+                List<Key> ks = sliceResourceMap.get(sr);
+                if (ks == null) {
+                    ks = new ArrayList<>();
+                }
+                ks.add(key);
+                sliceResourceMap.put(sr, ks);
+            }
+        }
+        return sliceResourceMap;
+    }
+
+    @Override
+    public Map<SliceResource, List<Key>> groupLocate(Key... keys) {
+        return groupLocate(Function.Read, keys);
+    }
+
+
+    @Override
+    public Map<SliceResource, List<Key>> groupLocate(Function function, List<Key> keys) {
+        Map<SliceResource, List<Key>> sliceResourceMap = new HashMap<>();
+        for (Key key : keys) {
+            SliceResource sr = locate(key, function);
+            if (sr != null) {
+                List<Key> ks = sliceResourceMap.get(sr);
+                if (ks == null) {
+                    ks = new ArrayList<>();
+                }
+                ks.add(key);
+                sliceResourceMap.put(sr, ks);
+            }
+        }
+        return sliceResourceMap;
+    }
+
+    @Override
+    public Map<SliceResource, List<Key>> groupLocate(List<Key> keys) {
+        return groupLocate(Function.Read, keys);
     }
 
     protected Detector detector;
