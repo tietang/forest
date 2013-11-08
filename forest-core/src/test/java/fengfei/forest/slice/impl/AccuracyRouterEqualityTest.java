@@ -68,7 +68,7 @@ public class AccuracyRouterEqualityTest extends AbstractRouterTest {
         }
     }
 
-    @Test
+//    @Test
     public void testGroupLocateKeyFunction() {
         AccuracyRouter<Long> router = new AccuracyRouter<>(new LongTailEqualizer(1));
         router.setOverflowType(OverflowType.Exception);
