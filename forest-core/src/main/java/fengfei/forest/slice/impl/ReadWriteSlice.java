@@ -28,7 +28,7 @@ public class ReadWriteSlice<Key> implements Slice<Key> {
 	protected Long sliceId;
 	protected String alias;
 	protected Map<String, String> params = new HashMap<>();
-	protected Router<Key> childRouter;
+	protected Router<Key,SliceResource> childRouter;
 
 	protected List<SliceResource> resources = new ArrayList<>();
 	protected Lock lock = new ReentrantLock();
@@ -217,11 +217,11 @@ public class ReadWriteSlice<Key> implements Slice<Key> {
 		this.sliceId = sliceId;
 	}
 
-	public Router<Key> getChildRouter() {
+	public Router<Key,SliceResource> getChildRouter() {
 		return childRouter;
 	}
 
-	public void setChildRouter(Router<Key> childRouter) {
+	public void setChildRouter(Router<Key,SliceResource> childRouter) {
 		this.childRouter = childRouter;
 	}
 

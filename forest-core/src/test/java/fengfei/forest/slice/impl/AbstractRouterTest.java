@@ -5,10 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import org.junit.Ignore;
 
@@ -17,8 +14,7 @@ import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
 
-@Ignore
-public class AbstractRouterTest {
+public abstract class AbstractRouterTest {
 
     protected boolean isReadWrite = false;
 
@@ -33,7 +29,41 @@ public class AbstractRouterTest {
 
     Random random = new Random();
 
-    protected void testLocateKeyFunction(Router<Long> router, int id) {
+    protected void testGroupLocateKeyFunction(Router<Long,SliceResource> router, Long... ids) {
+
+        //
+        Map< SliceResource, List<Long>> list = router.groupLocate(Function.Read, Arrays.asList(ids));
+        long id = 0;
+        SliceResource resource = router.locate(Long.valueOf(id), Function.Read);
+        assertNotNull(resource);
+        assertEquals(isReadWrite ? Function.ReadWrite : Function.Read, resource.getFunction());
+        assertEquals(4, resource.getExtraInfo().size());
+        //System.out.println(resource);
+        SliceResource read = resource;
+        //
+        resource = router.locate(Long.valueOf(id), Function.Write);
+        assertNotNull(resource);
+        assertEquals(
+                isReadWrite ? Function.ReadWrite : Function.Write,
+                resource.getFunction());
+        assertEquals(4, resource.getExtraInfo().size());
+        if (!isReadWrite) {
+            assertNotSame(resource, read);
+        }
+        //System.out.println(resource);
+        // /
+        resource = router.locate(Long.valueOf(id), Function.ReadWrite);
+        assertNotNull(resource);
+        if (isReadWrite) {
+            assertTrue(resource.getFunction() == Function.ReadWrite);
+        } else {
+            assertTrue(resource.getFunction() == Function.Read || resource.getFunction() == Function.Write);
+        }
+        assertEquals(4, resource.getExtraInfo().size());
+        //System.out.println(resource);
+    }
+
+    protected void testLocateKeyFunction(Router<Long,SliceResource> router, int id) {
         //
         SliceResource resource = router.locate(Long.valueOf(id), Function.Read);
         assertNotNull(resource);
@@ -64,8 +94,8 @@ public class AbstractRouterTest {
         //System.out.println(resource);
     }
 
- 
-    protected void testFirst(String msg, Router<Long> router, Long id, Function function) {
+
+    protected void testFirst(String msg, Router<Long,SliceResource> router, Long id, Function function) {
         SliceResource resource = router.locate(Long.valueOf(id), function);
         SliceResource first = function == null ? router.first() : router.first(function);
         assertNotNull(msg, resource);
@@ -73,7 +103,7 @@ public class AbstractRouterTest {
         assertEquals(msg, resource.getSliceId(), first.getSliceId());
     }
 
-    protected void testLast(String msg, Router<Long> router, Long id, Function function) {
+    protected void testLast(String msg, Router<Long,SliceResource> router, Long id, Function function) {
         SliceResource resource = router.locate(Long.valueOf(id), function);
         SliceResource last = function == null ? router.last() : router.last(function);
         assertNotNull(msg, resource);
@@ -81,7 +111,7 @@ public class AbstractRouterTest {
         assertEquals(msg, resource.getSliceId(), last.getSliceId());
     }
 
-    protected void testNew(String msg, Router<Long> router, Long id, Function function) {
+    protected void testNew(String msg, Router<Long,SliceResource> router, Long id, Function function) {
         SliceResource resource = router.locate(Long.valueOf(id), function);
         SliceResource last = function == null ? router.last() : router.last(function);
         SliceResource first = function == null ? router.first() : router.first(function);
@@ -94,7 +124,7 @@ public class AbstractRouterTest {
         assertNotSame(msg, resource.getSliceId(), first.getSliceId());
     }
 
-    protected void testException(String msg, Router<Long> router, Long id, Function function) {
+    protected void testException(String msg, Router<Long,SliceResource> router, Long id, Function function) {
         try {
             SliceResource resource = router.locate(Long.valueOf(id), function);
             assertTrue(msg, false);
@@ -106,7 +136,7 @@ public class AbstractRouterTest {
 
     protected void testLocateKeyFunctionForOverflow(
             String msg,
-            Router<Long> router,
+            Router<Long,SliceResource> router,
             Long id,
             Function function) {
         OverflowType overflowType = router.getOverflowType();
@@ -129,7 +159,7 @@ public class AbstractRouterTest {
         }
     }
 
-    protected void testLocateKeyFunctionForException(Router<Long> router, int id) {
+    protected void testLocateKeyFunctionForException(Router<Long,SliceResource> router, int id) {
         String msg = " test locate for exception";
         Long id1 = Long.valueOf(id);
         testLocateKeyFunctionForOverflow(msg, router, id1, Function.Read);
@@ -137,7 +167,7 @@ public class AbstractRouterTest {
         testLocateKeyFunctionForOverflow(msg, router, id1, Function.ReadWrite);
     }
 
-    protected void testLocateKey(Router<Long> router, int id) {
+    protected void testLocateKey(Router<Long,SliceResource> router, int id) {
         String msg = " test locate for exception for id=" + id;
         SliceResource resource = router.locate(Long.valueOf(id));
         assertNotNull(msg, resource);

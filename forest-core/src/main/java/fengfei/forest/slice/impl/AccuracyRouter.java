@@ -94,7 +94,7 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 		SliceResource resource = function == null ? slice.getAny(random
 				.nextLong()) : slice.get(random.nextLong(), function);
 		if (resource == null) {
-			Router<Key> router = slice.getChildRouter();
+			Router<Key,SliceResource> router = slice.getChildRouter();
 			return isFirst ? router.first() : router.last();
 		}
 		return resource;
@@ -160,7 +160,7 @@ public class AccuracyRouter<Key> extends AbstractRouter<Key> {
 	}
 
 	@Override
-	public void registerChild(Router<Key> childRouter, Range... ranges) {
+	public void registerChild(Router<Key,SliceResource> childRouter, Range... ranges) {
 		for (Range range : ranges) {
 			for (long i = range.start; i <= range.end; i++) {
 				registerChild(Long.valueOf(i), childRouter);

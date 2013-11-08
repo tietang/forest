@@ -9,6 +9,7 @@ import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
+import fengfei.forest.slice.database.PoolableDatabaseResource;
 import fengfei.forest.slice.database.PoolableDatabaseRouter;
 import fengfei.forest.slice.database.url.MysqlUrlMaker;
 import fengfei.forest.slice.equalizer.LongEqualizer;
@@ -23,13 +24,12 @@ public class HashAccuracyExample {
 	public static void main(String[] args) {
 		AccuracyRouter<Long> faced = new AccuracyRouter<>(new LongEqualizer());
 		PoolableDatabaseRouter<Long> router = new PoolableDatabaseRouter<>(
-				faced,
-				new MysqlUrlMaker(),
+				faced, new MysqlUrlMaker(),
 				new TomcatPoolableDataSourceFactory());
 		setupGroup(router);
 		router.setPlotter(new HashPlotter());
 		router.setOverflowType(OverflowType.Last);
-		//System.out.println(router);
+		// System.out.println(router);
 		//
 		System.out.println(router.locate(1l));
 		System.out.println(router.locate(2l));
@@ -45,7 +45,7 @@ public class HashAccuracyExample {
 		System.out.println(router.locate(11l, Function.Write));
 	}
 
-	private static void setupGroup(Router<Long> router) {
+	private static void setupGroup(Router<Long, PoolableDatabaseResource> router) {
 		int ip = 2;
 		for (int i = 0; i < 50; i++) {
 			for (int j = 0; j < 3; j++) {
@@ -53,9 +53,11 @@ public class HashAccuracyExample {
 				Resource resource = new Resource(name);
 				resource.addExtraInfo(extraInfo());
 				SliceResource sliceResource = new SliceResource(resource);
-				sliceResource.setFunction(j == 0 ? Function.Write : Function.Read);
+				sliceResource.setFunction(j == 0 ? Function.Write
+						: Function.Read);
 				sliceResource.addParams(extraInfo());
-				router.register(Long.valueOf(i), String.valueOf(i), sliceResource);
+				router.register(Long.valueOf(i), String.valueOf(i),
+						sliceResource);
 			}
 		}
 	}

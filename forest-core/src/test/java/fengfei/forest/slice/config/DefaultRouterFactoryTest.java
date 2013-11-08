@@ -6,6 +6,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fengfei.forest.slice.Router;
+import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.config.xml.XmlSliceConfigReader;
 
 public class DefaultRouterFactoryTest {
@@ -28,7 +29,7 @@ public class DefaultRouterFactoryTest {
 
 	@Test
 	public void test() {
-		Router<Long> router = factory.getRouter("r01");
+		Router<Long, SliceResource> router = factory.getRouter("r01");
 		Assert.assertNotNull(router);
 	}
 
