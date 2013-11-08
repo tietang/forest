@@ -25,9 +25,9 @@ import fengfei.forest.slice.config.xml.XmlSliceConfigReader;
 import fengfei.forest.slice.exception.NonExistedSliceException;
 import fengfei.forest.slice.impl.ReadWriteSlice;
 
-public class GeneralRouterFactory extends AbstractRouterFactory {
+public class GeneralRouterFactory extends AbstractRouterFactory<SliceResource> {
 
-	protected Map<String, Router<?>> routers = new ConcurrentHashMap<>();
+	protected Map<String, Router<?, ?>> routers = new ConcurrentHashMap<>();
 	protected Map<String, RouterConfig> routerConfigCache = new ConcurrentHashMap<>();
 	protected Set<ResConfig> globalResources = new HashSet<>();
 	protected Map<String, String> globalExtraInfo = new ConcurrentHashMap<>();
@@ -42,8 +42,8 @@ public class GeneralRouterFactory extends AbstractRouterFactory {
 		SliceConfigReader reader = new XmlSliceConfigReader("cp:config.xml");
 
 		Config config = reader.read("/root/main");
-		RouterFactory factory = new GeneralRouterFactory(config);
-		Router<Long> router = factory.getRouter("r01");
+		RouterFactory<SliceResource> factory = new GeneralRouterFactory(config);
+		Router<Long, SliceResource> router = factory.getRouter("r01");
 		System.out.println(router.locate(1l));
 		System.out.println(router.locate(31423l));
 		System.out.println(router.locate(12l));
@@ -141,12 +141,13 @@ public class GeneralRouterFactory extends AbstractRouterFactory {
 		}
 	}
 
-	<Key> Router<Key> create(RouterConfig routerConfig) throws Exception {
+	<Key> Router<Key, SliceResource> create(RouterConfig routerConfig)
+			throws Exception {
 		//
 		String equalizerClass = routerConfig.equalizerClass;
 		String routerClass = routerConfig.routerClass;
 		String plotterClass = routerConfig.plotterClass;
-		Router<Key> router = newInstance(routerClass);
+		Router<Key, SliceResource> router = newInstance(routerClass);
 		if (equalizerClass != null && !"".equals(equalizerClass)) {
 			Equalizer<Key> equalizer = newInstance(equalizerClass);
 			router.setEqualizer(equalizer);
@@ -162,7 +163,8 @@ public class GeneralRouterFactory extends AbstractRouterFactory {
 		return router;
 	}
 
-	<Key> void buildGolobalResources(Router<Key> router) throws Exception {
+	<Key> void buildGolobalResources(Router<Key, SliceResource> router)
+			throws Exception {
 
 		for (ResConfig res : globalResources) {
 			String name = res.name;
@@ -176,8 +178,8 @@ public class GeneralRouterFactory extends AbstractRouterFactory {
 		}
 	}
 
-	<Key> void buildResources(RouterConfig routerConfig, Router<Key> router)
-			throws Exception {
+	<Key> void buildResources(RouterConfig routerConfig,
+			Router<Key, SliceResource> router) throws Exception {
 		Set<ResConfig> reses = routerConfig.resources;
 		Map<String, String> extraInfo = routerConfig.defaultExtraInfo;
 		for (ResConfig res : reses) {
@@ -192,8 +194,8 @@ public class GeneralRouterFactory extends AbstractRouterFactory {
 		}
 	}
 
-	private <Key> void buildSlices(RouterConfig routerConfig, Router<Key> router)
-			throws Exception {
+	private <Key> void buildSlices(RouterConfig routerConfig,
+			Router<Key, SliceResource> router) throws Exception {
 		List<SliceConfig> sliceConfigs = routerConfig.getSliceList();
 		int size = sliceConfigs.size();
 		for (int i = 0; i < size; i++) {
@@ -241,7 +243,7 @@ public class GeneralRouterFactory extends AbstractRouterFactory {
 			RouterConfig subRouterConfig = routerConfig.copy();
 			subRouterConfig.slices = new HashSet<>(sliceConfig.subSlices);
 			// subRouterConfig.parentId = routerConfig.id;
-			Router<Key> childRouter = create(subRouterConfig);
+			Router<Key, SliceResource> childRouter = create(subRouterConfig);
 			slice.setChildRouter(childRouter);
 		}
 
@@ -302,11 +304,12 @@ public class GeneralRouterFactory extends AbstractRouterFactory {
 		}
 	}
 
-	public <Key> Router<Key> getRouter(String routerName) {
+	public <Key> Router<Key, SliceResource> getRouter(String routerName) {
 		synchronized (this) {
 
 			@SuppressWarnings("unchecked")
-			Router<Key> router = (Router<Key>) routers.get(routerName);
+			Router<Key, SliceResource> router = (Router<Key, SliceResource>) routers
+					.get(routerName);
 			if (router == null) {
 				try {
 					RouterConfig routerConfig = routerConfigCache
@@ -325,8 +328,9 @@ public class GeneralRouterFactory extends AbstractRouterFactory {
 		}
 	}
 
-	<Key> void mapResource(Function function, String res, Router<Key> router,
-			long sliceId, String alias, Range[] ranges) {
+	<Key> void mapResource(Function function, String res,
+			Router<Key, SliceResource> router, long sliceId, String alias,
+			Range[] ranges) {
 		if (res != null && !"".equals(res)) {
 			String reses[] = toResources(res);
 			for (String resourceName : reses) {

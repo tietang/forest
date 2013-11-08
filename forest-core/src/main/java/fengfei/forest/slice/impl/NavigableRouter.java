@@ -73,7 +73,7 @@ public class NavigableRouter<Key> extends AbstractRouter<Key> {
 		//
 		SliceResource resource = slice.get(id, function);
 		if (resource == null) {
-			Router<Key> router = slice.getChildRouter();
+			Router<Key,SliceResource> router = slice.getChildRouter();
 			return router.locate(key, function);
 		}
 		return resource;
@@ -92,7 +92,7 @@ public class NavigableRouter<Key> extends AbstractRouter<Key> {
 		Slice<Key> slice = entry.getValue();
 		SliceResource resource = slice.getAny(id);
 		if (resource == null) {
-			Router<Key> router = slice.getChildRouter();
+			Router<Key,SliceResource> router = slice.getChildRouter();
 			return router.locate(key);
 		}
 		return resource;
@@ -110,7 +110,7 @@ public class NavigableRouter<Key> extends AbstractRouter<Key> {
 		SliceResource resource = function == null ? slice.getAny(random
 				.nextLong()) : slice.get(random.nextLong(), function);
 		if (resource == null) {
-			Router<Key> router = slice.getChildRouter();
+			Router<Key,SliceResource> router = slice.getChildRouter();
 			return isFirst ? router.first() : router.last();
 		}
 		return resource;
@@ -202,7 +202,7 @@ public class NavigableRouter<Key> extends AbstractRouter<Key> {
 	}
 
 	@Override
-	public void registerChild(Router<Key> childRouter, Range... ranges) {
+	public void registerChild(Router<Key,SliceResource> childRouter, Range... ranges) {
 		for (Range range : ranges) {
 			if (range.end == range.start) {
 				registerChild(Long.valueOf(range.end), childRouter);

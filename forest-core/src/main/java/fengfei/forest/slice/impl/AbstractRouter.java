@@ -17,7 +17,7 @@ import fengfei.forest.slice.exception.NonExistedSliceException;
 import fengfei.forest.slice.exception.UnSupportedException;
 import fengfei.forest.slice.plotter.LoopPlotter;
 
-public abstract class AbstractRouter<Key> implements Router<Key> {
+public abstract class AbstractRouter<Key> implements Router<Key,SliceResource> {
 
     protected Equalizer<Key> equalizer;
     protected OverflowType overflowType = OverflowType.Last;
@@ -102,7 +102,7 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
         }
         SliceResource resource = slice.get(id, function);
         if (resource == null) {
-            Router<Key> router = slice.getChildRouter();
+            Router<Key,SliceResource> router = slice.getChildRouter();
             return router.locate(key);
         }
         return resource;
@@ -114,7 +114,7 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
         }
         SliceResource resource = slice.getAny(id);
         if (resource == null) {
-            Router<Key> router = slice.getChildRouter();
+            Router<Key,SliceResource> router = slice.getChildRouter();
             return router.locate(key);
         }
         return resource;
@@ -280,7 +280,7 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
     }
 
     @Override
-    public void registerChild(Long sliceId, Router<Key> childRouter) {
+    public void registerChild(Long sliceId, Router<Key,SliceResource> childRouter) {
         Slice<Key> slice = get(sliceId);
         if (slice == null) {
             throw new NonExistedSliceException("Can't register child router, slice(" + sliceId
@@ -303,29 +303,6 @@ public abstract class AbstractRouter<Key> implements Router<Key> {
 //    public void startAutoFailover() {
 //
 //    }
-
-
-    @Override
-    public Map<SliceResource, List<Key>> groupLocate(Function function, Key... keys) {
-        Map<SliceResource, List<Key>> sliceResourceMap = new HashMap<>();
-        for (Key key : keys) {
-            SliceResource sr = locate(key, function);
-            if (sr != null) {
-                List<Key> ks = sliceResourceMap.get(sr);
-                if (ks == null) {
-                    ks = new ArrayList<>();
-                }
-                ks.add(key);
-                sliceResourceMap.put(sr, ks);
-            }
-        }
-        return sliceResourceMap;
-    }
-
-    @Override
-    public Map<SliceResource, List<Key>> groupLocate(Key... keys) {
-        return groupLocate(Function.Read, keys);
-    }
 
 
     @Override

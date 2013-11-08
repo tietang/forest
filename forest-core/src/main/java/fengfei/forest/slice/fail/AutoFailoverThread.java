@@ -14,21 +14,21 @@ import fengfei.forest.slice.Slice;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.impl.ResourceTribe;
 
-public class AutoFailoverThread<Key> extends Thread {
+public class AutoFailoverThread<Key,R extends SliceResource> extends Thread {
 	static Logger log = LoggerFactory.getLogger(AutoFailoverThread.class);
 	/**
 	 * interval seconds
 	 */
 	int interval = 3;
-	Router<Key> router;
+	Router<Key,R> router;
 
-	public AutoFailoverThread(int interval, Router<Key> router) {
+	public AutoFailoverThread(int interval, Router<Key,R> router) {
 		super();
 		this.interval = interval;
 		this.router = router;
 	}
 
-	public AutoFailoverThread(Router<Key> router) {
+	public AutoFailoverThread(Router<Key,R> router) {
 		super();
 		this.router = router;
 	}

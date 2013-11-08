@@ -6,11 +6,13 @@ import java.util.Map;
 import fengfei.forest.slice.Equalizer;
 import fengfei.forest.slice.Plotter;
 import fengfei.forest.slice.Router;
+import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.exception.NonExistedSliceException;
 
-public abstract class AbstractRouterFactory implements RouterFactory {
+public abstract class AbstractRouterFactory<R extends SliceResource>  implements
+		RouterFactory<R> {
 
-	protected Map<String, Router<?>> routers = new HashMap<>();
+	protected Map<String, Router<?, ?>> routers = new HashMap<>();
 
 	public AbstractRouterFactory() {
 
@@ -30,18 +32,18 @@ public abstract class AbstractRouterFactory implements RouterFactory {
 		}
 	}
 
-	public <Key> Router<Key> getRouter(String routerName) {
+	public <Key> Router<Key, R> getRouter(String routerName) {
 		@SuppressWarnings("unchecked")
-		Router<Key> router = (Router<Key>) routers.get(routerName);
+		Router<Key, R> router = (Router<Key, R>) routers.get(routerName);
 		if (router == null) {
 			throw new NonExistedSliceException("routerName=" + routerName);
 		}
 		return router;
 	}
 
-	public <Key> Router<Key> getRouter(Equalizer<Key> equalizer,
+	public <Key> Router<Key, R> getRouter(Equalizer<Key> equalizer,
 			String routerName) {
-		Router<Key> router = getRouter(routerName);
+		Router<Key, R> router = getRouter(routerName);
 		if (equalizer != null) {
 			router.setEqualizer(equalizer);
 		}
@@ -49,9 +51,9 @@ public abstract class AbstractRouterFactory implements RouterFactory {
 	}
 
 	@Override
-	public <Key> Router<Key> getRouter(Equalizer<Key> equalizer,
+	public <Key> Router<Key, R> getRouter(Equalizer<Key> equalizer,
 			Plotter plotter, String routerName) {
-		Router<Key> router = getRouter(equalizer, routerName);
+		Router<Key, R> router = getRouter(equalizer, routerName);
 		if (plotter != null) {
 			router.setPlotter(plotter);
 		}

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fengfei.forest.slice.Router;
+import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
 import fengfei.forest.slice.exception.NonExistedSliceException;
 import fengfei.forest.slice.exception.SliceRuntimeException;
@@ -20,7 +21,7 @@ public class PoolableServerRouter<Key, D> extends ServerRouter<Key> {
 	protected Map<String, PooledSource<D>> pooledDataSources = new ConcurrentHashMap<>();
 	protected PoolableSourceFactory<D> poolableSourceFactory;
 
-	public PoolableServerRouter(Router<Key> router,
+	public PoolableServerRouter(Router<Key,SliceResource> router,
 			PoolableSourceFactory<D> poolableSourceFactory) {
 		super(router);
 		this.poolableSourceFactory = poolableSourceFactory;

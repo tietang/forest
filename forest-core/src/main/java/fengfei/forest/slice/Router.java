@@ -1,19 +1,19 @@
 package fengfei.forest.slice;
 
-public interface Router<Key> extends Navigator<Key>, SliceRegistry<Key>,
-		SliceResourceRegistry {
+public interface Router<Key, R extends SliceResource> extends Navigator<Key, R>, SliceRegistry<Key>,
+        SliceResourceRegistry {
 
-	void setOverflowType(OverflowType overflowType);
+    void setOverflowType(OverflowType overflowType);
 
-	OverflowType getOverflowType();
+    OverflowType getOverflowType();
 
-	public void setPlotter(Plotter plotter);
+    public void setPlotter(Plotter plotter);
 
-	void setEqualizer(Equalizer<Key> equalizer);
+    void setEqualizer(Equalizer<Key> equalizer);
 
-	Detector getDetector();
+    Detector getDetector();
 
-	void setDetector(Detector detector);
+    void setDetector(Detector detector);
 
- 
+
 }

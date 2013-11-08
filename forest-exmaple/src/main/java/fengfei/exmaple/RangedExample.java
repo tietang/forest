@@ -89,8 +89,7 @@ public class RangedExample {
 		DataSource ds = resource.getDataSource();
 		try (Connection conn = ds.getConnection();) {
 			ForestGrower grower = new DefaultForestGrower(conn);
-			User user = UserDao.get(grower, suffix, "test@163.com",
-					"123456");
+			User user = UserDao.get(grower, suffix, "test@163.com", "123456");
 			System.out.println("get user:" + user);
 		}
 	}
@@ -108,7 +107,7 @@ public class RangedExample {
 		}
 	}
 
-	private static void setupGroup(Router<Long> router) {
+	private static void setupGroup(Router<Long, PoolableDatabaseResource> router) {
 		int ip = 2;
 		int maxMod = 1024;
 		int sliceSize = 3;

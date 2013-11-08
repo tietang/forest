@@ -16,6 +16,7 @@ import fengfei.forest.slice.Resource;
 import fengfei.forest.slice.Router;
 import fengfei.forest.slice.SliceResource;
 import fengfei.forest.slice.SliceResource.Function;
+import fengfei.forest.slice.database.PoolableDatabaseResource;
 import fengfei.forest.slice.database.PoolableDatabaseRouter;
 import fengfei.forest.slice.database.url.MysqlUrlMaker;
 import fengfei.forest.slice.impl.NavigableRouter;
@@ -86,7 +87,7 @@ public class RangeSliceExample2 {
 		}
 	}
 
-	private static void setupGroup(Router<Long> router) {
+	private static void setupGroup(Router<Long, PoolableDatabaseResource> router) {
 		int ip = 2;
 		int maxMod = 1024;
 		int sliceSize = 3;

@@ -15,9 +15,9 @@ import fengfei.forest.slice.impl.ResourceTribe;
  */
 public interface Slice<Key> extends Failover {
 
-	Router<Key> getChildRouter();
+	Router<Key,SliceResource> getChildRouter();
 
-	void setChildRouter(Router<Key> childRouter);
+	void setChildRouter(Router<Key,SliceResource> childRouter);
 
 	void setPlotter(Plotter plotter);
 

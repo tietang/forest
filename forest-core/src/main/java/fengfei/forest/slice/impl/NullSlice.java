@@ -13,13 +13,13 @@ import fengfei.forest.slice.SliceResource.Function;
 public class NullSlice<Key> implements Slice<Key> {
 
 	@Override
-	public Router<Key> getChildRouter() {
+	public Router<Key,SliceResource> getChildRouter() {
 
 		return null;
 	}
 
 	@Override
-	public void setChildRouter(Router<Key> childRouter) {
+	public void setChildRouter(Router<Key,SliceResource> childRouter) {
 
 	}
 

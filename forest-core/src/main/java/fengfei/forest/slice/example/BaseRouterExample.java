@@ -16,7 +16,8 @@ import fengfei.forest.slice.SliceResource.Function;
 public class BaseRouterExample {
 	public static Logger log = LoggerFactory.getLogger("Example");
 
-	protected static void setupGroup(Router<User> router) {
+	protected static <R extends SliceResource> void setupGroup(
+			Router<User, R> router) {
 		int ip = 2;
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 3; j++) {
@@ -124,15 +125,14 @@ public class BaseRouterExample {
 
 		public void connect() {
 			// to connect to server
-			
-			log.info(String.format("Connected host: %s:%d", host,
-					port));
+
+			log.info(String.format("Connected host: %s:%d", host, port));
 		}
 
 		public void close() {
 			// close connection
-			log.info(String.format(
-					"Closed connection for host:  %s:%d", host, port));
+			log.info(String.format("Closed connection for host:  %s:%d", host,
+					port));
 		}
 
 		public String ping() {
