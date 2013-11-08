@@ -17,6 +17,7 @@ local.properties
 .settings/
 .loadpath
 *.class
+*.iml
 
 # External tool builders
 .externalToolBuilders/
