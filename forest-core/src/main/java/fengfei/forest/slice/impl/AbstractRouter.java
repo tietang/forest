@@ -17,7 +17,7 @@ import fengfei.forest.slice.exception.NonExistedSliceException;
 import fengfei.forest.slice.exception.UnSupportedException;
 import fengfei.forest.slice.plotter.LoopPlotter;
 
-public abstract class AbstractRouter<Key> implements Router<Key,SliceResource> {
+public abstract class AbstractRouter<Key> implements Router<Key, SliceResource> {
 
     protected Equalizer<Key> equalizer;
     protected OverflowType overflowType = OverflowType.Last;
@@ -102,7 +102,7 @@ public abstract class AbstractRouter<Key> implements Router<Key,SliceResource> {
         }
         SliceResource resource = slice.get(id, function);
         if (resource == null) {
-            Router<Key,SliceResource> router = slice.getChildRouter();
+            Router<Key, SliceResource> router = slice.getChildRouter();
             return router.locate(key);
         }
         return resource;
@@ -114,7 +114,7 @@ public abstract class AbstractRouter<Key> implements Router<Key,SliceResource> {
         }
         SliceResource resource = slice.getAny(id);
         if (resource == null) {
-            Router<Key,SliceResource> router = slice.getChildRouter();
+            Router<Key, SliceResource> router = slice.getChildRouter();
             return router.locate(key);
         }
         return resource;
@@ -280,7 +280,7 @@ public abstract class AbstractRouter<Key> implements Router<Key,SliceResource> {
     }
 
     @Override
-    public void registerChild(Long sliceId, Router<Key,SliceResource> childRouter) {
+    public void registerChild(Long sliceId, Router<Key, SliceResource> childRouter) {
         Slice<Key> slice = get(sliceId);
         if (slice == null) {
             throw new NonExistedSliceException("Can't register child router, slice(" + sliceId
@@ -306,24 +306,25 @@ public abstract class AbstractRouter<Key> implements Router<Key,SliceResource> {
 
 
     @Override
-    public Map<SliceResource, List<Key>> groupLocate(Function function, List<Key> keys) {
-        Map<SliceResource, List<Key>> sliceResourceMap = new HashMap<>();
+    public Map<Long, SliceResourceGroup<Key, SliceResource>> groupLocate(Function function, List<Key> keys) {
+        Map<Long, SliceResourceGroup<Key, SliceResource>> sliceResourceMap = new HashMap<>();
         for (Key key : keys) {
             SliceResource sr = locate(key, function);
             if (sr != null) {
-                List<Key> ks = sliceResourceMap.get(sr);
+                SliceResourceGroup<Key, SliceResource> ks = sliceResourceMap.get(sr.getSliceId());
                 if (ks == null) {
-                    ks = new ArrayList<>();
+                    ks = new SliceResourceGroup();
+                    ks.setSliceResource(sr);
                 }
-                ks.add(key);
-                sliceResourceMap.put(sr, ks);
+                ks.addKey(key);
+                sliceResourceMap.put(sr.getSliceId(), ks);
             }
         }
         return sliceResourceMap;
     }
 
     @Override
-    public Map<SliceResource, List<Key>> groupLocate(List<Key> keys) {
+    public Map<Long, SliceResourceGroup<Key, SliceResource>> groupLocate(List<Key> keys) {
         return groupLocate(Function.Read, keys);
     }
 

@@ -15,9 +15,9 @@ public interface Navigator<Key, R extends SliceResource> {
      * @return
      */
 
-    Map<R, List<Key>> groupLocate(Function function, List<Key> keys);
+    Map<Long, SliceResourceGroup<Key, R>> groupLocate(Function function, List<Key> keys);
 
-    Map<R, List<Key>> groupLocate(List<Key> keys);
+    Map<Long, SliceResourceGroup<Key, R>> groupLocate(List<Key> keys);
 
     /**
      * 分组定位到一个给定的key和特定function 所对应的Resource

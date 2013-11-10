@@ -2,14 +2,10 @@ package fengfei.forest.slice.impl;
 
 import java.util.*;
 
-import fengfei.forest.slice.Router;
+import fengfei.forest.slice.*;
 import fengfei.forest.slice.equalizer.LongTailEqualizer;
 import org.junit.Before;
 import org.junit.Test;
-
-import fengfei.forest.slice.OverflowType;
-import fengfei.forest.slice.Resource;
-import fengfei.forest.slice.SliceResource;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -68,7 +64,7 @@ public class AccuracyRouterEqualityTest extends AbstractRouterTest {
         }
     }
 
-//    @Test
+    @Test
     public void testGroupLocateKeyFunction() {
         AccuracyRouter<Long> router = new AccuracyRouter<>(new LongTailEqualizer(1));
         router.setOverflowType(OverflowType.Exception);
@@ -91,16 +87,17 @@ public class AccuracyRouterEqualityTest extends AbstractRouterTest {
         //
 
 
-        Map<SliceResource, List<Long>> resources = router.groupLocate(SliceResource.Function.Read,
+        Map<Long, SliceResourceGroup<Long, SliceResource>> resources = router.groupLocate(SliceResource.Function.Read,
                 Arrays.asList(ids));
         assertNotNull(resources);
         System.out.println(resources);
-        Set<Map.Entry<SliceResource, List<Long>>> entries = resources.entrySet();
-        for (Map.Entry<SliceResource, List<Long>> entry : entries) {
-            SliceResource resource = entry.getKey();
-            List<Long> keys = entry.getValue();
-            assertNotNull(keys);
-            assertEquals(18, keys.size());
+        Set<Map.Entry<Long, SliceResourceGroup<Long, SliceResource>>> entries = resources.entrySet();
+        for (Map.Entry<Long, SliceResourceGroup<Long, SliceResource>> entry : entries) {
+            Long id = entry.getKey();
+            SliceResourceGroup<Long, SliceResource> group = entry.getValue();
+            assertNotNull(group);
+            assertNotNull(group.getKeys());
+            assertEquals(18, group.getKeys().size());
         }
     }
 
